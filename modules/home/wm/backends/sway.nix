@@ -27,7 +27,7 @@ let
 
   barAutostart =
     lib.optionalString (barCmd != null) ''
-      exec_always pkill -x ${barCmd}; ${barCmd}
+      exec sh -lc 'pgrep -x ${barCmd}>/dev/null || exec ${barCmd}'
     '';
 
 
@@ -41,24 +41,24 @@ let
 
   clientColors = {
     focused = {
-      border = ui.colors.border;
-      indicator = ui.colors.border;
-      childBorder = ui.colors.border;
+      border = ui.colors.background;
+      indicator = ui.colors.background;
+      childBorder = ui.colors.background;
       background = ui.colors.background;
       text = ui.colors.focus;
     };
 
     focusedInactive = {
-      border = ui.colors.border;
-      childBorder = ui.colors.border;
+      border = ui.colors.background;
+      childBorder = ui.colors.background;
       indicator = ui.colors.muted;
       background = ui.colors.background;
       text = ui.colors.foreground;
     };
 
     unfocused = {
-      border = ui.colors.border;
-      childBorder = ui.colors.border;
+      border = ui.colors.background;
+      childBorder = ui.colors.background;
       indicator = ui.colors.muted;
       background = ui.colors.background;
       text = ui.colors.foreground;
