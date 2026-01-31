@@ -1,3 +1,4 @@
+
 { config, lib, pkgs, ui, ... }:
 
 let
@@ -152,7 +153,7 @@ in
         color: @bg;
       }
 
-      /* Keep hover consistent with focused style (optional but usually desired) */
+      /* Keep hover consistent with focused style (optional) */
       #workspaces button:hover {
         background: @focus;
         color: @bg;
@@ -160,7 +161,10 @@ in
 
       /* ----------------------------
          RHS blocks + '|' separators
-         (GTK CSS: avoid :not())
+
+         GTK CSS in Waybar does NOT reliably support :last-child / :not(),
+         so we render separators after every RHS widget and then explicitly
+         suppress it for the last module we know is last (#clock).
          ---------------------------- */
 
       #network, #custom-bat, #disk, #memory, #clock {
@@ -168,15 +172,14 @@ in
         margin: 0;
       }
 
-      /* Add a separator after every RHS widget... */
       .modules-right > widget::after {
         content: " |";
         color: @fg;
         padding-left: ${toString sepPadPx}px;
       }
 
-      /* ...then remove it for the last one */
-      .modules-right > widget:last-child::after {
+      /* clock is last by config: remove trailing separator */
+      #clock::after {
         content: "";
         padding-left: 0;
       }
