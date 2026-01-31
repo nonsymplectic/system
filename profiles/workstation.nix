@@ -37,6 +37,6 @@
   home-manager.sharedModules = [
     ../modules/home/wm.nix
     ../modules/home/apps.nix
-    ../modules/homes/core/git.nix
+    ../modules/home/core/git.nix
   ];
 }
