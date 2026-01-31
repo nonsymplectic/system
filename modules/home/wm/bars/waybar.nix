@@ -1,17 +1,17 @@
-
 { config, lib, pkgs, ui, ... }:
 
 let
   cfg = config.my.wm;
 
   stripHash = s: lib.removePrefix "#" s;
-  p = i: stripHash (builtins.elemAt ui.terminal.palette i);
 
-  bg = stripHash ui.terminal.background;
-  fg = stripHash ui.terminal.foreground;
+  # Token colors (expected to be like "#rrggbb" or "rrggbb"; we normalize)
+  bg = stripHash ui.colors.background;
+  fg = stripHash ui.colors.foreground;
+  focus = stripHash ui.colors.focus;
 
   # ---- token-driven sizing ----
-  s = ui.scale;
+  s = ui.scale or 1.0;
 
   # integer rounding
   px = x: builtins.floor (x + 0.5);
@@ -19,8 +19,11 @@ let
   fontPx    = px (ui.monoFont.size * s);
   heightPx  = px (1.8 * fontPx);
   spacingPx = px (0.55 * fontPx);
-  vPadPx    = px (0.25 * fontPx);
+  vPadPx    = px (0.20 * fontPx);
   hPadPx    = px (0.45 * fontPx);
+
+  # Workspace button horizontal padding (thin buttons)
+  wsHPadPx  = px (0.55 * fontPx);
 
   # ---- battery that hides when absent ----
   batScript = pkgs.writeShellScript "waybar-bat" ''
@@ -33,6 +36,10 @@ let
   '';
 in
 {
+  /* ============================================================
+     Waybar
+     ============================================================ */
+
   config = lib.mkIf (cfg.enable && cfg.bar.enable && cfg.bar.backend == "waybar") {
     my.wm.bar.command = "waybar";
 
@@ -72,6 +79,7 @@ in
         interval = 30;
         return-type = "plain";
         hide-empty-text = true;
+        tooltip = false;
       };
 
       # --- /: used/total ---
@@ -103,28 +111,15 @@ in
       * {
         font-family: "${ui.monoFont.family}";
         font-size: ${toString fontPx}px;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        min-height: 0;
       }
 
-      @define-color fg #${fg};
-      @define-color bg #${bg};
-
-      /* ANSI palette (GTK CSS) */
-      @define-color c0  #${p 0};
-      @define-color c1  #${p 1};
-      @define-color c2  #${p 2};
-      @define-color c3  #${p 3};
-      @define-color c4  #${p 4};
-      @define-color c5  #${p 5};
-      @define-color c6  #${p 6};
-      @define-color c7  #${p 7};
-      @define-color c8  #${p 8};
-      @define-color c9  #${p 9};
-      @define-color c10 #${p 10};
-      @define-color c11 #${p 11};
-      @define-color c12 #${p 12};
-      @define-color c13 #${p 13};
-      @define-color c14 #${p 14};
-      @define-color c15 #${p 15};
+      @define-color bg    #${bg};
+      @define-color fg    #${fg};
+      @define-color focus #${focus};
 
       window#waybar {
         background: @bg;
@@ -132,13 +127,46 @@ in
         padding: ${toString vPadPx}px ${toString hPadPx}px;
       }
 
-      #workspaces button.focused {
-        border-bottom: 2px solid @c4;
+      /* ----------------------------
+         Workspaces (thin full-height)
+         ---------------------------- */
+
+      #workspaces {
+        background: transparent;
       }
 
-      /* optional: make each module look like a “label: value” block */
+      #workspaces button {
+        background: @bg;
+        color: @fg;
+        padding: 0 ${toString wsHPadPx}px;
+        margin: 0;
+        min-height: 0;
+      }
+
+      #workspaces button.focused {
+        background: @focus;
+        color: @bg;
+      }
+
+      /* optional: remove hover styling that some themes inject */
+      #workspaces button:hover {
+        background: @focus;
+        color: @bg;
+      }
+
+      /* ----------------------------
+         RHS blocks and separators
+         ---------------------------- */
+
       #network, #custom-bat, #disk, #memory, #clock {
-        padding: 0 ${toString (px (0.35 * fontPx))}px;
+        padding: 0;
+        margin: 0;
+      }
+
+      .modules-right > widget:not(:last-child)::after {
+        content: " |";
+        color: @fg;
+        padding-left: ${toString (px (0.35 * fontPx))}px;
       }
     '';
   };
