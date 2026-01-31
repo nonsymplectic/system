@@ -2,7 +2,7 @@
 {
   wayland.windowManager.sway = {
     enable = true;
-    extraOptions = ["--unsupported-gpu"]
+    extraOptions = ["--unsupported-gpu"];
     wrapperFeatures.gtk = true;
     config = {
       terminal = "foot";
