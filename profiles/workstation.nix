@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   imports = [
-    ../modules/nixos/services/ly.nix # Display Manager
+    ../modules/nixos/services/ly.nix # Display Manager is system level
   ];
 
   # --- Connectivity baseline ---
@@ -15,8 +15,6 @@
     tree
     htop
     git
-    ungoogled-chromium
-    keepassxc
   ];
 
   # --- Define home-manager shared modules
@@ -33,7 +31,9 @@
     sway
   ];
 
+  # Imports for home-manager managed stuff
   home-manager.sharedModules = [
     ../modules/home/wm.nix
+    ../modules/home/apps.nix
   ];
 }
