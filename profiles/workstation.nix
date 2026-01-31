@@ -7,6 +7,13 @@
     ../modules/nixos/core/agenix.nix # Agenix encryption
   ];
 
+  # Imports for home-manager managed stuff
+  home-manager.sharedModules = [
+    ../modules/home/wm.nix
+    ../modules/home/apps.nix
+    ../modules/home/core/git.nix
+  ];
+
   # --- Connectivity baseline ---
   networking.networkmanager.enable = true;
 
@@ -40,10 +47,4 @@
   my.wm.launcher = "wofi";
   my.wm.terminal = "foot";
 
-  # Imports for home-manager managed stuff
-  home-manager.sharedModules = [
-    ../modules/home/wm.nix
-    ../modules/home/apps.nix
-    ../modules/home/core/git.nix
-  ];
 }
