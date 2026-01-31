@@ -17,7 +17,7 @@
     bar = {
       enable = true;
       backend = "waybar";
-      position = "top";
+      position = "bottom";
     };
   };
 }
