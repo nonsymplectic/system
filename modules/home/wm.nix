@@ -10,6 +10,7 @@ in
      Purpose:
        - Declare a WM-agnostic interface under my.wm.*
        - Install WM-adjacent user packages (terminal, launcher)
+       - Dispatch to a bar implementation (optional)
        - Dispatch to a backend implementation (currently: sway)
      ============================================================ */
 
@@ -42,6 +43,33 @@ in
       description = "App launcher used for drun.";
     };
 
+    /* ============================================================
+       Bar
+       ============================================================ */
+
+    bar = {
+      enable = lib.mkEnableOption "bar";
+
+      backend = lib.mkOption {
+        type = lib.types.enum [ "waybar" ];
+        default = "waybar";
+        description = "Bar implementation.";
+      };
+
+      position = lib.mkOption {
+        type = lib.types.enum [ "top" "bottom" "left" "right" ];
+        default = "top";
+        description = "Bar location.";
+      };
+
+      command = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+        readOnly = true;
+        description = "Backend-provided bar launch command.";
+      };
+    };
+
     keybindingOverrides = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       default = { };
@@ -71,6 +99,7 @@ in
      ------------------------------------------------------------
      - Generic WM-adjacent packages derived from abstract choices
      - Wayland portal wiring (backend-agnostic)
+     - Bar dispatch (optional)
      - Backend dispatch
      ============================================================ */
 
@@ -91,6 +120,15 @@ in
       xdg.portal.enable = true;
       xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
     }
+
+    # ------------------------------------------------------------
+    # Bar dispatch (optional)
+    # ------------------------------------------------------------
+    (lib.mkIf cfg.bar.enable (lib.mkMerge [
+      (lib.mkIf (cfg.bar.backend == "waybar")
+        (import ./wm/bars/waybar.nix { inherit config lib pkgs ui; })
+      )
+    ]))
 
     # ------------------------------------------------------------
     # Backend dispatch

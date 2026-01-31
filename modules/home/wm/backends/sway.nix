@@ -19,6 +19,19 @@ let
 
 
   /* ============================================================
+     Bar command (forwarded from bar module)
+     ============================================================ */
+
+  barCmd =
+    if cfg.bar.enable then cfg.bar.command else null;
+
+  barAutostart =
+    lib.optionalString (barCmd != null) ''
+      exec_always pkill -x ${barCmd}; ${barCmd}
+    '';
+
+
+  /* ============================================================
      Client colors
      ------------------------------------------------------------
      Focus styling:
@@ -177,23 +190,28 @@ in
 
     extraOptions = cfg.backendFlags.sway or [ ];
 
-    config = {
-      terminal = cfg.terminal;
-      menu = menuCmd;
+    config = lib.mkMerge [
+      {
+        terminal = cfg.terminal;
+        menu = menuCmd;
 
-      fonts = {
-        names = [ ui.font.family ];
-        size = builtins.toString ui.font.size;
-      };
+        fonts = {
+          names = [ ui.font.family ];
+          size = builtins.toString ui.font.size;
+        };
 
-      colors = clientColors;
+        colors = clientColors;
 
-      # Disable borders entirely.
-      window.border = 0;
+        # Disable borders entirely.
+        window.border = 0;
 
-      keybindings = keybindings;
-    };
+        keybindings = keybindings;
+      }
 
-    extraConfig = cfg.extraConfig;
+      # Disable built-in swaybar when using an external bar.
+      (lib.mkIf cfg.bar.enable { bars = [ ]; })
+    ];
+
+    extraConfig = barAutostart + cfg.extraConfig;
   };
 }
