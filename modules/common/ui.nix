@@ -12,6 +12,47 @@ let
   ansi16 =
     types.addCheck (types.listOf types.str) (xs: builtins.length xs == 16);
 
+  # Named view of ANSI 16-color palette
+  ansi = rec {
+    black = "#241f31";
+    red = "#c01c28";
+    green = "#2ec27e";
+    yellow = "#f5c211";
+    blue = "#1e78e4";
+    magenta = "#9841bb";
+    cyan = "#0ab9dc";
+    white = "#c0bfbc";
+
+    brightBlack = "#5e5c64";
+    brightRed = "#ed333b";
+    brightGreen = "#57e389";
+    brightYellow = "#f8e45c";
+    brightBlue = "#51a1ff";
+    brightMagenta = "#c061cb";
+    brightCyan = "#4fd2fd";
+    brightWhite = "#f6f5f4";
+  };
+
+  ansiPalette = [
+    ansi.black         # black
+    ansi.red           # red
+    ansi.green         # green
+    ansi.yellow        # yellow
+    ansi.blue          # blue
+    ansi.magenta       # magenta
+    ansi.cyan          # cyan
+    ansi.white         # white
+
+    ansi.brightBlack   # bright black
+    ansi.brightRed     # bright red
+    ansi.brightGreen   # bright green
+    ansi.brightYellow  # bright yellow
+    ansi.brightBlue    # bright blue
+    ansi.brightMagenta # bright magenta
+    ansi.brightCyan    # bright cyan
+    ansi.brightWhite   # bright white
+  ];
+
 in
 {
   /* ============================================================
@@ -93,16 +134,20 @@ in
        ============================================================ */
 
     colors = {
-      background = mkOption { type = types.str; default = "#1d1d20"; description = "Background color (hex)."; };
-      foreground = mkOption { type = types.str; default = "#ffffff"; description = "Foreground/text color (hex)."; };
-      primary = mkOption { type = types.str; default = "#1e78e4"; description = "Primary/accent color (hex)."; };
-      secondary = mkOption { type = types.str; default = "#9841bb"; description = "Secondary accent color (hex)."; };
-      muted = mkOption { type = types.str; default = "#5e5c64"; description = "Muted/disabled color (hex)."; };
-      border = mkOption { type = types.str; default = "#241f31"; description = "Border/outline color (hex)."; };
-      focus = mkOption { type = types.str; default = "#1e78e4"; description = "Focus/active indicator color (hex)."; };
-      error = mkOption { type = types.str; default = "#c01c28"; description = "Error color (hex)."; };
-      warning = mkOption { type = types.str; default = "#f5c211"; description = "Warning color (hex)."; };
-      success = mkOption { type = types.str; default = "#2ec27e"; description = "Success color (hex)."; };
+      # Reference ANSI slots (by name) for UI background/foreground.
+      # This keeps terminal + UI aligned and avoids duplicate sources of truth.
+      background = mkOption { type = types.str; default = ansi.black; description = "Background color (hex)."; };
+      foreground = mkOption { type = types.str; default = ansi.brightWhite; description = "Foreground/text color (hex)."; };
+
+      # Semantic roles (still ANSI-derived).
+      primary = mkOption { type = types.str; default = ansi.green; description = "Primary/accent color (hex)."; };
+      secondary = mkOption { type = types.str; default = ansi.yellow; description = "Secondary accent color (hex)."; };
+      muted = mkOption { type = types.str; default = ansi.brightBlack; description = "Muted/disabled color (hex)."; };
+      border = mkOption { type = types.str; default = ansi.brightBlack; description = "Border/outline color (hex)."; };
+      focus = mkOption { type = types.str; default = ansi.blue; description = "Focus/active indicator color (hex)."; };
+      error = mkOption { type = types.str; default = ansi.red; description = "Error color (hex)."; };
+      warning = mkOption { type = types.str; default = ansi.yellow; description = "Warning color (hex)."; };
+      success = mkOption { type = types.str; default = ansi.green; description = "Success color (hex)."; };
     };
 
 
@@ -116,31 +161,14 @@ in
        ============================================================ */
 
     terminal = {
-      background = mkOption { type = types.str; default = "#1d1d20"; description = "Terminal background (hex)."; };
-      foreground = mkOption { type = types.str; default = "#ffffff"; description = "Terminal foreground (hex)."; };
-      cursor = mkOption { type = types.str; default = "#ffffff"; description = "Terminal cursor color (hex)."; };
+      # Reference ANSI slots (by name) for terminal background/foreground/cursor.
+      background = mkOption { type = types.str; default = ansi.black; description = "Terminal background (hex)."; };
+      foreground = mkOption { type = types.str; default = ansi.brightWhite; description = "Terminal foreground (hex)."; };
+      cursor = mkOption { type = types.str; default = ansi.brightWhite; description = "Terminal cursor color (hex)."; };
 
       palette = mkOption {
         type = ansi16;
-        default = [
-          "#241f31" # 0  black
-          "#c01c28" # 1  red
-          "#2ec27e" # 2  green
-          "#f5c211" # 3  yellow
-          "#1e78e4" # 4  blue
-          "#9841bb" # 5  magenta
-          "#0ab9dc" # 6  cyan
-          "#c0bfbc" # 7  white
-
-          "#5e5c64" # 8  bright black
-          "#ed333b" # 9  bright red
-          "#57e389" # 10 bright green
-          "#f8e45c" # 11 bright yellow
-          "#51a1ff" # 12 bright blue
-          "#c061cb" # 13 bright magenta
-          "#4fd2fd" # 14 bright cyan
-          "#f6f5f4" # 15 bright white
-        ];
+        default = ansiPalette;
         description = ''
           Terminal ANSI palette (16 colors), in canonical order.
         '';

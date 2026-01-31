@@ -202,9 +202,6 @@ in
 
         colors = clientColors;
 
-        # Disable borders entirely.
-        window.border = 0;
-
         keybindings = keybindings;
       }
 
