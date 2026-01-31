@@ -13,9 +13,16 @@
     vim
     wget
     git
+    ungoogled-chromium
   ];
 
   # --- Define home-manager shared modules
+  # Make HM-provided desktop files and portal descriptors visible system-wide
+  environment.pathsToLink = [
+    "/share/applications"
+    "/share/xdg-desktop-portal"
+  ];
+
   home-manager.sharedModules = [
     ../modules/home/wm.nix
   ];
