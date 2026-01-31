@@ -10,16 +10,24 @@ in
      Purpose:
        - Declare a WM-agnostic interface under my.wm.*
        - Install WM-adjacent user packages (terminal, launcher)
-       - Dispatch to a bar implementation (optional)
-       - Dispatch to a backend implementation (currently: sway)
+       - Import backend + bar implementations (self-gated via mkIf)
      ============================================================ */
 
 
   /* ============================================================
-     Module options (WM-agnostic interface)
+     Module imports
      ------------------------------------------------------------
-     These options live in the Home Manager option tree.
-     They must be set from within HM scope (e.g. via sharedModules).
+     Backends / bars must gate themselves via cfg.backend / cfg.bar.*
+     ============================================================ */
+
+  imports = [
+    ./wm/backends/sway.nix
+    ./wm/bars/waybar.nix
+  ];
+
+
+  /* ============================================================
+     Module options (WM-agnostic interface)
      ============================================================ */
 
   options.my.wm = {
@@ -66,7 +74,7 @@ in
         type = lib.types.nullOr lib.types.str;
         default = null;
         readOnly = true;
-        description = "Backend-provided bar launch command.";
+        description = "Bar launch command provided by the selected bar module.";
       };
     };
 
@@ -97,44 +105,24 @@ in
   /* ============================================================
      Configuration (enabled only)
      ------------------------------------------------------------
-     - Generic WM-adjacent packages derived from abstract choices
-     - Wayland portal wiring (backend-agnostic)
-     - Bar dispatch (optional)
-     - Backend dispatch
+     Backend/bar implementations are imported unconditionally and
+     must be self-gated; this module only provides common wiring.
      ============================================================ */
 
-  config = lib.mkIf cfg.enable (lib.mkMerge [
-    {
-      # ----------------------------------------------------------
-      # User packages: terminal + launcher (abstract selection)
-      # ----------------------------------------------------------
-      home.packages =
-        lib.optionals (cfg.terminal == "foot") [ pkgs.foot ] ++
-        lib.optionals (cfg.launcher == "wofi") [ pkgs.wofi ] ++
-        lib.optionals (cfg.launcher == "fuzzel") [ pkgs.fuzzel ] ++
-        lib.optionals (cfg.launcher == "bemenu") [ pkgs.bemenu ];
+  config = lib.mkIf cfg.enable {
+    # ----------------------------------------------------------
+    # User packages: terminal + launcher (abstract selection)
+    # ----------------------------------------------------------
+    home.packages =
+      lib.optionals (cfg.terminal == "foot") [ pkgs.foot ] ++
+      lib.optionals (cfg.launcher == "wofi") [ pkgs.wofi ] ++
+      lib.optionals (cfg.launcher == "fuzzel") [ pkgs.fuzzel ] ++
+      lib.optionals (cfg.launcher == "bemenu") [ pkgs.bemenu ];
 
-      # ----------------------------------------------------------
-      # Wayland portals (required for many desktop integrations)
-      # ----------------------------------------------------------
-      xdg.portal.enable = true;
-      xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
-    }
-
-    # ------------------------------------------------------------
-    # Bar dispatch (optional)
-    # ------------------------------------------------------------
-    (lib.mkIf cfg.bar.enable (lib.mkMerge [
-      (lib.mkIf (cfg.bar.backend == "waybar")
-        (import ./wm/bars/waybar.nix { inherit config lib pkgs ui; })
-      )
-    ]))
-
-    # ------------------------------------------------------------
-    # Backend dispatch
-    # ------------------------------------------------------------
-    (lib.mkIf (cfg.backend == "sway")
-      (import ./wm/backends/sway.nix { inherit config lib pkgs ui; })
-    )
-  ]);
+    # ----------------------------------------------------------
+    # Wayland portals (required for many desktop integrations)
+    # ----------------------------------------------------------
+    xdg.portal.enable = true;
+    xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
+  };
 }
