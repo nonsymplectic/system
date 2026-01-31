@@ -42,6 +42,9 @@
     # User-level applications
     ../modules/home/apps.nix
 
+    # Core developer-facing CLI tools
+    ../modules/home/core/devtools.nix
+
     # Git configuration
     ../modules/home/core/git.nix
   ];
