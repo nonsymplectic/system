@@ -13,6 +13,7 @@
     vim
     wget
     tree
+    htop
     git
     ungoogled-chromium
   ];
