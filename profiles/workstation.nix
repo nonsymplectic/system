@@ -14,4 +14,9 @@
     wget
     git
   ];
+
+  # --- Define home-manager shared modules
+  home-manager.sharedModules = [
+    ../modules/home/wm.nix
+  ];
 }
