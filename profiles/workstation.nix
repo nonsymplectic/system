@@ -19,6 +19,9 @@
     # Host-defined UI token surface (my.ui)
     ../modules/common/ui.nix
 
+    # Font resources
+    ../modules/nixos/ui/fonts.nix
+
     # Declares primaryUser plumbing
     ../modules/nixos/core/primary-user.nix
 
