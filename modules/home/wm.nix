@@ -4,7 +4,7 @@
     enable = true;
     wrapperFeatures.gtk = true;
     config = {
-      terminal = "foot"
+      terminal = "foot";
       menu = "wofi --show drun";
     };
   };
