@@ -12,7 +12,7 @@ let
     "Mod4+Return"  = "exec ${cfg.terminal}";
     "Mod4+d"       = "exec ${menuCmd}";
     "Mod4+Shift+e" = "exec swaymsg exit";
-    "Mod4+Shift+q" = "kill"
+    "Mod4+Shift+q" = "kill";
   };
 
   keybindings = baseKeybindings // cfg.keybindingOverrides;
