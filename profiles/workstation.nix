@@ -1,5 +1,6 @@
 { pkgs, ... }:
 {
+  # system wide imports
   imports = [
     ../modules/nixos/core/primary-user.nix # Defines my.primaryUser
     ../modules/nixos/services/ly.nix # Display Manager is system level
