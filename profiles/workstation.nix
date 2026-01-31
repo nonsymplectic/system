@@ -34,6 +34,12 @@
     sway
   ];
 
+  # WM module configuration
+  my.wm.enable = true;
+  my.wm.backend = "sway";
+  my.wm.launcher = "wofi";
+  my.wm.terminal = "foot";
+
   # Imports for home-manager managed stuff
   home-manager.sharedModules = [
     ../modules/home/wm.nix

@@ -1,31 +1,56 @@
-{ pkgs, config, ... }:
-{
-  # Make user-installed .desktop files discoverable by drun launchers (wofi, etc.)
-  home.sessionVariables.XDG_DATA_DIRS =
-    "${config.home.profileDirectory}/share"
-    + ":/etc/profiles/per-user/${config.home.username}/share"
-    + ":/run/current-system/sw/share";
+{ config, lib, pkgs, ... }:
 
-  wayland.windowManager.sway = {
-    enable = true;
-    extraOptions = [ "--unsupported-gpu" ];
-    wrapperFeatures.gtk = true;
-    config = {
-      terminal = "foot";
-      menu = "wofi --show drun";
+let
+  cfg = config.my.wm;
+  ui  = config.my.ui;
+
+  swayBackend = import ./wm/backends/sway.nix { inherit config lib pkgs ui cfg; };
+in
+{
+  options.my.wm = {
+    enable = lib.mkEnableOption "window manager";
+
+    backend = lib.mkOption {
+      type = lib.types.enum [ "sway" ];
+      default = "sway";
+    };
+
+    terminal = lib.mkOption {
+      type = lib.types.str;
+      default = "foot";
+    };
+
+    launcher = lib.mkOption {
+      type = lib.types.enum [ "wofi" "fuzzel" "bemenu" ];
+      default = "wofi";
+    };
+
+    extraKeybindings = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = {};
+    };
+
+    extraSwayConfig = lib.mkOption {
+      type = lib.types.lines;
+      default = "";
     };
   };
 
-  home.packages = with pkgs; [
-    foot
-    wofi
-    swaybg
-    wl-clipboard
-    grim
-    slurp
-  ];
+  config = lib.mkIf cfg.enable (lib.mkMerge [
+    (lib.mkIf (cfg.backend == "sway") swayBackend)
 
-  xdg.portal.enable = true;
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
+    {
+      # launcher pkgs, terminal pkgs, generic WM tooling
+      home.packages =
+        (with pkgs; [ ]) ++
+        (lib.optionals (cfg.terminal == "foot") [ pkgs.foot ]) ++
+        (lib.optionals (cfg.launcher == "wofi") [ pkgs.wofi ]) ++
+        (lib.optionals (cfg.launcher == "fuzzel") [ pkgs.fuzzel ]) ++
+        (lib.optionals (cfg.launcher == "bemenu") [ pkgs.bemenu ]);
+
+      # portals are still WM-adjacent and belong here
+      xdg.portal.enable = true;
+      xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
+    }
+  ]);
 }
-
