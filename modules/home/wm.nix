@@ -72,8 +72,7 @@ in
 
       command = lib.mkOption {
         type = lib.types.nullOr lib.types.str;
-        default = null;
-        readOnly = true;
+        default = "waybar";
         description = "Bar launch command provided by the selected bar module.";
       };
     };
