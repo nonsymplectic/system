@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, ui, ... }:
 
 let
   cfg = config.my.wm;
@@ -53,6 +53,16 @@ in
       default = "";
       description = "Backend-native config appended to the generated config.";
     };
+
+    backendFlags = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.listOf lib.types.str);
+      default = { };
+      example = { sway = [ "--unsupported-gpu" ]; };
+      description = ''
+        Extra CLI flags passed to the selected WM backend.
+        Keys are backend names, values are lists of flags.
+      '';
+    };
   };
 
 
@@ -86,7 +96,7 @@ in
     # Backend dispatch
     # ------------------------------------------------------------
     (lib.mkIf (cfg.backend == "sway")
-      (import ./wm/backends/sway.nix { inherit config lib pkgs; })
+      (import ./wm/backends/sway.nix { inherit config lib pkgs ui; })
     )
   ]);
 }

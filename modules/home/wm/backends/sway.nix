@@ -1,4 +1,4 @@
-{ config, lib, pkgs }:
+{ config, lib, pkgs, ui }:
 
 let
   cfg = config.my.wm;
@@ -9,6 +9,7 @@ let
      Purpose:
        - Provide backend-specific defaults for sway
        - Interpret my.wm.* abstract options (terminal, launcher)
+       - Apply UI tokens (fonts + client colors)
        - Merge user overrides (keybindingOverrides, extraConfig)
      ============================================================ */
 
@@ -21,6 +22,55 @@ let
     if cfg.launcher == "wofi" then "wofi --show drun"
     else if cfg.launcher == "fuzzel" then "fuzzel"
     else "bemenu-run";
+
+
+  /* ============================================================
+     Client colors
+     ------------------------------------------------------------
+     Window decoration colors derived from semantic UI tokens.
+     ============================================================ */
+
+  clientColors = {
+    focused = {
+      border = ui.colors.focus;
+      indicator = ui.colors.focus;
+      childBorder = ui.colors.focus;
+      background = ui.colors.background;
+      text = ui.colors.foreground;
+    };
+
+    focusedInactive = {
+      border = ui.colors.border;
+      childBorder = ui.colors.border;
+      indicator = ui.colors.muted;
+      background = ui.colors.background;
+      text = ui.colors.foreground;
+    };
+
+    unfocused = {
+      border = ui.colors.border;
+      childBorder = ui.colors.border;
+      indicator = ui.colors.muted;
+      background = ui.colors.background;
+      text = ui.colors.foreground;
+    };
+
+    urgent = {
+      border = ui.colors.error;
+      indicator = ui.colors.error;
+      childBorder = ui.colors.error;
+      background = ui.colors.background;
+      text = ui.colors.foreground;
+    };
+
+    placeholder = {
+      border = ui.colors.muted;
+      indicator = ui.colors.muted;
+      childBorder = ui.colors.muted;
+      background = ui.colors.background;
+      text = ui.colors.foreground;
+    };
+  };
 
 
   /* ============================================================
@@ -133,8 +183,18 @@ in
       terminal = cfg.terminal;
       menu = menuCmd;
 
+      fonts = {
+        names = [ ui.font.family ];
+        size = builtins.toString ui.font.size;
+      };
+
+      colors = clientColors;
+
       keybindings = keybindings;
     };
+
+    # Set extra flags
+    extraOptions = cfg.backendFlags.sway or [ ];
 
     # Backend-native config append hook (from WM-agnostic interface)
     extraConfig = cfg.extraConfig;

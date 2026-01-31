@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 
 {
   /* ============================================================
@@ -42,4 +42,35 @@
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  /* ============================================================
+     UI tokens (policy)
+     ------------------------------------------------------------
+     Host-level overrides for UI tokens.
+     ============================================================ */
+
+  # my.ui = {
+  #   font = {
+  #     # Primary UI font size
+  #     size = 11;
+  #   };
+  #
+  #   monoFont = {
+  #     # Monospace font size (terminal, code-heavy UI)
+  #     size = 11;
+  #   };
+  # };
+
+
+  /* ============================================================
+     Window manager backend flags (policy)
+     ------------------------------------------------------------
+     Extra CLI flags passed to the selected WM backend.
+     Keys correspond to backend names.
+     ============================================================ */
+
+  # sway needs this flag because of nvidia drivers
+  home-manager.users.${config.my.primaryUser}.my.wm.backendFlags.sway = [
+    "--unsupported-gpu"
+  ];
 }
