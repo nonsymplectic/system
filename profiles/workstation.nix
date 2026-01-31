@@ -13,7 +13,6 @@
     vim
     wget
     git
-    sway # needed for Display managers to properly discover the .desktop entry
     ungoogled-chromium
   ];
 
@@ -24,6 +23,11 @@
     "/share/xdg-desktop-portal"
     "/share/wayland-sessions"
     "/share/xsessions"
+  ];
+
+  # Add WMs to sessionPackages
+  services.displayManager.sessionPackages = with pkgs; [
+    sway
   ];
 
   home-manager.sharedModules = [
