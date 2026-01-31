@@ -1,7 +1,9 @@
 { pkgs, ... }:
 {
   imports = [
+    ../modules/nixos/core/primary-user.nix # Defines my.primaryUser
     ../modules/nixos/services/ly.nix # Display Manager is system level
+    ../modules/nixos/core/agenix.nix # Agenix encryption
   ];
 
   # --- Connectivity baseline ---
@@ -35,5 +37,6 @@
   home-manager.sharedModules = [
     ../modules/home/wm.nix
     ../modules/home/apps.nix
+    ../modules/homes/core/git.nix
   ];
 }

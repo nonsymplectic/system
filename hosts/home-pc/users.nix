@@ -1,5 +1,8 @@
 { ... }:
 {
+  # Used for agenix encyption, git ssh, etc.
+  my.primaryUser = "michal";
+
   users.users.michal = {
       isNormalUser = true;
       extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
