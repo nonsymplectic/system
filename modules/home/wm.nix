@@ -1,8 +1,14 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
+  # Make user-installed .desktop files discoverable by drun launchers (wofi, etc.)
+  home.sessionVariables.XDG_DATA_DIRS =
+    "${config.home.profileDirectory}/share"
+    + ":/etc/profiles/per-user/${config.home.username}/share"
+    + ":/run/current-system/sw/share";
+
   wayland.windowManager.sway = {
     enable = true;
-    extraOptions = ["--unsupported-gpu"];
+    extraOptions = [ "--unsupported-gpu" ];
     wrapperFeatures.gtk = true;
     config = {
       terminal = "foot";
@@ -22,3 +28,4 @@
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
 }
+
