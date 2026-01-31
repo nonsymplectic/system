@@ -1,26 +1,66 @@
 { pkgs, ... }:
+
 {
-  # system wide imports
+  /* ============================================================
+     Workstation profile (NixOS layer)
+     ------------------------------------------------------------
+     Role profile for a workstation-like machine.
+     - System-level imports (users, DM, secrets)
+     - Home Manager module wiring (user environment)
+     - Minimal system baseline (net + session packages)
+     ============================================================ */
+
+
+  /* ============================================================
+     NixOS module imports
+     ============================================================ */
+
   imports = [
-    ../modules/nixos/core/primary-user.nix # Defines my.primaryUser, useful for home directories etc
-    ../modules/nixos/services/ly.nix # Display Manager is system level
-    ../modules/nixos/core/agenix.nix # Agenix encryption
+    # Declares primaryUser plumbing
+    ../modules/nixos/core/primary-user.nix
+
+    # Display manager is system-level
+    ../modules/nixos/services/ly.nix
+
+    # Secrets management (agenix)
+    ../modules/nixos/core/agenix.nix
   ];
 
-  # Imports for home-manager managed stuff
+
+  /* ============================================================
+     Home Manager wiring
+     ------------------------------------------------------------
+     Only wires HM modules from the NixOS layer.
+     All my.* options must be set inside HM scope (via HM modules).
+     ============================================================ */
+
   home-manager.sharedModules = [
-    ../modules/home/wm.nix # wm backend
-    ../profiles/home/workstation.nix # wm policy
+    # WM implementation + policy (HM scope)
+    ../modules/home/wm.nix
+    ../profiles/home/workstation.nix
 
-    ../modules/home/apps.nix # user-level applications
+    # User-level applications
+    ../modules/home/apps.nix
 
-    ../modules/home/core/git.nix # git config
+    # Git configuration
+    ../modules/home/core/git.nix
   ];
 
-  # --- Connectivity baseline ---
+
+  /* ============================================================
+     Networking baseline
+     ============================================================ */
+
   networking.networkmanager.enable = true;
 
-  # --- Minimal system packages (available to all users) ---
+
+  /* ============================================================
+     Minimal system packages
+     ------------------------------------------------------------
+     System-level tools available to all users.
+     User applications should go through Home Manager.
+     ============================================================ */
+
   environment.systemPackages = with pkgs; [
     nix-search
     vim
@@ -31,13 +71,26 @@
   ];
 
 
-  # Home Manager (useUserPackages) requires these paths to expose portal and DE configs
+  /* ============================================================
+     XDG / portal integration
+     ------------------------------------------------------------
+     Required by Home Manager NixOS module when useUserPackages=true
+     and xdg.portal is enabled in HM. Links portal + desktop configs
+     into the system profile for discovery.
+     ============================================================ */
+
   environment.pathsToLink = [
     "/share/applications"
     "/share/xdg-desktop-portal"
   ];
 
-  # Add WMs to sessionPackages
+
+  /* ============================================================
+     Display manager sessions
+     ------------------------------------------------------------
+     Ensure the WM is available as a login session.
+     ============================================================ */
+
   services.displayManager.sessionPackages = with pkgs; [
     sway
   ];
