@@ -30,6 +30,13 @@
     git
   ];
 
+
+  # Home Manager (useUserPackages) requires these paths to expose portal and DE configs
+  environment.pathsToLink = [
+    "/share/applications"
+    "/share/xdg-desktop-portal"
+  ];
+
   # Add WMs to sessionPackages
   services.displayManager.sessionPackages = with pkgs; [
     sway
