@@ -16,6 +16,7 @@
     htop
     git
     ungoogled-chromium
+    keepassxc
   ];
 
   # --- Define home-manager shared modules
