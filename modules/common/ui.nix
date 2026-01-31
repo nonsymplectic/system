@@ -65,7 +65,7 @@ in
 
       size = mkOption {
         type = types.int;
-        default = 18;
+        default = 16;
         description = "Primary UI font size (pt).";
       };
     };
@@ -79,7 +79,7 @@ in
 
       size = mkOption {
         type = types.int;
-        default = 18;
+        default = 16;
         description = "Monospace UI font size (pt).";
       };
     };
