@@ -12,6 +12,7 @@
     nix-search
     vim
     wget
+    tree
     git
     ungoogled-chromium
   ];
