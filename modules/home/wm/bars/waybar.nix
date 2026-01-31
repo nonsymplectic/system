@@ -26,9 +26,6 @@ let
   # Workspace buttons: thin, full bar height (vertical padding 0)
   wsHPadPx  = px (0.55 * fontPx);
 
-  # Separator spacing
-  sepPadPx  = px (0.35 * fontPx);
-
   # ---- battery: hidden if absent ----
   batScript = pkgs.writeShellScript "waybar-bat" ''
     set -eu
@@ -62,7 +59,6 @@ in
         "clock"
       ];
 
-      # NET: WIFI | ETH | --
       network = {
         interval = 2;
         format-wifi = "NET: WIFI";
@@ -73,7 +69,6 @@ in
         tooltip-format-disconnected = "disconnected";
       };
 
-      # BAT: xx% (hidden if no battery)
       "custom/bat" = {
         exec = "${batScript}";
         interval = 30;
@@ -82,7 +77,6 @@ in
         tooltip = false;
       };
 
-      # /: used/total
       disk = {
         interval = 60;
         path = "/";
@@ -90,14 +84,12 @@ in
         tooltip = false;
       };
 
-      # MEM: used/total
       memory = {
         interval = 2;
         format = "MEM: {used}/{total}";
         tooltip = false;
       };
 
-      # Sat 2026-01-31 22:30
       clock = {
         interval = 30;
         format = "{:%a %F %H:%M}";
@@ -129,22 +121,15 @@ in
         padding: ${toString vPadPx}px ${toString hPadPx}px;
       }
 
-      /* ----------------------------
-         Workspaces (thin, full-height)
-         ---------------------------- */
-
+      /* Workspaces: thin, full-height buttons */
       #workspaces {
         background: transparent;
-        padding: 0;
-        margin: 0;
       }
 
       #workspaces button {
         background: @bg;
         color: @fg;
         padding: 0 ${toString wsHPadPx}px;
-        margin: 0;
-        min-height: 0;
       }
 
       #workspaces button.focused {
@@ -152,28 +137,16 @@ in
         color: @bg;
       }
 
+      /* optional: keep hover consistent with focused */
       #workspaces button:hover {
         background: @focus;
         color: @bg;
       }
 
-      /* ----------------------------
-         RHS blocks + '|' separators
-         (robust: attach to known module ids)
-         ---------------------------- */
-
+      /* RHS modules: keep them visually “flat” */
       #network, #custom-bat, #disk, #memory, #clock {
         padding: 0;
         margin: 0;
-      }
-
-      #network::after,
-      #custom-bat::after,
-      #disk::after,
-      #memory::after {
-        content: " |";
-        color: @fg;
-        padding-left: ${toString sepPadPx}px;
       }
     '';
   };
