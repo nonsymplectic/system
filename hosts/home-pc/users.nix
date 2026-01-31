@@ -4,9 +4,9 @@
   my.primaryUser = "michal";
 
   users.users.michal = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-    };
+    isNormalUser = true;
+    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+  };
 
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;

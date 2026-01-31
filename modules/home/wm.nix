@@ -44,7 +44,7 @@ in
 
     keybindingOverrides = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
-      default = {};
+      default = { };
       description = "Backend-native keybinding overrides.";
     };
 

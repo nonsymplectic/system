@@ -13,11 +13,11 @@ in
   ];
 
   age.secrets.github_ssh_key = {
-    file  = ../../../secrets/github_id_ed25519_github.age;
+    file = ../../../secrets/github_id_ed25519_github.age;
     owner = user;
     inherit group;
-    mode  = "0600";
-    path  = "${home}/.ssh/id_ed25519_github";
+    mode = "0600";
+    path = "${home}/.ssh/id_ed25519_github";
   };
 }
 

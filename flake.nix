@@ -12,30 +12,30 @@
   };
 
   outputs = inputs@{ self, nixpkgs, ... }:
-  let
-    mkHost = import ./lib/mkHost.nix { inherit inputs; };
+    let
+      mkHost = import ./lib/mkHost.nix { inherit inputs; };
 
-    # Flake-global baseline (nix tooling + stateVersion)
-    baselineModule = { ... }: {
-      nix.settings.experimental-features = [ "nix-command" "flakes" ];
-      system.stateVersion = "25.11";
-    };
-  in
-  {
-    lib.mkHost = mkHost;
-
-    nixosConfigurations = {
-      home-pc = mkHost {
-        system = "x86_64-linux";
-        baselineModule = baselineModule;
-        modules = [ ./hosts/home-pc ];
+      # Flake-global baseline (nix tooling + stateVersion)
+      baselineModule = { ... }: {
+        nix.settings.experimental-features = [ "nix-command" "flakes" ];
+        system.stateVersion = "25.11";
       };
+    in
+    {
+      lib.mkHost = mkHost;
 
-      laptop = mkHost {
-        system = "x86_64-linux";
-        baselineModule = baselineModule;
-        modules = [ ./hosts/laptop ];
+      nixosConfigurations = {
+        home-pc = mkHost {
+          system = "x86_64-linux";
+          baselineModule = baselineModule;
+          modules = [ ./hosts/home-pc ];
+        };
+
+        laptop = mkHost {
+          system = "x86_64-linux";
+          baselineModule = baselineModule;
+          modules = [ ./hosts/laptop ];
+        };
       };
     };
-  };
 }
