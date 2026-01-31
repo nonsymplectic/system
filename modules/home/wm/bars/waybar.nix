@@ -55,7 +55,7 @@ in
       ];
 
       network = {
-        interval = 2;
+        interval = 45;
         format-wifi = "NET: WIFI |";
         format-ethernet = "NET: ETH |";
         format-disconnected = "NET: -- |";
@@ -66,7 +66,7 @@ in
 
       "custom/bat" = {
         exec = "${batScript}";
-        interval = 30;
+        interval = 45;
         return-type = "plain";
         hide-empty-text = true;
         tooltip = false;
@@ -74,7 +74,7 @@ in
 
       # /: 2.65/15.55GiB |
       disk = {
-        interval = 60;
+        interval = 90;
         path = "/";
         unit = "GiB";
         format = "/: {specific_used:0.2f}/{specific_total:0.2f}GiB |";
@@ -83,14 +83,14 @@ in
 
       # MEM: 2.65/15.55GiB |
       memory = {
-        interval = 2;
+        interval = 45;
         format = "MEM: {used:0.2f}/{total:0.2f}GiB |";
         tooltip = false;
       };
 
       # Sat 2026-01-31 22:30
       clock = {
-        interval = 30;
+        interval = 45;
         format = "{:%a %F %H:%M}";
         tooltip = false;
       };
