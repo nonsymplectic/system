@@ -47,7 +47,7 @@ in
     [colors]
     foreground=${termFg}
     background=${termBg}
-    cursor=${termCursor}
+    cursor=${termBg} ${termCursor}
 
     regular0=${p 0}
     regular1=${p 1}
