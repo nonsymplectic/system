@@ -26,14 +26,14 @@ let
   # Workspace buttons: thin, full bar height (vertical padding 0)
   wsHPadPx  = px (0.55 * fontPx);
 
-  # ---- battery: hidden if absent ----
+  # ---- battery: hidden if absent; includes trailing separator ----
   batScript = pkgs.writeShellScript "waybar-bat" ''
     set -eu
     bat="$(ls -d /sys/class/power_supply/BAT* 2>/dev/null | head -n1 || true)"
     [ -n "$bat" ] || exit 0
     cap="$(cat "$bat/capacity" 2>/dev/null || true)"
     [ -n "$cap" ] || exit 0
-    printf 'BAT: %s%%\n' "$cap"
+    printf 'BAT: %s%% |\n' "$cap"
   '';
 in
 {
@@ -59,16 +59,18 @@ in
         "clock"
       ];
 
+      # NET: WIFI | / NET: ETH | / NET: -- |
       network = {
         interval = 2;
-        format-wifi = "NET: WIFI";
-        format-ethernet = "NET: ETH";
-        format-disconnected = "NET: --";
+        format-wifi = "NET: WIFI |";
+        format-ethernet = "NET: ETH |";
+        format-disconnected = "NET: -- |";
         tooltip-format-wifi = "{essid} ({signalStrength}%)\n{ipaddr}";
         tooltip-format-ethernet = "{ifname}\n{ipaddr}";
         tooltip-format-disconnected = "disconnected";
       };
 
+      # BAT: xx% | (hidden if no battery)
       "custom/bat" = {
         exec = "${batScript}";
         interval = 30;
@@ -77,19 +79,22 @@ in
         tooltip = false;
       };
 
+      # /: used/total |
       disk = {
         interval = 60;
         path = "/";
-        format = "/: {used}/{total}";
+        format = "/: {used}/{total} |";
         tooltip = false;
       };
 
+      # MEM: used/total |
       memory = {
         interval = 2;
-        format = "MEM: {used}/{total}";
+        format = "MEM: {used}/{total} |";
         tooltip = false;
       };
 
+      # Sat 2026-01-31 22:30  (no trailing separator)
       clock = {
         interval = 30;
         format = "{:%a %F %H:%M}";
@@ -121,7 +126,11 @@ in
         padding: ${toString vPadPx}px ${toString hPadPx}px;
       }
 
-      /* Workspaces: thin, full-height buttons */
+      /* ----------------------------
+         Workspaces: thin, full-height
+         focused: fg=bg, bg=focus
+         ---------------------------- */
+
       #workspaces {
         background: transparent;
       }
@@ -130,6 +139,8 @@ in
         background: @bg;
         color: @fg;
         padding: 0 ${toString wsHPadPx}px;
+        margin: 0;
+        min-height: 0;
       }
 
       #workspaces button.focused {
@@ -137,13 +148,12 @@ in
         color: @bg;
       }
 
-      /* optional: keep hover consistent with focused */
       #workspaces button:hover {
         background: @focus;
         color: @bg;
       }
 
-      /* RHS modules: keep them visually “flat” */
+      /* RHS modules: flat */
       #network, #custom-bat, #disk, #memory, #clock {
         padding: 0;
         margin: 0;
