@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 
 {
   /* ============================================================
@@ -16,6 +16,9 @@
      ============================================================ */
 
   imports = [
+    # Host-defined UI token surface (my.ui)
+    ../modules/common/ui.nix
+
     # Declares primaryUser plumbing
     ../modules/nixos/core/primary-user.nix
 
@@ -33,6 +36,10 @@
      Only wires HM modules from the NixOS layer.
      All my.* options must be set inside HM scope (via HM modules).
      ============================================================ */
+  home-manager.extraSpecialArgs = {
+    # Pass host-defined UI tokens into Home Manager scope.
+    ui = config.my.ui;
+  };
 
   home-manager.sharedModules = [
     # WM implementation + policy (HM scope)
