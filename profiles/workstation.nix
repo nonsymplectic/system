@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  imports = [
+    ../modules/nixos/services/ly.nix # Display Manager
+  ];
+
   # --- Connectivity baseline ---
   networking.networkmanager.enable = true;
 
@@ -10,5 +14,4 @@
     wget
     git
   ];
-
 }

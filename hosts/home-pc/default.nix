@@ -5,7 +5,7 @@
     ./hardware.nix
     ./users.nix
     ./swap.nix
-    ../../profiles/minimal.nix
+    ../../profiles/workstation.nix
   ];
 
   networking.hostName = "nixos";
