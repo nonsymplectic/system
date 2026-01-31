@@ -21,6 +21,8 @@
   environment.pathsToLink = [
     "/share/applications"
     "/share/xdg-desktop-portal"
+    "/share/wayland-sessions"
+    "/share/xsessions"
   ];
 
   home-manager.sharedModules = [
