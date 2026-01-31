@@ -52,6 +52,9 @@
     # Core developer-facing CLI tools
     ../modules/home/core/devtools.nix
 
+    # Terminal emulator (foot)
+    ../modules/home/core/foot.nix
+
     # Git configuration
     ../modules/home/core/git.nix
   ];
