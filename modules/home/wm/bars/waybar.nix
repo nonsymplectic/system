@@ -5,7 +5,7 @@ let
 
   stripHash = s: lib.removePrefix "#" s;
 
-  # Token colors (expected to be like "#rrggbb" or "rrggbb"; we normalize)
+  # Token colors (accept "#rrggbb" or "rrggbb")
   bg = stripHash ui.colors.background;
   fg = stripHash ui.colors.foreground;
   focus = stripHash ui.colors.focus;
@@ -19,13 +19,17 @@ let
   fontPx    = px (ui.monoFont.size * s);
   heightPx  = px (1.8 * fontPx);
   spacingPx = px (0.55 * fontPx);
+
   vPadPx    = px (0.20 * fontPx);
   hPadPx    = px (0.45 * fontPx);
 
-  # Workspace button horizontal padding (thin buttons)
+  # Workspace buttons: thin, full bar height (vertical padding 0)
   wsHPadPx  = px (0.55 * fontPx);
 
-  # ---- battery that hides when absent ----
+  # Separator spacing
+  sepPadPx  = px (0.35 * fontPx);
+
+  # ---- battery: hidden if absent ----
   batScript = pkgs.writeShellScript "waybar-bat" ''
     set -eu
     bat="$(ls -d /sys/class/power_supply/BAT* 2>/dev/null | head -n1 || true)"
@@ -36,10 +40,6 @@ let
   '';
 in
 {
-  /* ============================================================
-     Waybar
-     ============================================================ */
-
   config = lib.mkIf (cfg.enable && cfg.bar.enable && cfg.bar.backend == "waybar") {
     my.wm.bar.command = "waybar";
 
@@ -62,7 +62,7 @@ in
         "clock"
       ];
 
-      # --- NET ---
+      # NET: WIFI | ETH | --
       network = {
         interval = 2;
         format-wifi = "NET: WIFI";
@@ -73,7 +73,7 @@ in
         tooltip-format-disconnected = "disconnected";
       };
 
-      # --- BAT (hidden if no battery) ---
+      # BAT: xx% (hidden if no battery)
       "custom/bat" = {
         exec = "${batScript}";
         interval = 30;
@@ -82,7 +82,7 @@ in
         tooltip = false;
       };
 
-      # --- /: used/total ---
+      # /: used/total
       disk = {
         interval = 60;
         path = "/";
@@ -90,14 +90,14 @@ in
         tooltip = false;
       };
 
-      # --- MEM: used/total ---
+      # MEM: used/total
       memory = {
         interval = 2;
         format = "MEM: {used}/{total}";
         tooltip = false;
       };
 
-      # --- clock ---
+      # Sat 2026-01-31 22:30
       clock = {
         interval = 30;
         format = "{:%a %F %H:%M}";
@@ -115,6 +115,8 @@ in
         border-radius: 0;
         box-shadow: none;
         min-height: 0;
+        padding: 0;
+        margin: 0;
       }
 
       @define-color bg    #${bg};
@@ -128,11 +130,13 @@ in
       }
 
       /* ----------------------------
-         Workspaces (thin full-height)
+         Workspaces (thin, full-height)
          ---------------------------- */
 
       #workspaces {
         background: transparent;
+        padding: 0;
+        margin: 0;
       }
 
       #workspaces button {
@@ -148,14 +152,15 @@ in
         color: @bg;
       }
 
-      /* optional: remove hover styling that some themes inject */
+      /* Keep hover consistent with focused style (optional but usually desired) */
       #workspaces button:hover {
         background: @focus;
         color: @bg;
       }
 
       /* ----------------------------
-         RHS blocks and separators
+         RHS blocks + '|' separators
+         (GTK CSS: avoid :not())
          ---------------------------- */
 
       #network, #custom-bat, #disk, #memory, #clock {
@@ -163,10 +168,17 @@ in
         margin: 0;
       }
 
-      .modules-right > widget:not(:last-child)::after {
+      /* Add a separator after every RHS widget... */
+      .modules-right > widget::after {
         content: " |";
         color: @fg;
-        padding-left: ${toString (px (0.35 * fontPx))}px;
+        padding-left: ${toString sepPadPx}px;
+      }
+
+      /* ...then remove it for the last one */
+      .modules-right > widget:last-child::after {
+        content: "";
+        padding-left: 0;
       }
     '';
   };
