@@ -13,6 +13,7 @@
     vim
     wget
     git
+    sway # needed for Display managers to properly discover the .desktop entry
     ungoogled-chromium
   ];
 
