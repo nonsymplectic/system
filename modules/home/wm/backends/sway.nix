@@ -5,12 +5,6 @@ let
 
   /* ============================================================
      Sway backend (Home Manager layer)
-     ------------------------------------------------------------
-     Purpose:
-       - Provide backend-specific defaults for sway
-       - Interpret my.wm.* abstract options (terminal, launcher)
-       - Apply UI tokens (fonts + client colors)
-       - Merge user overrides (keybindingOverrides, extraConfig)
      ============================================================ */
 
 
@@ -27,16 +21,18 @@ let
   /* ============================================================
      Client colors
      ------------------------------------------------------------
-     Window decoration colors derived from semantic UI tokens.
+     Focus styling:
+       - Keep borders neutral
+       - Color the title text for the focused container
      ============================================================ */
 
   clientColors = {
     focused = {
-      border = ui.colors.focus;
-      indicator = ui.colors.focus;
-      childBorder = ui.colors.focus;
+      border = ui.colors.border;
+      indicator = ui.colors.border;
+      childBorder = ui.colors.border;
       background = ui.colors.background;
-      text = ui.colors.foreground;
+      text = ui.colors.focus;
     };
 
     focusedInactive = {
@@ -117,12 +113,13 @@ let
     "Mod4+Shift+Right" = "move right";
 
     # ----------------------------------------------------------
-    # Layout: tabbed / stacking / splits
+    # Layout: tabbed / stacking / splits (Sway defaults)
     # ----------------------------------------------------------
+    "Mod4+s" = "layout stacking";
     "Mod4+w" = "layout tabbed";
-    "Mod4+e" = "layout stacking";
-    "Mod4+b" = "split h";
-    "Mod4+v" = "split v";
+    "Mod4+e" = "layout toggle split";
+    "Mod4+b" = "splith";
+    "Mod4+v" = "splitv";
 
     # ----------------------------------------------------------
     # Fullscreen / floating
@@ -176,8 +173,9 @@ in
   wayland.windowManager.sway = {
     enable = true;
 
-    # GTK wrapper ensures expected GUI app environment under sway
     wrapperFeatures.gtk = true;
+
+    extraOptions = cfg.backendFlags.sway or [ ];
 
     config = {
       terminal = cfg.terminal;
@@ -193,10 +191,6 @@ in
       keybindings = keybindings;
     };
 
-    # Set extra flags
-    extraOptions = cfg.backendFlags.sway or [ ];
-
-    # Backend-native config append hook (from WM-agnostic interface)
     extraConfig = cfg.extraConfig;
   };
 }
