@@ -2,16 +2,19 @@
 {
   # system wide imports
   imports = [
-    ../modules/nixos/core/primary-user.nix # Defines my.primaryUser
+    ../modules/nixos/core/primary-user.nix # Defines my.primaryUser, useful for home directories etc
     ../modules/nixos/services/ly.nix # Display Manager is system level
     ../modules/nixos/core/agenix.nix # Agenix encryption
   ];
 
   # Imports for home-manager managed stuff
   home-manager.sharedModules = [
-    ../modules/home/wm.nix
-    ../modules/home/apps.nix
-    ../modules/home/core/git.nix
+    ../modules/home/wm.nix # wm backend
+    ../profiles/home/workstation.nix # wm policy
+
+    ../modules/home/apps.nix # user-level applications
+
+    ../modules/home/core/git.nix # git config
   ];
 
   # --- Connectivity baseline ---
@@ -27,24 +30,8 @@
     git
   ];
 
-  # --- Define home-manager shared modules
-  # Make HM-provided desktop files and portal descriptors visible system-wide
-  environment.pathsToLink = [
-    "/share/applications"
-    "/share/xdg-desktop-portal"
-    "/share/wayland-sessions"
-    "/share/xsessions"
-  ];
-
   # Add WMs to sessionPackages
   services.displayManager.sessionPackages = with pkgs; [
     sway
   ];
-
-  # WM module configuration
-  my.wm.enable = true;
-  my.wm.backend = "sway";
-  my.wm.launcher = "wofi";
-  my.wm.terminal = "foot";
-
 }
