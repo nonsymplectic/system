@@ -43,6 +43,10 @@ in
 
     [main]
     font=${ui.monoFont.family}:size=${toString ui.monoFont.size}
+    term=foot-direct
+
+    [cursor]
+    blink=yes
 
     [colors]
     foreground=${termFg}
