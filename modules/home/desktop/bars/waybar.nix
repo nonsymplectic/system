@@ -1,8 +1,8 @@
-{ config, lib, pkgs, ui, ...}:
+{ config, lib, pkgs, ui, ... }:
 
 let
 
-  cfg = my.desktop;
+  cfg = config.my.desktop;
   enabled = cfg.enable && cfg.bar.enable && cfg.bar.backend == "waybar";
 
   stripHash = s: lib.removePrefix "#" s;
@@ -44,7 +44,7 @@ in
     # ----------------------------------------------------------
     # Provide bar command
     # ----------------------------------------------------------
-    config.desktop._resolved.barCmd = lib.mkDefault "waybar";
+    my.desktop._resolved.barCmd = lib.mkDefault "waybar";
 
 
     /* ============================================================

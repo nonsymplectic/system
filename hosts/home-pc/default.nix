@@ -70,9 +70,9 @@
      ============================================================ */
 
   # sway needs this flag because of nvidia drivers
-/*
-  home-manager.users.${config.my.primaryUser}.my.desktop.backendFlags.sway = [
+
+  my.desktop.extraFlags.sway = [
     "--unsupported-gpu"
   ];
-*/
+
 }

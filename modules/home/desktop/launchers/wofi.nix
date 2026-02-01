@@ -1,7 +1,7 @@
 { config, lib, pkgs, ui, ... }:
 
 let
-  wm = config.my.wm;
+  wm = config.my.desktop;
 
   enabled = wm.enable && wm.launcher == "wofi";
 
@@ -36,6 +36,10 @@ in
     /* ============================================================
        Enable wofi (installs + writes config/style via HM)
        ============================================================ */
+
+    # add ._resolved.launcherCmd
+    my.desktop._resolved.launcherCmd = lib.mkDefault "wofi --show drun";
+
 
     programs.wofi = {
       enable = true;

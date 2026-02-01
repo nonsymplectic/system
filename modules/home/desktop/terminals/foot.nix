@@ -1,7 +1,7 @@
 { config, lib, pkgs, ui, ... }:
 
 let
-  wm = config.my.wm;
+  wm = config.my.desktop;
 
   enabled = wm.enable && wm.terminal == "foot";
 

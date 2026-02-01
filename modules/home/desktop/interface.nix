@@ -27,8 +27,7 @@ in
   imports = [
     # Window managers
     ./wms/sway.nix
-  ];
-  /*
+
     # Bars
     ./bars/waybar.nix
 
@@ -38,7 +37,7 @@ in
     # Launchers
     ./launchers/wofi.nix
   ];
-*/
+
   config = lib.mkIf cfg.enable {
     # ----------------------------------------------------------
     # Wayland portals (required for many desktop integrations)

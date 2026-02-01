@@ -17,7 +17,10 @@
        Top-level enable
        ============================================================ */
 
-    enable = lib.mkEnableOption "desktop configuration";
+    enable = lib.mkEnableOption {
+      default = true;
+      description = "desktop configuration";
+    };
 
 
     /* ============================================================
@@ -58,7 +61,10 @@
        ============================================================ */
 
     bar = {
-      enable = lib.mkEnableOption "bar";
+      enable = lib.mkEnableOption {
+        default = true;
+        description = "bar";
+      };
 
       backend = lib.mkOption {
         type = lib.types.enum [ "waybar" ];
@@ -95,6 +101,26 @@
        Hosts must not set these.
        ============================================================ */
 
-    _resolved = { };
+    _resolved = lib.mkOption {
+      internal = true;
+      description = "Derived/normalized commands computed from the desktop config.";
+      default = { };
+
+      type = lib.types.submodule {
+        options = {
+          barCmd = lib.mkOption {
+            type = lib.types.nullOr lib.types.str;
+            default = null;
+            description = "Resolved command used to start the bar (e.g. waybar).";
+          };
+
+          launcherCmd = lib.mkOption {
+            type = lib.types.nullOr lib.types.str;
+            default = null;
+            description = "Resolved command used to start the launcher (e.g. rofi -show drun).";
+          };
+        };
+      };
+    };
   };
 }
