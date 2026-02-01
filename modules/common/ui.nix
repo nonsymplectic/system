@@ -109,6 +109,12 @@ in
         default = 15;
         description = "Primary UI font size (pt).";
       };
+
+      sizePx = mkOption {
+        type = types.int;
+        default = 20;
+        description = "UI font size in px (for CSS-based components).";
+      };
     };
 
     monoFont = {
@@ -122,6 +128,12 @@ in
         type = types.int;
         default = 15;
         description = "Monospace UI font size (pt).";
+      };
+
+      sizePx = mkOption {
+        type = types.int;
+        default = 20;
+        description = "UI font size in px (for CSS-based components).";
       };
     };
 

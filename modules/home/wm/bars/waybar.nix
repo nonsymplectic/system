@@ -114,8 +114,8 @@ in
 
       style = ''
         * {
-          font-family: "${ui.font.family}";
-          font-size: ${toString ui.font.size};
+          font-family: "${ui.monoFont.family}";
+          font-size: ${toString ui.monoFont.sizePx};
           border: none;
           border-radius: 0;
           box-shadow: none;

@@ -56,7 +56,7 @@ in
       style = ''
         * {
           font-family: "${ui.monoFont.family}";
-          font-size: ${toString ui.monoFont.size}px;
+          font-size: ${toString ui.monoFont.sizePx}px;
         }
 
         window {
