@@ -9,6 +9,7 @@ let
 
   bg = stripHash ui.colors.background;
   fg = stripHash ui.colors.foreground;
+  border = stripHash ui.colors.border;
   focus = stripHash ui.colors.focus;
   muted = stripHash (ui.colors.muted or ui.colors.foreground);
 
@@ -44,6 +45,9 @@ in
       # ----------------------------------------------------------
       settings = {
         sort_order = "alphabetical";
+        show_icons = false;
+        insensitive = true;
+        no_actions = true;
       };
 
       # ----------------------------------------------------------
@@ -68,7 +72,7 @@ in
         }
 
         #outer-box {
-          background-color: #${bg};
+          background-color: #${border};
         }
 
         #entry {
