@@ -153,6 +153,7 @@ UI tokens represent **host-specific display properties**, such as:
 * font size (px)
 * colors
 * scaling
+* ANSI terminal colors
 
 They are:
 
