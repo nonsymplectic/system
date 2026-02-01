@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ui, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.my.wm;
@@ -9,25 +9,42 @@ in
      ------------------------------------------------------------
      Purpose:
        - Declare a WM-agnostic interface under my.wm.*
-       - Install WM-adjacent user packages (terminal, launcher)
-       - Import backend + bar implementations (self-gated via mkIf)
+       - Provide shared wiring (portals, generic integration)
+       - Import implementations (backend / bar / terminal / launcher)
+         which are responsible for:
+           * self-gating via mkIf
+           * installing their own packages via home.packages
      ============================================================ */
 
 
   /* ============================================================
      Module imports
      ------------------------------------------------------------
-     Backends / bars must gate themselves via cfg.backend / cfg.bar.*
+     Implementations must self-gate via:
+       - cfg.enable
+       - cfg.backend / cfg.bar.* / cfg.terminal / cfg.launcher
      ============================================================ */
 
   imports = [
+    # Backends
     ./wm/backends/sway.nix
+
+    # Bars
     ./wm/bars/waybar.nix
+
+    # Terminals
+    ./wm/terminals/foot.nix
+
+    # Launchers
+    ./wm/launchers/wofi.nix
   ];
 
 
   /* ============================================================
      Module options (WM-agnostic interface)
+     ------------------------------------------------------------
+     This module declares "policy" (selection) only.
+     Implementations install packages and emit concrete configs.
      ============================================================ */
 
   options.my.wm = {
@@ -36,19 +53,19 @@ in
     backend = lib.mkOption {
       type = lib.types.enum [ "sway" ];
       default = "sway";
-      description = "WM backend to configure.";
+      description = "WM backend.";
     };
 
     terminal = lib.mkOption {
-      type = lib.types.str;
+      type = lib.types.enum [ "foot" ];
       default = "foot";
-      description = "Terminal command.";
+      description = "Terminal implementation.";
     };
 
     launcher = lib.mkOption {
-      type = lib.types.enum [ "wofi" "fuzzel" "bemenu" ];
+      type = lib.types.enum [ "wofi" ];
       default = "wofi";
-      description = "App launcher used for drun.";
+      description = "App launcher.";
     };
 
     /* ============================================================
@@ -72,7 +89,7 @@ in
 
       command = lib.mkOption {
         type = lib.types.nullOr lib.types.str;
-        default = "waybar";
+        default = null;
         description = "Bar launch command provided by the selected bar module.";
       };
     };
@@ -104,20 +121,16 @@ in
   /* ============================================================
      Configuration (enabled only)
      ------------------------------------------------------------
-     Backend/bar implementations are imported unconditionally and
-     must be self-gated; this module only provides common wiring.
+     This module provides shared wiring only.
+
+     Package installation is delegated to implementation modules:
+       - ./wm/backends/*
+       - ./wm/bars/*
+       - ./wm/terminals/*
+       - ./wm/launchers/*
      ============================================================ */
 
   config = lib.mkIf cfg.enable {
-    # ----------------------------------------------------------
-    # User packages: terminal + launcher (abstract selection)
-    # ----------------------------------------------------------
-    home.packages =
-      lib.optionals (cfg.terminal == "foot") [ pkgs.foot ] ++
-      lib.optionals (cfg.launcher == "wofi") [ pkgs.wofi ] ++
-      lib.optionals (cfg.launcher == "fuzzel") [ pkgs.fuzzel ] ++
-      lib.optionals (cfg.launcher == "bemenu") [ pkgs.bemenu ];
-
     # ----------------------------------------------------------
     # Wayland portals (required for many desktop integrations)
     # ----------------------------------------------------------

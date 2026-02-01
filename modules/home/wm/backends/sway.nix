@@ -1,11 +1,19 @@
 { config, lib, pkgs, ui, ... }:
 
 let
-  cfg = config.my.wm;
+  wm = config.my.wm;
 
   /* ============================================================
      Sway backend (Home Manager layer)
+     ------------------------------------------------------------
+     Purpose:
+       - Enable + configure Sway via Home Manager (wayland.windowManager.sway)
+       - Self-gate on my.wm.enable && my.wm.backend == "sway"
+       - Interpret WM-agnostic selections (terminal/launcher/bar) into
+         Sway-native config (terminal/menu/bars/keybindings)
      ============================================================ */
+
+  enabled = wm.enable && wm.backend == "sway";
 
 
   /* ============================================================
@@ -13,21 +21,28 @@ let
      ============================================================ */
 
   menuCmd =
-    if cfg.launcher == "wofi" then "wofi --show drun"
-    else if cfg.launcher == "fuzzel" then "fuzzel"
+    if wm.launcher == "wofi" then "wofi --show drun"
+    else if wm.launcher == "fuzzel" then "fuzzel"
     else "bemenu-run";
 
 
   /* ============================================================
      Bar command (forwarded from bar module)
+     ------------------------------------------------------------
+     my.wm.bar.command is provided by the selected bar module.
+     If enabled, we autostart it and disable swaybar.
      ============================================================ */
 
   barCmd =
-    if cfg.bar.enable then cfg.bar.command else null;
+    if wm.bar.enable then wm.bar.command else null;
+
+  barBin =
+    if barCmd == null then null
+    else lib.head (lib.splitString " " barCmd);
 
   barAutostart =
     lib.optionalString (barCmd != null) ''
-      exec sh -lc 'pgrep -x ${barCmd}>/dev/null || exec ${barCmd}'
+      exec sh -lc '${pkgs.procps}/bin/pgrep -x ${lib.escapeShellArg barBin} >/dev/null || exec ${barCmd}'
     '';
 
 
@@ -92,7 +107,7 @@ let
     # ----------------------------------------------------------
     # Launch / session
     # ----------------------------------------------------------
-    "Mod4+Return" = "exec ${cfg.terminal}";
+    "Mod4+Return" = "exec ${wm.terminal}";
     "Mod4+d" = "exec ${menuCmd}";
     "Mod4+Shift+q" = "kill";
     "Mod4+Shift+r" = "reload";
@@ -175,40 +190,52 @@ let
     "Mod4+r" = "mode resize";
   };
 
-  keybindings = baseKeybindings // cfg.keybindingOverrides;
+  keybindings = baseKeybindings // wm.keybindingOverrides;
 
 in
 {
   /* ============================================================
-     Home Manager sway module
+     Configuration (selected only)
+     ------------------------------------------------------------
+     This module is self-gated. It must not install or emit config
+     unless:
+       - my.wm.enable == true
+       - my.wm.backend == "sway"
      ============================================================ */
 
-  wayland.windowManager.sway = {
-    enable = true;
+  config = lib.mkIf enabled {
 
-    wrapperFeatures.gtk = true;
+    /* ============================================================
+       Home Manager sway module
+       ============================================================ */
 
-    extraOptions = cfg.backendFlags.sway or [ ];
+    wayland.windowManager.sway = {
+      enable = true;
 
-    config = lib.mkMerge [
-      {
-        terminal = cfg.terminal;
-        menu = menuCmd;
+      wrapperFeatures.gtk = true;
 
-        fonts = {
-          names = [ ui.font.family ];
-          size = builtins.toString ui.font.size;
-        };
+      extraOptions = wm.backendFlags.sway or [ ];
 
-        colors = clientColors;
+      config = lib.mkMerge [
+        {
+          terminal = wm.terminal;
+          menu = menuCmd;
 
-        keybindings = keybindings;
-      }
+          fonts = {
+            names = [ ui.font.family ];
+            size = builtins.toString ui.font.size;
+          };
 
-      # Disable built-in swaybar when using an external bar.
-      (lib.mkIf cfg.bar.enable { bars = [ ]; })
-    ];
+          colors = clientColors;
 
-    extraConfig = barAutostart + cfg.extraConfig;
+          keybindings = keybindings;
+        }
+
+        # Disable built-in swaybar when using an external bar.
+        (lib.mkIf wm.bar.enable { bars = [ ]; })
+      ];
+
+      extraConfig = barAutostart + wm.extraConfig;
+    };
   };
 }
