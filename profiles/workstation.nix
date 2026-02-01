@@ -28,6 +28,9 @@
     # Display manager is system-level
     ../modules/nixos/services/ly.nix
 
+    # Some WMs need a DM hotfix
+    ../modules/nixos/ui/sway.nix
+
     # Secrets management (agenix)
     ../modules/nixos/core/agenix.nix
   ];
@@ -98,16 +101,5 @@
   environment.pathsToLink = [
     "/share/applications"
     "/share/xdg-desktop-portal"
-  ];
-
-
-  /* ============================================================
-     Display manager sessions
-     ------------------------------------------------------------
-     Ensure the WM is available as a login session.
-     ============================================================ */
-
-  services.displayManager.sessionPackages = with pkgs; [
-    sway
   ];
 }
