@@ -42,6 +42,16 @@ in
     # ----------------------------------------------------------
     # Wayland portals (required for many desktop integrations)
     # ----------------------------------------------------------
+    warnings = [
+      ''
+        my.desktop enabled:
+          wm=${cfg.wm}
+          terminal=${cfg.terminal}
+          launcher=${cfg.launcher} (cmd=${toString (config.my.desktop._resolved.launcherCmd or "<unset>")})
+          bar=${if cfg.bar.enable then cfg.bar.backend else "disabled"} (cmd=${toString (config.my.desktop._resolved.barCmd or "<unset>")})
+      ''
+    ];
+
     xdg.portal.enable = true;
     xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
   };
