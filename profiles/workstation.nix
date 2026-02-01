@@ -45,6 +45,9 @@
   };
 
   home-manager.sharedModules = [
+    # Shell
+    ../modules/home/core/shell.nix
+
     # WM implementation + policy (HM scope)
     ../modules/home/wm.nix
     ../profiles/home/workstation.nix
