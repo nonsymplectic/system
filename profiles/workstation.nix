@@ -17,7 +17,7 @@
 
   imports = [
     # Host-defined UI token surface (my.ui)
-    ../modules/common/ui.nix
+    ../options/ui.nix
 
     # Font resources
     ../modules/nixos/ui/fonts.nix
@@ -49,8 +49,8 @@
     ../modules/home/core/shell.nix
 
     # WM implementation + policy (HM scope)
-    ../modules/home/wm.nix
-    ../profiles/home/workstation.nix
+    ../modules/home/desktop/interface.nix
+    ../options/desktop.nix
 
     # User-level applications
     ../modules/home/apps.nix
