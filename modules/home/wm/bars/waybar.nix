@@ -13,14 +13,14 @@ let
 
   px = x: builtins.floor (x + 0.5);
 
-  fontPx    = px (ui.monoFont.size * s);
-  heightPx  = px (1.8 * fontPx);
+  fontPx = px (ui.monoFont.size * s);
+  heightPx = px (1.8 * fontPx);
   spacingPx = px (0.55 * fontPx);
 
-  vPadPx    = px (0.20 * fontPx);
-  hPadPx    = px (0.45 * fontPx);
+  vPadPx = px (0.20 * fontPx);
+  hPadPx = px (0.45 * fontPx);
 
-  wsHPadPx  = px (0.55 * fontPx);
+  wsHPadPx = px (0.55 * fontPx);
 
   batScript = pkgs.writeShellScript "waybar-bat" ''
     set -eu

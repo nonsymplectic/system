@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ui, ...}:
+{ config, lib, pkgs, ui, ... }:
 
 let
   cfg = config.my.wm;
