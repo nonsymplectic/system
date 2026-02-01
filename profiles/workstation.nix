@@ -22,9 +22,6 @@
     # default desktop token surface (my.desktop)
     ../options/desktop.nix
 
-    # Declares WM token surface (my.wm)
-    ../modules/common/wm.nix
-
     # Declares primaryUser plumbing
     ../modules/nixos/core/primary-user.nix
 

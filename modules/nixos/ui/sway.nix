@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  enabled = config.my.wm.enable && config.my.wm.backend == "sway";
+  enabled = config.my.desktop.enable && config.my.desktop.backend == "sway";
 in
 {
   config = lib.mkIf enabled {
