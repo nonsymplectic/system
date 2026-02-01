@@ -16,8 +16,11 @@
      ============================================================ */
 
   imports = [
-    # Declares UI token surface (my.ui)
-    ../modules/common/ui.nix
+    # default UI token surface (my.ui)
+    ../options/ui.nix
+
+    # default desktop token surface (my.desktop)
+    ../options/desktop.nix
 
     # Declares WM token surface (my.wm)
     ../modules/common/wm.nix
@@ -45,12 +48,15 @@
      Only wires HM modules from the NixOS layer.
      ============================================================ */
 
-     home-manager.sharedModules = [
+
+
+  home-manager.sharedModules = [
     # Shell
     ../modules/home/core/shell.nix
 
-    # WM implementation
-    ../modules/home/wm.nix
+    # WM implementation + policy (HM scope)
+    ../options/desktop.nix
+    ../modules/home/desktop/interface.nix
 
     # User-level applications
     ../modules/home/apps.nix
@@ -61,7 +67,6 @@
     # Git configuration
     ../modules/home/core/git.nix
   ];
-
 
   /* ============================================================
      Networking baseline

@@ -1,6 +1,8 @@
 { config, lib, pkgs, ui, wm, ... }:
 
 let
+  wm = config.my.desktop;
+
   /* ============================================================
      Sway backend (Home Manager layer)
      ------------------------------------------------------------
@@ -11,18 +13,14 @@ let
          Sway-native config (terminal/menu/bars/keybindings)
      ============================================================ */
 
-  enabled = wm.enable && wm.backend == "sway";
+  enabled = wm.enable && wm.wm == "sway";
 
 
   /* ============================================================
      Launcher command (backend interpretation)
      ============================================================ */
 
-  menuCmd =
-    if wm.launcher == "wofi" then "wofi --show drun"
-    else if wm.launcher == "fuzzel" then "fuzzel"
-    else "bemenu-run";
-
+  menuCmd = wm._resolved.launcherCmd;
 
   /* ============================================================
      Bar command (forwarded from bar module)
@@ -32,7 +30,7 @@ let
      ============================================================ */
 
   barCmd =
-    if wm.bar.enable then wm.bar.command else null;
+    if wm.bar.enable then wm._resolved.barCmd else null;
 
   barBin =
     if barCmd == null then null
@@ -188,7 +186,7 @@ let
     "Mod4+r" = "mode resize";
   };
 
-  keybindings = baseKeybindings // wm.keybindingOverrides;
+  keybindings = baseKeybindings;
 
 in
 {
@@ -212,7 +210,7 @@ in
 
       wrapperFeatures.gtk = true;
 
-      extraOptions = wm.backendFlags.sway or [ ];
+      extraOptions = wm.extraFlags.sway or [ ];
 
       config = lib.mkMerge [
         {
@@ -233,7 +231,7 @@ in
         (lib.mkIf wm.bar.enable { bars = [ ]; })
       ];
 
-      extraConfig = barAutostart + wm.extraConfig;
+      extraConfig = barAutostart;
     };
   };
 }

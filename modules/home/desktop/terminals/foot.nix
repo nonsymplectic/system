@@ -1,6 +1,8 @@
 { config, lib, pkgs, ui, wm, ... }:
 
 let
+  wm = config.my.desktop;
+
   enabled = wm.enable && wm.terminal == "foot";
 
   stripHash = s: lib.removePrefix "#" s;

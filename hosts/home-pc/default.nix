@@ -71,7 +71,9 @@
      ============================================================ */
 
   # sway needs this flag because of nvidia drivers
-  my.wm.backendFlags.sway = [
+
+  my.desktop.extraFlags.sway = [
     "--unsupported-gpu"
   ];
+
 }
