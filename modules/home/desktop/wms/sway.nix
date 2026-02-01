@@ -186,7 +186,7 @@ let
     "Mod4+r" = "mode resize";
   };
 
-  keybindings = baseKeybindings ;
+  keybindings = baseKeybindings;
 
 in
 {
