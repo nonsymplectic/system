@@ -1,6 +1,6 @@
 { ... }:
 {
-  # Used for agenix encyption, git ssh, etc.
+  # Primary User Setting use for System-Level
   my.primaryUser = "michal";
 
   users.users.michal = {

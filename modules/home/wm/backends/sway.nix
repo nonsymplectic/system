@@ -1,8 +1,6 @@
-{ config, lib, pkgs, ui, ... }:
+{ config, lib, pkgs, ui, wm, ... }:
 
 let
-  wm = config.my.wm;
-
   /* ============================================================
      Sway backend (Home Manager layer)
      ------------------------------------------------------------

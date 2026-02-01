@@ -16,16 +16,19 @@
      ============================================================ */
 
   imports = [
-    # Host-defined UI token surface (my.ui)
+    # Declares UI token surface (my.ui)
     ../modules/common/ui.nix
 
-    # Font resources
-    ../modules/nixos/ui/fonts.nix
+    # Declares WM token surface (my.wm)
+    ../modules/common/wm.nix
 
     # Declares primaryUser plumbing
     ../modules/nixos/core/primary-user.nix
 
-    # Display manager is system-level
+    # Font resources
+    ../modules/nixos/ui/fonts.nix
+
+    # Installs Display Manager
     ../modules/nixos/services/ly.nix
 
     # Some WMs need a DM hotfix
@@ -40,20 +43,14 @@
      Home Manager wiring
      ------------------------------------------------------------
      Only wires HM modules from the NixOS layer.
-     All my.* options must be set inside HM scope (via HM modules).
      ============================================================ */
-  home-manager.extraSpecialArgs = {
-    # Pass host-defined UI tokens into Home Manager scope.
-    ui = config.my.ui;
-  };
 
-  home-manager.sharedModules = [
+     home-manager.sharedModules = [
     # Shell
     ../modules/home/core/shell.nix
 
-    # WM implementation + policy (HM scope)
+    # WM implementation
     ../modules/home/wm.nix
-    ../profiles/home/workstation.nix
 
     # User-level applications
     ../modules/home/apps.nix

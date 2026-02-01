@@ -1,8 +1,6 @@
-{ config, lib, pkgs, ui, ... }:
+{ config, lib, pkgs, ui, wm, ... }:
 
 let
-  wm = config.my.wm;
-
   enabled = wm.enable && wm.bar.enable && wm.bar.backend == "waybar";
 
   stripHash = s: lib.removePrefix "#" s;
@@ -44,7 +42,7 @@ in
     # ----------------------------------------------------------
     # Provide bar command (selected bar module owns this)
     # ----------------------------------------------------------
-    my.wm.bar.command = lib.mkDefault "waybar";
+    #wm.bar.command = lib.mkDefault "waybar";
 
 
     /* ============================================================

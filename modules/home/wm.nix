@@ -1,8 +1,5 @@
-{ config, lib, pkgs, ... }:
+{ lib, pkgs, wm, ... }:
 
-let
-  cfg = config.my.wm;
-in
 {
   /* ============================================================
      Window manager module (Home Manager layer)
@@ -21,8 +18,8 @@ in
      Module imports
      ------------------------------------------------------------
      Implementations must self-gate via:
-       - cfg.enable
-       - cfg.backend / cfg.bar.* / cfg.terminal / cfg.launcher
+       - wm.enable
+       - wm.backend / wm.bar.* / wm.terminal / wm.launcher
      ============================================================ */
 
   imports = [
@@ -46,7 +43,7 @@ in
      This module declares "policy" (selection) only.
      Implementations install packages and emit concrete configs.
      ============================================================ */
-
+  /*
   options.my.wm = {
     enable = lib.mkEnableOption "window manager configuration";
 
@@ -67,11 +64,11 @@ in
       default = "wofi";
       description = "App launcher.";
     };
-
+    */
     /* ============================================================
        Bar
        ============================================================ */
-
+    /*
     bar = {
       enable = lib.mkEnableOption "bar";
 
@@ -117,7 +114,7 @@ in
     };
   };
 
-
+  */
   /* ============================================================
      Configuration (enabled only)
      ------------------------------------------------------------
@@ -130,7 +127,7 @@ in
        - ./wm/launchers/*
      ============================================================ */
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf wm.enable {
     # ----------------------------------------------------------
     # Wayland portals (required for many desktop integrations)
     # ----------------------------------------------------------

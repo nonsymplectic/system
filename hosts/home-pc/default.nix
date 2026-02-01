@@ -23,7 +23,7 @@
     ./users.nix
     ./swap.nix
 
-    # Shared role profile (host-agnostic)
+    # Shared role profile
     ../../profiles/workstation.nix
   ];
 
@@ -44,7 +44,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   /* ============================================================
-     UI tokens (policy)
+     UI tokens
      ------------------------------------------------------------
      Host-level overrides for UI tokens.
      ============================================================ */
@@ -52,25 +52,26 @@
   # my.ui = {
   #   font = {
   #     # Primary UI font size
-  #     size = 11;
+  #     size = 15;
+  #     sizePx = 20;
   #   };
   #
   #   monoFont = {
-  #     # Monospace font size (terminal, code-heavy UI)
-  #     size = 11;
+  #     # Monospace font size
+  #     size = 15;
+  #     sizePx = 20;
   #   };
   # };
 
 
   /* ============================================================
-     Window manager backend flags (policy)
+     WM tokens
      ------------------------------------------------------------
-     Extra CLI flags passed to the selected WM backend.
-     Keys correspond to backend names.
+     Host-level overrides for WM tokens.
      ============================================================ */
 
   # sway needs this flag because of nvidia drivers
-  home-manager.users.${config.my.primaryUser}.my.wm.backendFlags.sway = [
+  my.wm.backendFlags.sway = [
     "--unsupported-gpu"
   ];
 }

@@ -1,8 +1,6 @@
-{ config, lib, pkgs, ui, ... }:
+{ config, lib, pkgs, ui, wm, ... }:
 
 let
-  wm = config.my.wm;
-
   enabled = wm.enable && wm.terminal == "foot";
 
   stripHash = s: lib.removePrefix "#" s;
