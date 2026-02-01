@@ -34,23 +34,23 @@ let
   };
 
   ansiPalette = [
-    ansi.black         # black
-    ansi.red           # red
-    ansi.green         # green
-    ansi.yellow        # yellow
-    ansi.blue          # blue
-    ansi.magenta       # magenta
-    ansi.cyan          # cyan
-    ansi.white         # white
+    ansi.black # black
+    ansi.red # red
+    ansi.green # green
+    ansi.yellow # yellow
+    ansi.blue # blue
+    ansi.magenta # magenta
+    ansi.cyan # cyan
+    ansi.white # white
 
-    ansi.brightBlack   # bright black
-    ansi.brightRed     # bright red
-    ansi.brightGreen   # bright green
-    ansi.brightYellow  # bright yellow
-    ansi.brightBlue    # bright blue
+    ansi.brightBlack # bright black
+    ansi.brightRed # bright red
+    ansi.brightGreen # bright green
+    ansi.brightYellow # bright yellow
+    ansi.brightBlue # bright blue
     ansi.brightMagenta # bright magenta
-    ansi.brightCyan    # bright cyan
-    ansi.brightWhite   # bright white
+    ansi.brightCyan # bright cyan
+    ansi.brightWhite # bright white
   ];
 
 in
