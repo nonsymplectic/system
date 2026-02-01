@@ -11,19 +11,6 @@ let
   fg = stripHash ui.colors.foreground;
   focus = stripHash ui.colors.focus;
 
-  s = ui.scale or 1.0;
-
-  px = x: builtins.floor (x + 0.5);
-
-  fontPx = px (ui.monoFont.size * s);
-  heightPx = px (1.8 * fontPx);
-  spacingPx = px (0.55 * fontPx);
-
-  vPadPx = px (0.20 * fontPx);
-  hPadPx = px (0.45 * fontPx);
-
-  wsHPadPx = px (0.55 * fontPx);
-
   batScript = pkgs.writeShellScript "waybar-bat" ''
     set -eu
     bat="$(ls -d /sys/class/power_supply/BAT* 2>/dev/null | head -n1 || true)"
@@ -40,7 +27,10 @@ in
      Purpose:
        - Enable + configure Waybar via Home Manager (programs.waybar.*)
        - Self-gate on my.wm.enable && my.wm.bar.enable && my.wm.bar.backend
-       - Derive typography and sizing from UI tokens
+       - Keep defaults; only:
+           * set colors (from UI tokens)
+           * set font (from UI tokens, NOT scaled)
+           * remove layout padding/spacing (tight like sway)
        - Provide my.wm.bar.command for the selected bar backend
      ============================================================ */
 
@@ -69,8 +59,8 @@ in
           layer = "top";
           position = wm.bar.position;
 
-          height = heightPx;
-          spacing = spacingPx;
+          # Tight: no inter-module spacing.
+          spacing = 0;
 
           modules-left = [ "sway/workspaces" ];
           modules-center = [ ];
@@ -100,7 +90,6 @@ in
             tooltip = false;
           };
 
-          # /: 2.65/15.55GiB |
           disk = {
             interval = 90;
             path = "/";
@@ -109,14 +98,12 @@ in
             tooltip = false;
           };
 
-          # MEM: 2.65/15.55GiB |
           memory = {
             interval = 45;
             format = "MEM: {used:0.2f}/{total:0.2f}GiB |";
             tooltip = false;
           };
 
-          # Sat 2026-01-31 22:30
           clock = {
             interval = 45;
             format = "{:%a %F %H:%M}";
@@ -127,8 +114,8 @@ in
 
       style = ''
         * {
-          font-family: "${ui.monoFont.family}";
-          font-size: ${toString fontPx}px;
+          font-family: "${ui.font.family}";
+          font-size: ${toString ui.font.size};
           border: none;
           border-radius: 0;
           box-shadow: none;
@@ -144,26 +131,25 @@ in
         window#waybar {
           background: @bg;
           color: @fg;
-          padding: ${toString vPadPx}px ${toString hPadPx}px;
+          padding: 0;
+          margin: 0;
         }
 
         #workspaces {
           background: transparent;
+          padding: 0;
+          margin: 0;
         }
 
         #workspaces button {
           background: @bg;
           color: @fg;
-          padding: 0 ${toString wsHPadPx}px;
+          padding: 0;
           margin: 0;
           min-height: 0;
         }
 
-        #workspaces button.focused {
-          background: @focus;
-          color: @bg;
-        }
-
+        #workspaces button.focused,
         #workspaces button:hover {
           background: @focus;
           color: @bg;
