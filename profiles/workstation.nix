@@ -16,8 +16,11 @@
      ============================================================ */
 
   imports = [
-    # Host-defined UI token surface (my.ui)
+    # default UI token surface (my.ui)
     ../options/ui.nix
+
+    # default desktop token surface (my.desktop)
+    ../options/desktop.nix
 
     # Font resources
     ../modules/nixos/ui/fonts.nix
@@ -44,13 +47,15 @@
     ui = config.my.ui;
   };
 
+
+
   home-manager.sharedModules = [
     # Shell
     ../modules/home/core/shell.nix
 
     # WM implementation + policy (HM scope)
-    ../modules/home/desktop/interface.nix
     ../options/desktop.nix
+    ../modules/home/desktop/interface.nix
 
     # User-level applications
     ../modules/home/apps.nix
@@ -61,7 +66,6 @@
     # Git configuration
     ../modules/home/core/git.nix
   ];
-
 
   /* ============================================================
      Networking baseline

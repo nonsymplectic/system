@@ -1,9 +1,9 @@
-{ config, lib, pkgs, ui, ... }:
+{ config, lib, pkgs, ui, ...}:
 
 let
-  wm = config.my.wm;
 
-  enabled = wm.enable && wm.bar.enable && wm.bar.backend == "waybar";
+  cfg = my.desktop;
+  enabled = cfg.enable && cfg.bar.enable && cfg.bar.backend == "waybar";
 
   stripHash = s: lib.removePrefix "#" s;
 
@@ -42,9 +42,9 @@ in
   config = lib.mkIf enabled {
 
     # ----------------------------------------------------------
-    # Provide bar command (selected bar module owns this)
+    # Provide bar command
     # ----------------------------------------------------------
-    my.wm.bar.command = lib.mkDefault "waybar";
+    config.desktop._resolved.barCmd = lib.mkDefault "waybar";
 
 
     /* ============================================================
@@ -57,7 +57,7 @@ in
       settings = {
         mainBar = {
           layer = "top";
-          position = wm.bar.position;
+          position = config.desktop.bar.position;
 
           # Tight: no inter-module spacing.
           spacing = 0;
