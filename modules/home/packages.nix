@@ -7,15 +7,17 @@
     zed-editor
 
     # --- CLI TOOLS ---
-    ps_mem
-    neofetch
+    ps_mem # RAM usage
+    htop # task viewer
+    btop # task viewer
+    neofetch # eyecandy welcome screen
 
     # --- FILE VIEWERS ----
-    swayimg
-    zathura
+    swayimg # wayland image viewer
+    zathura # pdfs
 
     # --- CODE FORMATTERS ---
-    nixpkgs-fmt #nix
-    black #python
+    nixpkgs-fmt # nix
+    black # python
   ];
 }

@@ -9,7 +9,7 @@
   };
 
   # --- Home manager ---
-   home-manager.users.michal = {
+  home-manager.users.michal = {
     home.username = "michal";
     home.homeDirectory = "/home/michal";
     home.stateVersion = "25.11";

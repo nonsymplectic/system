@@ -28,6 +28,12 @@ let
       exec sh -lc '${pkgs.procps}/bin/pgrep -x ${lib.escapeShellArg barBin} >/dev/null || exec ${barCmd}'
     '';
 
+    wallpaperDir = ../../../../options/wallpapers;
+    wallpaperPath = wallpaperDir + ("/" + "wall.png");
+    wallpaperSetting = ''
+    output * bg ${wallpaperPath} fill
+  '';
+
   clientColors = {
     focused = {
       border = ui.colors.background;
@@ -174,7 +180,7 @@ in
         (lib.mkIf desktop.bar.enable { bars = [ ]; })
       ];
 
-      extraConfig = barAutostart;
+      extraConfig = barAutostart + wallpaperSetting;
     };
   };
 }
