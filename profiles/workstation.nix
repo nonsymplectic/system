@@ -32,7 +32,7 @@
     ../modules/nixos/services/ly.nix
 
     # Some WMs need a DM hotfix
-    ../modules/nixos/ui/sway.nix
+    ../modules/nixos/ui/wm-displaymanager.nix
 
     # Secrets management (agenix)
     ../modules/nixos/core/agenix.nix
