@@ -96,7 +96,7 @@ in
       style = ''
         * {
           font-family: "${ui.monoFont.family}";
-          font-size: ${toString ui.monoFont.sizePx};
+          font-size: ${toString ui.monoFont.sizePx}px;
           border: none;
           border-radius: 0;
           box-shadow: none;
