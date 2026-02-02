@@ -5,11 +5,11 @@
      Host configuration (NixOS layer)
      ------------------------------------------------------------
      Purpose:
-       - Host-specific hardware + boot policy
+       - Host-specific hardware
        - Minimal host identity (hostname, timezone)
        - Import shared role profiles (e.g. workstation)
+       - Host-specific overrides
      ============================================================ */
-
 
   /* ============================================================
      Imports
@@ -34,14 +34,6 @@
 
   networking.hostName = "nixos";
   time.timeZone = "Europe/Zurich";
-
-
-  /* ============================================================
-     Boot policy (host-specific)
-     ============================================================ */
-
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
 
   /* ============================================================
      UI tokens
@@ -70,7 +62,7 @@
      Host-level overrides for WM tokens.
      ============================================================ */
 
-  # sway needs this flag because of nvidia drivers
+  # Sway needs this flag because of nvidia drivers
 
   my.desktop.extraFlags.sway = [
     "--unsupported-gpu"

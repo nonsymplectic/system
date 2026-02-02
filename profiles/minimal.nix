@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  # --- Booting ---
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
   # --- Connectivity baseline ---
   networking.networkmanager.enable = true;
 
@@ -10,6 +14,6 @@
     wget
     git
     tree
+    openssh
   ];
-
 }

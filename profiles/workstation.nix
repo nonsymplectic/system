@@ -1,4 +1,4 @@
-{ pkgs, config, lib, ... }:
+{ pkgs, config, ... }:
 
 {
   /* ============================================================
@@ -16,6 +16,9 @@
      ============================================================ */
 
   imports = [
+    # inherits from minimal.nix
+    ../profiles/minimal.nix
+
     # default UI token surface (my.ui)
     ../options/ui.nix
 
@@ -40,10 +43,12 @@
 
 
   /* ============================================================
-     Home Manager wiring
+     Home Manager
      ------------------------------------------------------------
-     Only wires HM modules from the NixOS layer.
+     user-level home-manager settings belong in hosts/<hostname>/users.nix
      ============================================================ */
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
 
 
   home-manager.extraSpecialArgs = {
@@ -62,30 +67,6 @@
     # --- GENERIC USER LEVEL ---
     ../modules/home/packages.nix
   ];
-
-  /* ============================================================
-     Networking baseline
-     ============================================================ */
-
-  networking.networkmanager.enable = true;
-
-
-  /* ============================================================
-     Minimal system packages
-     ------------------------------------------------------------
-     System-level tools available to all users.
-     User applications should go through Home Manager.
-     ============================================================ */
-
-  environment.systemPackages = with pkgs; [
-    nix-search
-    vim
-    wget
-    tree
-    htop
-    git
-  ];
-
 
   /* ============================================================
      XDG / portal integration

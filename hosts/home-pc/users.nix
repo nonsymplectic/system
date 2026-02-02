@@ -1,6 +1,6 @@
 { ... }:
 {
-  # Primary User Setting use for System-Level
+  # --- Primary user ---
   my.primaryUser = "michal";
 
   users.users.michal = {
@@ -8,14 +8,14 @@
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
   };
 
-  home-manager.useGlobalPkgs = true;
-  home-manager.useUserPackages = true;
-
-  home-manager.users.michal = {
+  # --- Home manager ---
+   home-manager.users.michal = {
     home.username = "michal";
     home.homeDirectory = "/home/michal";
     home.stateVersion = "25.11";
 
     programs.home-manager.enable = true;
   };
+
+  # --- Add further users here ---
 }
