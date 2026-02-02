@@ -1,36 +1,23 @@
-{ config, lib, pkgs, ui, wm, ... }:
+{ lib, pkgs, ui, desktop, ... }:
 
 let
-  wm = config.my.desktop;
+  /*
+    Sway (Home Manager plugin)
 
-  /* ============================================================
-     Sway backend (Home Manager layer)
-     ------------------------------------------------------------
-     Purpose:
-       - Enable + configure Sway via Home Manager (wayland.windowManager.sway)
-       - Self-gate on my.wm.enable && my.wm.backend == "sway"
-       - Interpret WM-agnostic selections (terminal/launcher/bar) into
-         Sway-native config (terminal/menu/bars/keybindings)
-     ============================================================ */
+    Responsibilities:
+      - Self-gate on normalized desktop payload (`desktop.*`).
+      - Configure Sway via Home Manager (wayland.windowManager.sway).
+      - Interpret desktop selections (terminal/launcher/bar) into Sway config.
+  */
 
-  enabled = wm.enable && wm.wm == "sway";
+  enabled =
+    desktop.enable
+    && desktop.wm.name == "sway";
 
-
-  /* ============================================================
-     Launcher command (backend interpretation)
-     ============================================================ */
-
-  menuCmd = wm._resolved.launcherCmd;
-
-  /* ============================================================
-     Bar command (forwarded from bar module)
-     ------------------------------------------------------------
-     my.wm.bar.command is provided by the selected bar module.
-     If enabled, we autostart it and disable swaybar.
-     ============================================================ */
+  menuCmd = desktop.launcher.command;
 
   barCmd =
-    if wm.bar.enable then wm._resolved.barCmd else null;
+    if desktop.bar.enable then desktop.bar.backend.command else null;
 
   barBin =
     if barCmd == null then null
@@ -40,15 +27,6 @@ let
     lib.optionalString (barCmd != null) ''
       exec sh -lc '${pkgs.procps}/bin/pgrep -x ${lib.escapeShellArg barBin} >/dev/null || exec ${barCmd}'
     '';
-
-
-  /* ============================================================
-     Client colors
-     ------------------------------------------------------------
-     Focus styling:
-       - No colored borders
-       - Color the title text for the focused container
-     ============================================================ */
 
   clientColors = {
     focused = {
@@ -92,26 +70,15 @@ let
     };
   };
 
-
-  /* ============================================================
-     Keybindings
-     ------------------------------------------------------------
-     Backend defaults + user overrides.
-     ============================================================ */
-
   baseKeybindings = {
-    # ----------------------------------------------------------
     # Launch / session
-    # ----------------------------------------------------------
-    "Mod4+Return" = "exec ${wm.terminal}";
+    "Mod4+Return" = "exec ${desktop.terminal.command}";
     "Mod4+d" = "exec ${menuCmd}";
     "Mod4+Shift+q" = "kill";
     "Mod4+Shift+r" = "reload";
     "Mod4+Shift+e" = "exec swaymsg exit";
 
-    # ----------------------------------------------------------
     # Focus movement (vim + arrows)
-    # ----------------------------------------------------------
     "Mod4+h" = "focus left";
     "Mod4+j" = "focus down";
     "Mod4+k" = "focus up";
@@ -124,9 +91,7 @@ let
     # Focus parent (escape nested containers)
     "Mod4+a" = "focus parent";
 
-    # ----------------------------------------------------------
     # Container movement (vim + arrows)
-    # ----------------------------------------------------------
     "Mod4+Shift+h" = "move left";
     "Mod4+Shift+j" = "move down";
     "Mod4+Shift+k" = "move up";
@@ -136,25 +101,19 @@ let
     "Mod4+Shift+Up" = "move up";
     "Mod4+Shift+Right" = "move right";
 
-    # ----------------------------------------------------------
     # Layout: tabbed / stacking / splits (Sway defaults)
-    # ----------------------------------------------------------
     "Mod4+s" = "layout stacking";
     "Mod4+w" = "layout tabbed";
     "Mod4+e" = "layout toggle split";
     "Mod4+b" = "splith";
     "Mod4+v" = "splitv";
 
-    # ----------------------------------------------------------
     # Fullscreen / floating
-    # ----------------------------------------------------------
     "Mod4+f" = "fullscreen toggle";
     "Mod4+Shift+space" = "floating toggle";
     "Mod4+space" = "focus mode_toggle";
 
-    # ----------------------------------------------------------
     # Workspaces (1-10) + move container to workspace
-    # ----------------------------------------------------------
     "Mod4+1" = "workspace number 1";
     "Mod4+2" = "workspace number 2";
     "Mod4+3" = "workspace number 3";
@@ -180,41 +139,25 @@ let
     # Workspace back-and-forth
     "Mod4+Tab" = "workspace back_and_forth";
 
-    # ----------------------------------------------------------
     # Resize mode
-    # ----------------------------------------------------------
     "Mod4+r" = "mode resize";
   };
 
   keybindings = baseKeybindings;
-
 in
 {
-  /* ============================================================
-     Configuration (selected only)
-     ------------------------------------------------------------
-     This module is self-gated. It must not install or emit config
-     unless:
-       - my.wm.enable == true
-       - my.wm.backend == "sway"
-     ============================================================ */
-
   config = lib.mkIf enabled {
-
-    /* ============================================================
-       Home Manager sway module
-       ============================================================ */
-
     wayland.windowManager.sway = {
       enable = true;
-
       wrapperFeatures.gtk = true;
 
-      extraOptions = wm.extraFlags.sway or [ ];
+      # Sway-specific extra flags come from normalization.
+      extraOptions = desktop.wm.flags;
 
       config = lib.mkMerge [
         {
-          terminal = wm.terminal;
+          # terminal/menu are Sway-native strings.
+          terminal = desktop.terminal.command;
           menu = menuCmd;
 
           fonts = {
@@ -228,7 +171,7 @@ in
         }
 
         # Disable built-in swaybar when using an external bar.
-        (lib.mkIf wm.bar.enable { bars = [ ]; })
+        (lib.mkIf desktop.bar.enable { bars = [ ]; })
       ];
 
       extraConfig = barAutostart;

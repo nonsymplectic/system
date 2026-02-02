@@ -1,9 +1,10 @@
-{ config, lib, pkgs, ui, wm, ... }:
+{ lib, pkgs, ui, desktop, ... }:
 
 let
-
-  cfg = config.my.desktop;
-  enabled = cfg.enable && cfg.bar.enable && cfg.bar.backend == "waybar";
+  enabled =
+    desktop.enable
+    && desktop.bar.enable
+    && desktop.bar.backend.name == "waybar";
 
   stripHash = s: lib.removePrefix "#" s;
 
@@ -21,43 +22,23 @@ let
   '';
 in
 {
-  /* ============================================================
-     waybar (HM implementation module)
-     ------------------------------------------------------------
-     Purpose:
-       - Enable + configure Waybar via Home Manager (programs.waybar.*)
-       - Self-gate on my.wm.enable && my.wm.bar.enable && my.wm.bar.backend
-       - Keep defaults; only:
-           * set colors (from UI tokens)
-           * set font (from UI tokens, NOT scaled)
-           * remove layout padding/spacing (tight like sway)
-       - Provide my.wm.bar.command for the selected bar backend
-     ============================================================ */
+  /*
+    Waybar (Home Manager plugin)
 
-
-  /* ============================================================
-     Configuration (selected only)
-     ============================================================ */
+    Responsibilities:
+      - Self-gate on normalized desktop payload (`desktop.*`).
+      - Enable + configure Waybar via Home Manager.
+      - Style derives from immutable UI tokens (`ui.*`).
+  */
 
   config = lib.mkIf enabled {
-
-    # ----------------------------------------------------------
-    # Provide bar command
-    # ----------------------------------------------------------
-    my.desktop._resolved.barCmd = lib.mkDefault "waybar";
-
-
-    /* ============================================================
-       Enable Waybar (installs + writes config/style via HM)
-       ============================================================ */
-
     programs.waybar = {
       enable = true;
 
       settings = {
         mainBar = {
           layer = "top";
-          position = config.desktop.bar.position;
+          position = desktop.bar.position;
 
           # Tight: no inter-module spacing.
           spacing = 0;

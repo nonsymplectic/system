@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, config, lib, ... }:
 
 {
   /* ============================================================
@@ -46,13 +46,16 @@
      ============================================================ */
 
 
+  home-manager.extraSpecialArgs = {
+    uiPolicy = config.my.ui;
+    desktopPolicy = config.my.desktop;
+  };
 
   home-manager.sharedModules = [
     # Shell
     ../modules/home/core/shell.nix
 
-    # WM implementation + policy (HM scope)
-    ../options/desktop.nix
+    # Desktop Plugin Module
     ../modules/home/desktop/interface.nix
 
     # User-level applications

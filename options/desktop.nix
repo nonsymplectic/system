@@ -17,7 +17,8 @@
        Top-level enable
        ============================================================ */
 
-    enable = lib.mkEnableOption {
+    enable = lib.mkOption {
+      type = lib.types.bool;
       default = true;
       description = "desktop configuration";
     };
@@ -61,7 +62,8 @@
        ============================================================ */
 
     bar = {
-      enable = lib.mkEnableOption {
+      enable = lib.mkOption {
+        type = lib.types.bool;
         default = true;
         description = "bar";
       };
@@ -74,7 +76,7 @@
 
       position = lib.mkOption {
         type = lib.types.enum [ "top" "bottom" ];
-        default = "top";
+        default = "bottom";
         description = "Bar location.";
       };
     };
@@ -91,36 +93,6 @@
         Extra CLI flags passed to the selected WM backend.
         Keys are backend names, values are lists of flags.
       '';
-    };
-
-
-    /* ============================================================
-       Internal plugin outputs (registry slots)
-       ------------------------------------------------------------
-       Implementations publish derived values here.
-       Hosts must not set these.
-       ============================================================ */
-
-    _resolved = lib.mkOption {
-      internal = true;
-      description = "Derived/normalized commands computed from the desktop config.";
-      default = { };
-
-      type = lib.types.submodule {
-        options = {
-          barCmd = lib.mkOption {
-            type = lib.types.nullOr lib.types.str;
-            default = null;
-            description = "Resolved command used to start the bar (e.g. waybar).";
-          };
-
-          launcherCmd = lib.mkOption {
-            type = lib.types.nullOr lib.types.str;
-            default = null;
-            description = "Resolved command used to start the launcher (e.g. rofi -show drun).";
-          };
-        };
-      };
     };
   };
 }

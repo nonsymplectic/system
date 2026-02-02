@@ -1,36 +1,25 @@
-{ config, lib, pkgs, ui, wm, ... }:
+{ lib, pkgs, ui, desktop, ... }:
 
 let
-  wm = config.my.desktop;
-
-  enabled = wm.enable && wm.terminal == "foot";
+  enabled =
+    desktop.enable
+    && desktop.terminal.name == "foot";
 
   stripHash = s: lib.removePrefix "#" s;
 
   p = i: stripHash (builtins.elemAt ui.terminal.palette i);
-
 in
 {
-  /* ============================================================
-     foot (HM implementation module)
-     ------------------------------------------------------------
-     Purpose:
-       - Enable + configure foot via Home Manager (programs.foot.*)
-       - Self-gate on my.wm.enable && my.wm.terminal == "foot"
-       - Derive colors / font from UI tokens
-     ============================================================ */
+  /*
+    Foot (Home Manager plugin)
 
-
-  /* ============================================================
-     Configuration (selected only)
-     ============================================================ */
+    Responsibilities:
+      - Self-gate on normalized desktop payload (`desktop.*`).
+      - Enable + configure foot via Home Manager (programs.foot.*).
+      - Colors and font derive from immutable UI tokens (`ui.*`).
+  */
 
   config = lib.mkIf enabled {
-
-    /* ============================================================
-       Enable foot (installs + writes foot.ini via HM)
-       ============================================================ */
-
     programs.foot = {
       enable = true;
 

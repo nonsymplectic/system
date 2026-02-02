@@ -1,9 +1,9 @@
-{ config, lib, pkgs, ui, wm, ... }:
+{ lib, pkgs, ui, desktop, ... }:
 
 let
-  wm = config.my.desktop;
-
-  enabled = wm.enable && wm.launcher == "wofi";
+  enabled =
+    desktop.enable
+    && desktop.launcher.name == "wofi";
 
   stripHash = s: lib.removePrefix "#" s;
 
@@ -12,41 +12,22 @@ let
   border = stripHash ui.colors.border;
   focus = stripHash ui.colors.focus;
   muted = stripHash (ui.colors.muted or ui.colors.foreground);
-
 in
 {
-  /* ============================================================
-     wofi (HM implementation module)
-     ------------------------------------------------------------
-     Purpose:
-       - Enable + configure wofi via Home Manager (programs.wofi.*)
-       - Self-gate on my.wm.enable && my.wm.launcher == "wofi"
-       - Keep defaults; only:
-           * set color via CSS (from UI tokens)
-           * set sort order to alphabetical
-     ============================================================ */
+  /*
+    Wofi (Home Manager plugin)
 
-
-  /* ============================================================
-     Configuration (selected only)
-     ============================================================ */
+    Responsibilities:
+      - Self-gate on normalized desktop payload (`desktop.*`).
+      - Enable + configure wofi via Home Manager (programs.wofi.*).
+      - Styling derives from immutable UI tokens (`ui.*`).
+  */
 
   config = lib.mkIf enabled {
-
-    /* ============================================================
-       Enable wofi (installs + writes config/style via HM)
-       ============================================================ */
-
-    # add ._resolved.launcherCmd
-    my.desktop._resolved.launcherCmd = lib.mkDefault "wofi --show drun";
-
-
     programs.wofi = {
       enable = true;
 
-      # ----------------------------------------------------------
       # wofi(5): sort_order = default | alphabetical
-      # ----------------------------------------------------------
       settings = {
         sort_order = "alphabetical";
         show_icons = false;
@@ -54,9 +35,7 @@ in
         no_actions = true;
       };
 
-      # ----------------------------------------------------------
-      # Styling (wofi(7)): keep minimal + token-driven
-      # ----------------------------------------------------------
+      # wofi(7): minimal + token-driven
       style = ''
         * {
           font-family: "${ui.monoFont.family}";
