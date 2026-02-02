@@ -272,7 +272,7 @@ All cross-component coordination flows through the normalized payload.
 
 ---
 
-## Home Manager: package vs desktop split
+## Home Manager: directories
 
 ### `modules/home/packages.nix`
 
@@ -281,19 +281,16 @@ Declares **generic user packages**.
 * no configuration
 * no coupling to desktop or services
 
-This answers:
-
-> “What tools do I always want in my `$HOME`?”
-
----
-
 ### `modules/home/desktop/`
 
 Contains **all desktop behavior**.
 
-This answers:
+### `modules/home/core/`
 
-> “How does my desktop behave?”
+Contains **core tool configuarion**
+
+* shell
+* git, etc.
 
 ---
 
