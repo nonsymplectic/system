@@ -1,11 +1,11 @@
 { config, lib, desktopPolicy, uiPolicy, ... }:
 
 let
-# desktop config needs some normalization
-normalize = import ../../../lib/desktop/normalize.nix { inherit lib; };
-desktop = normalize desktopPolicy;
+  # desktop config needs some normalization
+  normalize = import ../../../lib/desktop/normalize.nix { inherit lib; };
+  desktop = normalize desktopPolicy;
 
-# ui doesn't
+  # ui doesn't
 in
 {
   # Make `desktop`,'ui' available to every module imported after this interface.

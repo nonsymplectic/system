@@ -52,20 +52,15 @@
   };
 
   home-manager.sharedModules = [
-    # Shell
-    ../modules/home/core/shell.nix
+    # --- CORE ---
+    ../modules/home/core/shell.nix # shell
+    ../modules/home/core/git.nix # git config
 
-    # Desktop Plugin Module
+    # --- DESKTOP ENVIRONMENT ---
     ../modules/home/desktop/interface.nix
 
-    # User-level applications
-    ../modules/home/apps.nix
-
-    # Core developer-facing CLI tools
-    ../modules/home/core/devtools.nix
-
-    # Git configuration
-    ../modules/home/core/git.nix
+    # --- GENERIC USER LEVEL ---
+    ../modules/home/packages.nix
   ];
 
   /* ============================================================

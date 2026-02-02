@@ -13,5 +13,9 @@
     # --- FILE VIEWERS ----
     swayimg
     zathura
+
+    # --- CODE FORMATTERS ---
+    nixpkgs-fmt #nix
+    black #python
   ];
 }
