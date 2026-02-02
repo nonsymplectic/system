@@ -11,7 +11,8 @@ The design emphasizes:
 * secrets managed **exclusively via agenix**
 * minimal baselines composed into richer profiles
 
-This document defines the intended architecture and coding standards.
+This document defines the **normative architecture**.
+Code must be adapted to match it, not the other way around.
 
 ---
 
@@ -37,7 +38,7 @@ They are allowed to:
 * import hardware configuration
 * select profiles
 * override UI tokens
-* override desktop selection tokens
+* override desktop policy
 * toggle host-specific capability flags
 
 They must **not**:
@@ -64,7 +65,7 @@ The minimal baseline shared by all interactive systems.
 Characteristics:
 
 * ~10 core packages
-* SSH client enabled (`programs.ssh.enable = true`)
+* SSH client enabled
 * basic shell/editor/tooling
 * no Home Manager
 * no graphical stack
@@ -83,7 +84,7 @@ Characteristics:
 * imports `minimal`
 * enables Home Manager
 * enables the desktop plugin system
-* enables a login manager (e.g. `ly`)
+* enables a login manager
 * enables workstation-only services
 
 All graphical/UI behavior starts here or below — never in `minimal`.
@@ -96,9 +97,9 @@ The **primary user** is defined in a shared system module.
 
 * User definitions live under `modules/nixos/core/users.nix`
 * Hosts must not redefine the primary user
-* Hosts may add *extra* users only when explicitly required
+* Hosts may add extra users only when explicitly required
 
-This ensures a consistent `$HOME` identity across machines.
+This guarantees a consistent `$HOME` identity across machines.
 
 ---
 
@@ -140,7 +141,7 @@ Examples:
 * `options/ui.nix`
 * `options/desktop.nix`
 
-These files are imported by both NixOS and Home Manager module graphs to ensure a single source of truth.
+These files are imported into **both** the NixOS and Home Manager module graphs to ensure a single source of truth.
 
 ---
 
@@ -148,42 +149,40 @@ These files are imported by both NixOS and Home Manager module graphs to ensure 
 
 UI tokens represent **host-specific display properties**, such as:
 
-* font family
-* font size (pt)
-* font size (px)
+* font families and sizes
 * colors
 * scaling
-* ANSI terminal colors
+* terminal palettes
 
-They are:
+Properties:
 
 * set at the system level
-* forwarded into Home Manager
+* forwarded into Home Manager as an **immutable policy**
 * consumed by user-level modules
-* never mutated by implementations
+* never mutated or derived from within Home Manager modules
 
-UI tokens are *inputs*, not configuration.
+UI tokens are **inputs**, not configuration.
 
 ---
 
-## Desktop plugin system (Home Manager)
+## Desktop system (Home Manager)
 
-The desktop environment is implemented as a **plugin system** at the Home Manager layer.
+The desktop environment is implemented entirely at the **Home Manager layer** as a plugin system.
 
-This system is:
+The system is:
 
 * window-manager agnostic
 * bar agnostic
 * launcher agnostic
 * terminal agnostic
 
-It provides a stable interface while allowing new components to be added with minimal churn.
+It provides a stable policy interface while allowing new components to be added with minimal churn.
 
 ---
 
-### Host-facing interface (`my.desktop.*`)
+### Desktop policy (`my.desktop.*`)
 
-Hosts select desktop components via declarative policy options:
+Hosts select desktop behavior via declarative **policy options**:
 
 * `my.desktop.enable`
 * `my.desktop.wm`
@@ -192,28 +191,58 @@ Hosts select desktop components via declarative policy options:
 * `my.desktop.bar.position`
 * `my.desktop.launcher`
 * `my.desktop.terminal`
-* ...
-* `my.desktop.extraFlags`.<COMPONENT> = [ ... ]
-These options express **what** the desktop should be, never **how** it is implemented, host-specifc flag overrides (compatibility, e.g. wm needs special gpu flag) allowed.
+* `my.desktop.extraFlags.<component> = [ ... ]`
+
+These options express **what** the desktop should be, never **how** it is implemented.
 
 ---
 
-### Interface module
+### Policy forwarding and normalization
+
+The desktop system uses **single-pass normalization**:
+
+1. `my.desktop` is defined at the system level.
+2. It is forwarded into Home Manager as an **immutable argument** (`desktopPolicy`).
+3. The Home Manager desktop interface:
+
+   * derives a single **normalized wiring payload** (`desktop`)
+   * enforces invariants
+   * exposes the normalized payload to all desktop plugins
+
+The normalized payload contains:
+
+* resolved component identifiers
+* launch commands (e.g. bar / launcher / terminal)
+* component flags
+* minimal session wiring (environment variables)
+
+Normalization is **wiring-only**:
+
+* no UI styling
+* no backend configuration
+* no module-local interpretation
+
+There is exactly **one interpretation** of desktop policy.
+
+---
+
+### Desktop interface module
 
 `modules/home/desktop/interface.nix` is the entry point.
 
 Responsibilities:
 
 * import all desktop plugins unconditionally
-* define internal plugin slots
-* enforce invariants via assertions
-* provide shared wiring (e.g. portals)
+* normalize `desktopPolicy → desktop`
+* forward immutable UI tokens (`uiPolicy`)
+* enforce invariants at evaluation time
+* expose `{ desktop, ui }` to all plugins
 
-It contains **no backend-specific logic**.
+The interface contains **no backend-specific configuration**.
 
 ---
 
-### Plugin modules
+### Desktop plugin modules
 
 Plugins live under:
 
@@ -227,72 +256,44 @@ modules/home/desktop/
 
 Each plugin:
 
-* self-gates on `config.my.desktop.*`
+* self-gates on the normalized `desktop` payload
 * installs its own packages
-* writes its own Home Manager program config
-* may publish internal outputs
+* configures its own Home Manager programs
+* consumes only `{ desktop, ui }`
 
-Plugins must not depend on each other directly.
+Plugins must **not**:
 
----
+* read `config.my.desktop.*`
+* mutate policy
+* publish internal registry slots
+* depend on other plugins directly
 
-### Internal plugin outputs (“registry slots”)
-
-Some components must publish implementation results that other components consume.
-
-This is handled via **internal registry slots**:
-
-```
-my.desktop._resolved.*
-```
-
-Example:
-
-* `my.desktop._resolved.barCommand`
-
-Rules:
-
-* `_resolved.*` is internal plumbing
-* hosts must never set these
-* only plugins may write to them
-* interface module enforces correctness
-
-This allows adding new plugins without touching existing backends.
+All cross-component coordination flows through the normalized payload.
 
 ---
 
-### Invariants
-
-The interface module enforces invariants such as:
-
-* if a bar is enabled, exactly one bar plugin must publish a command
-* if the desktop is enabled, exactly one WM backend must be active
-
-Violations fail fast at evaluation time.
-
----
-
-## Home Manager: package vs configuration split
-
-Home Manager modules are split explicitly:
+## Home Manager: package vs desktop split
 
 ### `modules/home/packages.nix`
 
-* declares **generic user packages**
+Declares **generic user packages**.
+
 * no configuration
 * no coupling to desktop or services
 
-This file answers the question:
-**“What tools do I always want in my `$HOME`?”**
+This answers:
+
+> “What tools do I always want in my `$HOME`?”
 
 ---
 
 ### `modules/home/desktop/`
 
-Contains all **desktop-related configuration** and nothing else.
+Contains **all desktop behavior**.
 
-This file answers the question:
-**“How does my desktop behave?”**
+This answers:
+
+> “How does my desktop behave?”
 
 ---
 
@@ -302,7 +303,7 @@ This file answers the question:
 
 * hardware
 * login managers
-* session glue (Wayland env, seat, portals)
+* session setup
 * services
 * secrets
 
@@ -344,6 +345,7 @@ This system is designed so that:
 
 * hosts remain boring and declarative
 * Home Manager config is identical across machines by default
+* desktop policy has a single interpretation
 * adding a new desktop component requires minimal changes
 * implementation complexity is hidden behind stable interfaces
 * secrets are never mishandled
@@ -354,4 +356,3 @@ This system is designed so that:
 ### Status
 
 This document is **normative**.
-Code must be adapted to match it, not the other way around.
