@@ -3,6 +3,8 @@
   home.packages = with pkgs; [
     # --- GUI ---
     chromium
+    qutebrowser
+    protonmail-desktop
     keepassxc
     zed-editor
 

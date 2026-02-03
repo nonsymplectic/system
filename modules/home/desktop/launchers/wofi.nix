@@ -33,6 +33,7 @@ in
         show_icons = false;
         insensitive = true;
         no_actions = true;
+        term = "${desktop.terminal.command}";
       };
 
       # wofi(7): minimal + token-driven
