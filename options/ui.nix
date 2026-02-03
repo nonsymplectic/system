@@ -14,23 +14,23 @@ let
 
   # Named view of ANSI 16-color palette
   ansi = rec {
-    black = "#241f31";
-    red = "#c01c28";
-    green = "#2ec27e";
-    yellow = "#f5c211";
-    blue = "#1e78e4";
-    magenta = "#9841bb";
-    cyan = "#0ab9dc";
-    white = "#c0bfbc";
+    black = "#eff1f5";
+    red = "#d20f39";
+    green = "#40a02b";
+    yellow = "#df8e1d";
+    blue = "#1e66f5";
+    magenta = "#ea76cb";
+    cyan = "#179299";
+    white = "#4c4f69";
 
-    brightBlack = "#5e5c64";
-    brightRed = "#ed333b";
-    brightGreen = "#57e389";
-    brightYellow = "#f8e45c";
-    brightBlue = "#51a1ff";
-    brightMagenta = "#c061cb";
-    brightCyan = "#4fd2fd";
-    brightWhite = "#f6f5f4";
+    brightBlack = "#eff1f5";
+    brightRed = "#d20f39";
+    brightGreen = "#40a02b";
+    brightYellow = "#df8e1d";
+    brightBlue = "#1e66f5";
+    brightMagenta = "#ea76cb";
+    brightCyan = "#179299";
+    brightWhite = "#4c4f69";
   };
 
   ansiPalette = [
@@ -64,7 +64,7 @@ in
      - Semantic colors
      - Terminal palette (ANSI 16)
 
-     Defaults derived from Adwaita Dark.
+     Defaults derived from Catpuccin Latte.
      Hosts may override any token per-host.
      ============================================================ */
 
@@ -142,21 +142,20 @@ in
        Semantic colors (hex strings)
        ------------------------------------------------------------
        Colors are expressed as hex strings, e.g. "#rrggbb".
-       Defaults derived from Adwaita Dark.
        ============================================================ */
 
     colors = {
       # Reference ANSI slots (by name) for UI background/foreground.
       # This keeps terminal + UI aligned and avoids duplicate sources of truth.
       background = mkOption { type = types.str; default = ansi.black; description = "Background color (hex)."; };
-      foreground = mkOption { type = types.str; default = ansi.brightWhite; description = "Foreground/text color (hex)."; };
+      foreground = mkOption { type = types.str; default = ansi.white; description = "Foreground/text color (hex)."; };
 
       # Semantic roles (still ANSI-derived).
       primary = mkOption { type = types.str; default = ansi.green; description = "Primary/accent color (hex)."; };
       secondary = mkOption { type = types.str; default = ansi.yellow; description = "Secondary accent color (hex)."; };
       muted = mkOption { type = types.str; default = ansi.brightBlack; description = "Muted/disabled color (hex)."; };
       border = mkOption { type = types.str; default = ansi.brightBlack; description = "Border/outline color (hex)."; };
-      focus = mkOption { type = types.str; default = ansi.blue; description = "Focus/active indicator color (hex)."; };
+      focus = mkOption { type = types.str; default = ansi.magenta; description = "Focus/active indicator color (hex)."; };
       error = mkOption { type = types.str; default = ansi.red; description = "Error color (hex)."; };
       warning = mkOption { type = types.str; default = ansi.yellow; description = "Warning color (hex)."; };
       success = mkOption { type = types.str; default = ansi.green; description = "Success color (hex)."; };
@@ -175,8 +174,8 @@ in
     terminal = {
       # Reference ANSI slots (by name) for terminal background/foreground/cursor.
       background = mkOption { type = types.str; default = ansi.black; description = "Terminal background (hex)."; };
-      foreground = mkOption { type = types.str; default = ansi.brightWhite; description = "Terminal foreground (hex)."; };
-      cursor = mkOption { type = types.str; default = ansi.brightWhite; description = "Terminal cursor color (hex)."; };
+      foreground = mkOption { type = types.str; default = ansi.white; description = "Terminal foreground (hex)."; };
+      cursor = mkOption { type = types.str; default = ansi.white; description = "Terminal cursor color (hex)."; };
 
       palette = mkOption {
         type = ansi16;
