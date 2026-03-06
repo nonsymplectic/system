@@ -1,5 +1,13 @@
 { pkgs, ... }:
 {
+  /* ============================================================
+     NixOS module imports
+     ============================================================ */
+  imports = [
+    # Declares primaryUser plumbing
+    ../modules/nixos/core/primary-user.nix
+  ];
+
   # --- Booting ---
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

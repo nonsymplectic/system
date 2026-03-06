@@ -25,9 +25,6 @@
     # default desktop token surface (my.desktop)
     ../options/desktop.nix
 
-    # Declares primaryUser plumbing
-    ../modules/nixos/core/primary-user.nix
-
     # Font resources
     ../modules/nixos/ui/fonts.nix
 
