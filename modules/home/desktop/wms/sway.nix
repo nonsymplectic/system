@@ -153,6 +153,24 @@ let
 in
 {
   config = lib.mkIf enabled {
+    # Sway comes with mako for notifications per default
+    services.mako = {
+      enable = true;
+
+      backgroundColor = ui.colors.background;
+      textColor = ui.colors.foreground;
+      borderColor = ui.colors.muted;
+      progressColor = "over ${ui.colors.focus}";
+
+      extraConfig = ''
+        [urgency=high]
+        border-color=${ui.colors.error}
+
+        [urgency=normal]
+         border-color=${ui.colors.focus}
+      '';
+    };
+
     wayland.windowManager.sway = {
       enable = true;
       wrapperFeatures.gtk = true;
