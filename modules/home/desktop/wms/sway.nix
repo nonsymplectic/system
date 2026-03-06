@@ -38,7 +38,7 @@ let
     focused = {
       border = ui.colors.background;
       indicator = ui.colors.background;
-      childBorder = ui.colors.background;
+      childBorder = ui.colors.focus;
       background = ui.colors.background;
       text = ui.colors.focus;
     };
@@ -182,9 +182,14 @@ in
 
       config = lib.mkMerge [
         {
+          defaultWorkspace = "workspace number 1";
+          workspaceLayout = "tabbed";
+
           # terminal/menu are Sway-native strings.
           terminal = desktop.terminal.command;
           menu = menuCmd;
+
+          defaultBorder = "2";
 
           fonts = {
             names = [ ui.font.family ];
