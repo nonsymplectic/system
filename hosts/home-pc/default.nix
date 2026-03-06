@@ -32,7 +32,7 @@
      Host identity
      ============================================================ */
 
-  networking.hostName = "nixos";
+  networking.hostName = "home-pc";
   time.timeZone = "Europe/Zurich";
 
   /* ============================================================

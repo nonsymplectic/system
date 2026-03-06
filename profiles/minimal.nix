@@ -4,6 +4,9 @@
      NixOS module imports
      ============================================================ */
   imports = [
+    # Nix settings
+    ../modules/nixos/core/nix.nix
+
     # Declares primaryUser plumbing
     ../modules/nixos/core/primary-user.nix
   ];
@@ -23,5 +26,10 @@
     git
     tree
     openssh
+
+    # shorthand for rebuilding system config
+    (writeShellScriptBin "system-rebuild" ''
+      exec nixos-rebuild switch --flake ".#$(hostname)"
+    '')
   ];
 }
