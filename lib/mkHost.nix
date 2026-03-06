@@ -3,10 +3,17 @@
 , modules ? [ ]
 , baselineModule ? ({ ... }: { })
 }:
+let
+  pkgsUnstable = import inputs.nixpkgs-unstable {
+    inherit system;
+  };
+in
 inputs.nixpkgs.lib.nixosSystem {
   inherit system;
 
-  specialArgs = { inherit inputs; };
+  specialArgs = {
+    inherit inputs pkgsUnstable;
+  };
 
   modules =
     [

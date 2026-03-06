@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, pkgsUnstable, config, ... }:
 
 {
   /* ============================================================
@@ -52,6 +52,7 @@
 
 
   home-manager.extraSpecialArgs = {
+    inherit pkgsUnstable;
     uiPolicy = config.my.ui;
     desktopPolicy = config.my.desktop;
   };

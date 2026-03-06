@@ -1,26 +1,31 @@
-{ pkgs, ... }:
+{ pkgs, pkgsUnstable, ... }:
 {
-  home.packages = with pkgs; [
-    # --- GUI ---
-    chromium
-    qutebrowser
-    protonmail-desktop
-    keepassxc
-    zed-editor
-    dino
+  home.packages =
+    (with pkgs; [
+      # --- GUI ---
+      chromium
+      qutebrowser
+      keepassxc
+      dino
 
-    # --- CLI TOOLS ---
-    ps_mem # RAM usage
-    htop # task viewer
-    btop # task viewer
-    neofetch # eyecandy welcome screen
+      # --- CLI TOOLS ---
+      ps_mem # RAM usage
+      htop # task viewer
+      btop # task viewer
+      neofetch # eyecandy welcome screen
 
-    # --- FILE VIEWERS ----
-    swayimg # wayland image viewer
-    zathura # pdfs
+      # --- FILE VIEWERS ----
+      swayimg # wayland image viewer
+      zathura # pdfs
 
-    # --- CODE FORMATTERS ---
-    nixpkgs-fmt # nix
-    black # python
-  ];
+      # --- CODE FORMATTERS ---
+      nixpkgs-fmt # nix
+      black # python
+    ])
+    ++
+    (with pkgsUnstable; [
+      # --- GUI ---
+      zed-editor
+      protonmail-desktop
+    ]);
 }
