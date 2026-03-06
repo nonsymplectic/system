@@ -157,10 +157,12 @@ in
     services.mako = {
       enable = true;
 
-      backgroundColor = ui.colors.background;
-      textColor = ui.colors.foreground;
-      borderColor = ui.colors.muted;
-      progressColor = "over ${ui.colors.focus}";
+      settings = {
+        backgroundColor = ui.colors.background;
+        textColor = ui.colors.foreground;
+        borderColor = ui.colors.muted;
+        progressColor = "over ${ui.colors.focus}";
+      };
 
       extraConfig = ''
         [urgency=high]

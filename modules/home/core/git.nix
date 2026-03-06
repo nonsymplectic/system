@@ -2,11 +2,12 @@
 {
   programs.git = {
     enable = true;
+    settings = {
+      user = {
+        name = "Michał Mikuta";
+        email = "nonsymplectic@users.noreply.github.com";
+      };
 
-    userName = "Michał Mikuta";
-    userEmail = "nonsymplectic@users.noreply.github.com";
-
-    extraConfig = {
       init.defaultBranch = "main";
 
       pull.rebase = true;
