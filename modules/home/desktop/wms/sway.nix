@@ -189,8 +189,6 @@ in
           terminal = desktop.terminal.command;
           menu = menuCmd;
 
-          defaultBorder = "2";
-
           fonts = {
             names = [ ui.font.family ];
             size = builtins.toString ui.font.size;
