@@ -21,14 +21,5 @@
     };
   };
 
-  programs.ssh = {
-    enable = true;
-    matchBlocks."github.com" = {
-      user = "git";
-      identityFile = "${config.home.homeDirectory}/.ssh/id_ed25519_github";
-      identitiesOnly = true;
-    };
-  };
-
   home.packages = with pkgs; [ git ];
 }

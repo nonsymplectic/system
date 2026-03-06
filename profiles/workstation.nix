@@ -60,6 +60,7 @@
   home-manager.sharedModules = [
     # --- CORE ---
     ../modules/home/core/shell.nix # shell
+    ../modules/home/core/ssh.nix # ssh config
     ../modules/home/core/git.nix # git config
 
     # --- DESKTOP ENVIRONMENT ---
