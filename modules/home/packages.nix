@@ -7,6 +7,7 @@
     protonmail-desktop
     keepassxc
     zed-editor
+    dino
 
     # --- CLI TOOLS ---
     ps_mem # RAM usage

@@ -25,7 +25,7 @@ in
 
       settings = {
         main = {
-          term = "foot-direct";
+          term = "linux";
           font = "${ui.monoFont.family}:size=${toString ui.monoFont.size}";
         };
 
