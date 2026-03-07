@@ -2,6 +2,8 @@
 {
   home.packages =
     (with pkgs; [
+      pulseaudioFull
+
       # --- GUI ---
       blueman
       chromium
