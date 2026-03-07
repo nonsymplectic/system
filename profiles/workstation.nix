@@ -65,6 +65,7 @@
 
     # --- GENERIC USER LEVEL ---
     ../modules/home/packages.nix
+    ../modules/home/services.nix
   ];
 
   /* ============================================================
