@@ -23,11 +23,18 @@ let
 
 in
 {
-  config = lib.mkIf (d.enable && anyDmEnabled && wmSessionPkg != null) {
-    services.displayManager.sessionPackages =
-      lib.mkAfter [ wmSessionPkg ];
+  config = lib.mkMerge [
+    (lib.mkIf (d.enable && anyDmEnabled && wmSessionPkg != null) {
+      services.displayManager.sessionPackages =
+        lib.mkAfter [ wmSessionPkg ];
 
-    # Optional: expose the WM binary system-wide as well.
-    # environment.systemPackages = lib.mkAfter [ wmSessionPkg ];
-  };
+      # Optional: expose the WM binary system-wide as well.
+      # environment.systemPackages = lib.mkAfter [ wmSessionPkg ];
+    })
+
+    # swaylock needs pam authorization to work
+    (lib.mkIf (d.enable && d.wm == "sway") {
+      security.pam.services.swaylock = { };
+    })
+  ];
 }

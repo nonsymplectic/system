@@ -16,6 +16,8 @@ let
 
   menuCmd = desktop.launcher.command;
 
+  lockCmd = "swaylock -S -F --effect-pixelate 16";
+
   barCmd =
     if desktop.bar.enable then desktop.bar.backend.command else null;
 
@@ -83,6 +85,7 @@ let
     "Mod4+Shift+q" = "kill";
     "Mod4+Shift+r" = "reload";
     "Mod4+Shift+e" = "exec swaymsg exit";
+    "Mod4+Shift+p" = "exec ${lockCmd}";
 
     # Focus movement (vim + arrows)
     "Mod4+h" = "focus left";
@@ -171,6 +174,12 @@ in
         [urgency=normal]
          border-color=${ui.colors.focus}
       '';
+    };
+
+    #Swaylock for a lockscreen
+    programs.swaylock = {
+      enable = true;
+      package = pkgs.swaylock-effects;
     };
 
     wayland.windowManager.sway = {
