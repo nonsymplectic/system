@@ -31,8 +31,8 @@
     # Installs Display Manager
     ../modules/nixos/services/ly.nix
 
-    # Some WMs need a DM hotfix
-    ../modules/nixos/ui/wm-displaymanager.nix
+    # Some WMs need hotfixes
+    ../modules/nixos/ui/wm-setup.nix
 
     # Secrets management (agenix)
     ../modules/nixos/core/agenix.nix
