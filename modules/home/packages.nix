@@ -10,6 +10,8 @@
       qutebrowser
       keepassxc
       dino
+      calibre
+      zotero
 
       # --- CLI TOOLS ---
       ps_mem # RAM usage

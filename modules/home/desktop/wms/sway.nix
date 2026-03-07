@@ -54,7 +54,6 @@ let
     show-keyboard-layout = true;
     show-failed-attempts = true;
     effect-pixelate = 16;
-
   };
 
   lockCmd = "${pkgs.swaylock-effects}/bin/swaylock";
