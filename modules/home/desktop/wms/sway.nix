@@ -225,6 +225,7 @@ in
 
     wayland.windowManager.sway = {
       enable = true;
+      systemd.enable = true;
       wrapperFeatures.gtk = true;
 
       # Sway-specific extra flags come from normalization.
