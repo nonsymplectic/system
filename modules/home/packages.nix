@@ -3,6 +3,7 @@
   home.packages =
     (with pkgs; [
       # --- GUI ---
+      blueman
       chromium
       qutebrowser
       keepassxc
