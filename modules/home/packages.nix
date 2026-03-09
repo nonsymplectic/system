@@ -41,6 +41,7 @@
       ps_mem # RAM usage
       htop # task viewer
       neofetch # eyecandy welcome screen
+      claude-code
 
       # --- FILE VIEWERS ----
       swayimg # wayland image viewer

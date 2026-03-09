@@ -19,6 +19,9 @@
     # inherits from minimal.nix
     ../profiles/minimal.nix
 
+    # Allow unfree
+    ../modules/nixos/core/unfree-packages.nix
+
     # default UI token surface (my.ui)
     ../options/ui.nix
 
