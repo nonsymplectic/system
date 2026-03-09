@@ -13,5 +13,7 @@
     # Zurich hardcoded for now
     latitude = 47.3769;
     longitude = 8.5417;
+
+    systemdTarget = "graphical-session.target";
   };
 }
