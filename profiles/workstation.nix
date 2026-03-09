@@ -62,6 +62,7 @@
 
     # --- DESKTOP ENVIRONMENT ---
     ../modules/home/desktop/interface.nix
+    ../modules/home/input-methods.nix
 
     # --- GENERIC USER LEVEL ---
     ../modules/home/packages.nix
