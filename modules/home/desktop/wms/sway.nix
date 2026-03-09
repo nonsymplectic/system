@@ -70,6 +70,10 @@ let
       exec sh -lc '${pkgs.procps}/bin/pgrep -x ${lib.escapeShellArg barBin} >/dev/null || exec ${barCmd}'
     '';
 
+  disableFloating = ''
+    for_window [floating] floating disable
+  '';
+
   wallpaperDir = ../../../../options/wallpapers;
   wallpaperPath = wallpaperDir + ("/" + "wall.png");
   wallpaperSetting = ''
@@ -254,7 +258,7 @@ in
         (lib.mkIf desktop.bar.enable { bars = [ ]; })
       ];
 
-      extraConfig = barAutostart + wallpaperSetting;
+      extraConfig = disableFloating + barAutostart + wallpaperSetting;
     };
   };
 }

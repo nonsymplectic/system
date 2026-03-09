@@ -11,6 +11,10 @@
 
     # --- FILE VIEWERS ---
     zathura.enable = true;
+    mpv.enable = true;
+
+    # --- GUI ---
+    anki.enable = true;
 
     # --- IDES ---
     zed-editor = {
