@@ -3,8 +3,8 @@
   home.packages =
     (with pkgs; [
       pulseaudioFull
-      # --- Web Browsers ---
 
+      # --- Web Browsers ---
       chromium
       qutebrowser
       tor-browser

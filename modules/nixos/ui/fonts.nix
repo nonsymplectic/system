@@ -10,6 +10,7 @@
 
   fonts.packages = [
     pkgs.nerd-fonts.jetbrains-mono
+    pkgs.noto-fonts
   ];
 
   # Make fonts discoverable system-wide via fontconfig.
