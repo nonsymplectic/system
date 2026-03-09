@@ -3,11 +3,14 @@
   home.packages =
     (with pkgs; [
       pulseaudioFull
+      # --- Web Browsers ---
+
+      chromium
+      qutebrowser
+      tor-browser
 
       # --- GUI ---
       blueman
-      chromium
-      qutebrowser
       keepassxc
       dino
       calibre
