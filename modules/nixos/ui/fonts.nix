@@ -11,8 +11,6 @@
   fonts.packages = [
     pkgs.nerd-fonts.jetbrains-mono
     pkgs.noto-fonts
-    noto-fonts-cjk-sans
-    noto-fonts-color-emoji
     pkgs.noto-fonts-cjk-sans
     pkgs.noto-fonts-color-emoji
   ];
