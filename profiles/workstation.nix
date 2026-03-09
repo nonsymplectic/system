@@ -1,4 +1,4 @@
-{ pkgs, pkgsUnstable, config, ... }:
+{ pkgs, pkgsUnstable, catppuccin, config, ... }:
 
 {
   /* ============================================================
@@ -49,7 +49,7 @@
 
 
   home-manager.extraSpecialArgs = {
-    inherit pkgsUnstable;
+    inherit pkgsUnstable catppuccin;
     uiPolicy = config.my.ui;
     desktopPolicy = config.my.desktop;
   };
@@ -63,6 +63,9 @@
     # --- DESKTOP ENVIRONMENT ---
     ../modules/home/desktop/interface.nix
     ../modules/home/input-methods.nix
+
+    catppuccin.homeModules.catppuccin
+    ../modules/home/desktop/theme.nix
 
     # --- GENERIC USER LEVEL ---
     ../modules/home/packages.nix

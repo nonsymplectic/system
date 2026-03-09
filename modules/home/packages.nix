@@ -1,12 +1,29 @@
 { pkgs, pkgsUnstable, ... }:
+
 {
+  programs = {
+    # --- WEB BROWSERS ---
+    chromium.enable = true;
+    qutebrowser.enable = true;
+
+    # --- CLI TOOLS ---
+    btop.enable = true;
+
+    # --- FILE VIEWERS ---
+    zathura.enable = true;
+
+    # --- IDES ---
+    zed-editor = {
+      enable = true;
+      package = pkgsUnstable.zed-editor;
+    };
+  };
+
   home.packages =
     (with pkgs; [
       pulseaudioFull
 
-      # --- Web Browsers ---
-      chromium
-      qutebrowser
+      # --- WEB BROWSERS ---
       tor-browser
 
       # --- GUI ---
@@ -19,12 +36,10 @@
       # --- CLI TOOLS ---
       ps_mem # RAM usage
       htop # task viewer
-      btop # task viewer
       neofetch # eyecandy welcome screen
 
       # --- FILE VIEWERS ----
       swayimg # wayland image viewer
-      zathura # pdfs
 
       # --- CODE FORMATTERS ---
       nixpkgs-fmt # nix
@@ -33,7 +48,6 @@
     ++
     (with pkgsUnstable; [
       # --- GUI ---
-      zed-editor
       protonmail-desktop
     ]);
 }

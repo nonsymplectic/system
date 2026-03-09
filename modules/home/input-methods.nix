@@ -1,12 +1,11 @@
 { pkgs, ... }:
 {
   i18n.inputMethod = {
-    enable = true;
+    enable = false;
     type = "fcitx5";
     fcitx5 = {
       waylandFrontend = true;
       addons = with pkgs; [
-        catppuccin-fcitx5
         (fcitx5-rime.override {
           rimeDataPkgs = [
             rime-ice
