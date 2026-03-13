@@ -1,9 +1,8 @@
-{
-  pkgs,
-  pkgsUnstable,
-  catppuccin,
-  config,
-  ...
+{ pkgs
+, pkgsUnstable
+, catppuccin
+, config
+, ...
 }:
 
 {
@@ -84,20 +83,5 @@
     ../modules/home/desktop-entries.nix
     ../modules/home/packages.nix
     ../modules/home/services.nix
-  ];
-
-  /*
-    ============================================================
-    XDG / portal integration
-    ------------------------------------------------------------
-    Required by Home Manager NixOS module when useUserPackages=true
-    and xdg.portal is enabled in HM. Links portal + desktop configs
-    into the system profile for discovery.
-    ============================================================
-  */
-
-  environment.pathsToLink = [
-    "/share/applications"
-    "/share/xdg-desktop-portal"
   ];
 }

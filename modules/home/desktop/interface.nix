@@ -1,9 +1,8 @@
-{
-  config,
-  lib,
-  desktopPolicy,
-  uiPolicy,
-  ...
+{ config
+, lib
+, desktopPolicy
+, uiPolicy
+, ...
 }:
 
 let

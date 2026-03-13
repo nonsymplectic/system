@@ -6,49 +6,59 @@ let
   flagsFor = name: policy.extraFlags.${name} or [ ];
 
   # Render flags safely for a command string.
-  renderFlags = flags:
-    lib.concatStringsSep " " (map lib.escapeShellArg flags);
+  renderFlags = flags: lib.concatStringsSep " " (map lib.escapeShellArg flags);
 
-  mkCommand = base: flags:
-    if flags == [ ] then base else "${base} ${renderFlags flags}";
+  mkCommand = base: flags: if flags == [ ] then base else "${base} ${renderFlags flags}";
 
   # Component-specific commands
   wmName = policy.wm;
   terminalName = policy.terminal;
   launcherName = policy.launcher;
+  defaultBrowserName = policy.defaultBrowser;
 
   wmCommand =
-    if wmName == "sway"
-    then mkCommand "sway" (flagsFor "sway")
-    else throw "normalizeDesktopPolicy: unsupported wm: ${wmName}";
+    if wmName == "sway" then
+      mkCommand "sway" (flagsFor "sway")
+    else
+      throw "normalizeDesktopPolicy: unsupported wm: ${wmName}";
 
   terminalCommand =
-    if terminalName == "foot"
-    then mkCommand "foot" (flagsFor "foot")
-    else throw "normalizeDesktopPolicy: unsupported terminal: ${terminalName}";
+    if terminalName == "foot" then
+      mkCommand "foot" (flagsFor "foot")
+    else
+      throw "normalizeDesktopPolicy: unsupported terminal: ${terminalName}";
 
   launcherCommand =
-    if launcherName == "wofi"
-    then mkCommand "wofi --show drun" (flagsFor "wofi")
-    else throw "normalizeDesktopPolicy: unsupported launcher: ${launcherName}";
+    if launcherName == "wofi" then
+      mkCommand "wofi --show drun" (flagsFor "wofi")
+    else
+      throw "normalizeDesktopPolicy: unsupported launcher: ${launcherName}";
+
+  defaultBrowserCommand =
+    if defaultBrowserName == "chromium" then
+      mkCommand "chromium" (flagsFor "chromium")
+    else if defaultBrowserName == "qutebrowser" then
+      mkCommand "qutebrowser" (flagsFor "qutebrowser")
+    else
+      throw "normalizeDesktopPolicy: unsupported browser: ${defaultBrowserName}";
 
   barBackendName = policy.bar.backend;
 
   barBackendCommand =
-    if barBackendName == "waybar"
-    then mkCommand "waybar" (flagsFor "waybar")
-    else throw "normalizeDesktopPolicy: unsupported bar backend: ${barBackendName}";
+    if barBackendName == "waybar" then
+      mkCommand "waybar" (flagsFor "waybar")
+    else
+      throw "normalizeDesktopPolicy: unsupported bar backend: ${barBackendName}";
 
   # Wiring-only session env. Keep this intentionally small.
-  wiringEnv =
-    lib.mkMerge [
-      {
-        XDG_SESSION_TYPE = "wayland";
-      }
-      (lib.mkIf policy.enable {
-        XDG_CURRENT_DESKTOP = wmName;
-      })
-    ];
+  wiringEnv = lib.mkMerge [
+    {
+      XDG_SESSION_TYPE = "wayland";
+    }
+    (lib.mkIf policy.enable {
+      XDG_CURRENT_DESKTOP = wmName;
+    })
+  ];
 
   assertions = [
     {
@@ -90,6 +100,10 @@ in
       flags = flagsFor barBackendName;
       command = barBackendCommand;
     };
+  };
+
+  defaultBrowser = {
+    command = defaultBrowserCommand;
   };
 
   env = wiringEnv;

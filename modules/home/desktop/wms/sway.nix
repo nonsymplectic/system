@@ -1,9 +1,8 @@
-{
-  lib,
-  pkgs,
-  ui,
-  desktop,
-  ...
+{ lib
+, pkgs
+, ui
+, desktop
+, ...
 }:
 
 let
@@ -126,6 +125,7 @@ let
     # Launch / session
     "Mod4+Return" = "exec ${desktop.terminal.command}";
     "Mod4+d" = "exec ${menuCmd}";
+    "Mod4+Shift+f" = "exec ${desktop.defaultBrowser.command}";
     "Mod4+Shift+q" = "kill";
     "Mod4+Shift+r" = "reload";
     "Mod4+Shift+e" = "exec swaymsg exit";

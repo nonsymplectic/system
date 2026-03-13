@@ -1,21 +1,25 @@
 { lib, ... }:
 
 {
-  /* ============================================================
-     Desktop plugin system (Home Manager layer)
-     ------------------------------------------------------------
-     Declarations only:
-       - Defines the complete my.desktop.* interface:
-           * types
-           * defaults
-           * descriptions
-       - No wiring, no imports, no packages, no config side effects.
-     ============================================================ */
+  /*
+    ============================================================
+    Desktop plugin system (Home Manager layer)
+    ------------------------------------------------------------
+    Declarations only:
+      - Defines the complete my.desktop.* interface:
+          * types
+          * defaults
+          * descriptions
+      - No wiring, no imports, no packages, no config side effects.
+    ============================================================
+  */
 
   options.my.desktop = {
-    /* ============================================================
-       Top-level enable
-       ============================================================ */
+    /*
+      ============================================================
+      Top-level enable
+      ============================================================
+    */
 
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -23,10 +27,11 @@
       description = "desktop configuration";
     };
 
-
-    /* ============================================================
-       Window manager
-       ============================================================ */
+    /*
+      ============================================================
+      Window manager
+      ============================================================
+    */
 
     wm = lib.mkOption {
       type = lib.types.enum [ "sway" ];
@@ -34,10 +39,11 @@
       description = "Window manager.";
     };
 
-
-    /* ============================================================
-       Terminal
-       ============================================================ */
+    /*
+      ============================================================
+      Terminal
+      ============================================================
+    */
 
     terminal = lib.mkOption {
       type = lib.types.enum [ "foot" ];
@@ -45,10 +51,11 @@
       description = "Terminal implementation.";
     };
 
-
-    /* ============================================================
-       Launcher
-       ============================================================ */
+    /*
+      ============================================================
+      Launcher
+      ============================================================
+    */
 
     launcher = lib.mkOption {
       type = lib.types.enum [ "wofi" ];
@@ -56,10 +63,11 @@
       description = "App launcher.";
     };
 
-
-    /* ============================================================
-       Bar
-       ============================================================ */
+    /*
+      ============================================================
+      Bar
+      ============================================================
+    */
 
     bar = {
       enable = lib.mkOption {
@@ -75,20 +83,41 @@
       };
 
       position = lib.mkOption {
-        type = lib.types.enum [ "top" "bottom" ];
+        type = lib.types.enum [
+          "top"
+          "bottom"
+        ];
         default = "bottom";
         description = "Bar location.";
       };
     };
 
+    /*
+      ============================================================
+      DefaultBrowser
+      ============================================================
+    */
 
-    /* ============================================================
-       ExtraFlags
-       ============================================================ */
+    defaultBrowser = lib.mkOption {
+      type = lib.types.enum [
+        "chromium"
+        "qutebrowser"
+      ];
+      default = "qutebrowser";
+      description = "Browser for shortcut.";
+    };
+
+    /*
+      ============================================================
+      ExtraFlags
+      ============================================================
+    */
     extraFlags = lib.mkOption {
       type = lib.types.attrsOf (lib.types.listOf lib.types.str);
       default = { };
-      example = { sway = [ "--unsupported-gpu" ]; };
+      example = {
+        sway = [ "--unsupported-gpu" ];
+      };
       description = ''
         Extra CLI flags passed to the selected WM backend.
         Keys are backend names, values are lists of flags.
