@@ -1,4 +1,10 @@
-{ config, lib, desktopPolicy, uiPolicy, ... }:
+{
+  config,
+  lib,
+  desktopPolicy,
+  uiPolicy,
+  ...
+}:
 
 let
   # desktop config needs some normalization

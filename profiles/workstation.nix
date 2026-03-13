@@ -80,6 +80,7 @@
     ../modules/home/desktop/theme.nix
 
     # --- GENERIC USER LEVEL ---
+    ../modules/home/default-apps.nix
     ../modules/home/desktop-entries.nix
     ../modules/home/packages.nix
     ../modules/home/services.nix
