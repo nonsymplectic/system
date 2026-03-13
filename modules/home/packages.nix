@@ -1,6 +1,7 @@
 { pkgs, pkgsUnstable, ... }:
 
 {
+  # --- HOME MANAGER ---
   programs = {
     # --- WEB BROWSERS ---
     chromium.enable = true;
@@ -20,9 +21,15 @@
     zed-editor = {
       enable = true;
       package = pkgsUnstable.zed-editor;
+      extensions = [ "nix" ];
+      extraPackages = [
+        pkgs.nixd
+        pkgs.nil
+      ];
     };
   };
 
+  # --- NON HOME MANAGER ---
   home.packages =
     (with pkgs; [
       pulseaudioFull
@@ -35,7 +42,6 @@
       keepassxc
       dino
       calibre
-      zotero
 
       # --- CLI TOOLS ---
       ps_mem # RAM usage
@@ -50,9 +56,9 @@
       nixpkgs-fmt # nix
       black # python
     ])
-    ++
-    (with pkgsUnstable; [
+    ++ (with pkgsUnstable; [
       # --- GUI ---
       protonmail-desktop
+      zotero
     ]);
 }

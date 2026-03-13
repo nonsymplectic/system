@@ -6,8 +6,8 @@
     accent = "pink";
 
     cursors = {
-        enable = true;
-        accent = "pink";
+      enable = true;
+      accent = "pink";
     };
 
     sway.enable = false;
