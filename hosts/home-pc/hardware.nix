@@ -1,5 +1,9 @@
-{ config, lib, pkgs, ... }:
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   # Bluetooth
   hardware.bluetooth = {
     enable = true;
@@ -23,7 +27,7 @@
   hardware.graphics.enable = true;
 
   # Load nvidia driver for Xorg and Wayland
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.videoDrivers = ["nvidia"];
 
   # Allow only the required unfree NVIDIA packages
   nixpkgs.config.allowUnfreePredicate = pkg:

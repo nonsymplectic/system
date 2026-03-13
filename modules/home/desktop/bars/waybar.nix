@@ -1,6 +1,10 @@
-{ lib, pkgs, ui, desktop, ... }:
-
-let
+{
+  lib,
+  pkgs,
+  ui,
+  desktop,
+  ...
+}: let
   enabled =
     desktop.enable
     && desktop.bar.enable
@@ -20,15 +24,14 @@ let
     [ -n "$cap" ] || exit 0
     printf 'BAT: %s%% |\n' "$cap"
   '';
-in
-{
+in {
   /*
-    Waybar (Home Manager plugin)
+  Waybar (Home Manager plugin)
 
-    Responsibilities:
-      - Self-gate on normalized desktop payload (`desktop.*`).
-      - Enable + configure Waybar via Home Manager.
-      - Style derives from immutable UI tokens (`ui.*`).
+  Responsibilities:
+    - Self-gate on normalized desktop payload (`desktop.*`).
+    - Enable + configure Waybar via Home Manager.
+    - Style derives from immutable UI tokens (`ui.*`).
   */
 
   config = lib.mkIf enabled {
@@ -43,8 +46,8 @@ in
           # Tight: no inter-module spacing.
           spacing = 0;
 
-          modules-left = [ "sway/workspaces" ];
-          modules-center = [ ];
+          modules-left = ["sway/workspaces"];
+          modules-center = [];
           modules-right = [
             "network"
             "custom/bat"

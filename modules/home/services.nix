@@ -1,6 +1,4 @@
-{ ... }:
-
-{
+{...}: {
   # red light filter
   services = {
     wlsunset = {

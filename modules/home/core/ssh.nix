@@ -1,6 +1,5 @@
 # ssh.nix
-{ config, ... }:
-{
+{config, ...}: {
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;

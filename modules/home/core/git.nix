@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
 {
+  config,
+  pkgs,
+  ...
+}: {
   programs.git = {
     enable = true;
     settings = {
@@ -21,5 +24,5 @@
     };
   };
 
-  home.packages = with pkgs; [ git ];
+  home.packages = with pkgs; [git];
 }

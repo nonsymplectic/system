@@ -1,11 +1,10 @@
-{ ... }:
-{
+{...}: {
   # --- Primary user ---
   my.primaryUser = "michal";
 
   users.users.michal = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = ["wheel"]; # Enable ‘sudo’ for the user.
   };
 
   # --- Home manager ---

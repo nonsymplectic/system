@@ -1,6 +1,9 @@
-{ config, lib, pkgs, ... }:
-
-let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
   d = config.my.desktop;
 
   anyDmEnabled =
@@ -20,13 +23,11 @@ let
   };
 
   wmSessionPkg = wmPkgs.${d.wm} or null;
-
-in
-{
+in {
   config = lib.mkMerge [
     (lib.mkIf (d.enable && anyDmEnabled && wmSessionPkg != null) {
       services.displayManager.sessionPackages =
-        lib.mkAfter [ wmSessionPkg ];
+        lib.mkAfter [wmSessionPkg];
 
       # Optional: expose the WM binary system-wide as well.
       # environment.systemPackages = lib.mkAfter [ wmSessionPkg ];
@@ -34,7 +35,7 @@ in
 
     # swaylock needs pam authorization to work
     (lib.mkIf (d.enable && d.wm == "sway") {
-      security.pam.services.swaylock = { };
+      security.pam.services.swaylock = {};
     })
   ];
 }

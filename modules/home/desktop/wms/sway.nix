@@ -4,18 +4,15 @@
   ui,
   desktop,
   ...
-}:
-
-let
+}: let
   /*
-    Sway (Home Manager plugin)
+  Sway (Home Manager plugin)
 
-    Responsibilities:
-      - Self-gate on normalized desktop payload (`desktop.*`).
-      - Configure Sway via Home Manager (wayland.windowManager.sway).
-      - Interpret desktop selections (terminal/launcher/bar) into Sway config.
+  Responsibilities:
+    - Self-gate on normalized desktop payload (`desktop.*`).
+    - Configure Sway via Home Manager (wayland.windowManager.sway).
+    - Interpret desktop selections (terminal/launcher/bar) into Sway config.
   */
-
   enabled = desktop.enable && desktop.wm.name == "sway";
 
   hex = c: lib.removePrefix "#" c;
@@ -60,9 +57,15 @@ let
 
   lockCmd = "${pkgs.swaylock-effects}/bin/swaylock";
 
-  barCmd = if desktop.bar.enable then desktop.bar.backend.command else null;
+  barCmd =
+    if desktop.bar.enable
+    then desktop.bar.backend.command
+    else null;
 
-  barBin = if barCmd == null then null else lib.head (lib.splitString " " barCmd);
+  barBin =
+    if barCmd == null
+    then null
+    else lib.head (lib.splitString " " barCmd);
 
   barAutostart = lib.optionalString (barCmd != null) ''
     exec sh -lc '${pkgs.procps}/bin/pgrep -x ${lib.escapeShellArg barBin} >/dev/null || exec ${barCmd}'
@@ -196,8 +199,7 @@ let
   };
 
   keybindings = baseKeybindings;
-in
-{
+in {
   config = lib.mkIf enabled {
     # Sway comes with mako for notifications per default
     services.mako = {
@@ -244,7 +246,7 @@ in
           menu = desktop.launcher.command;
 
           fonts = {
-            names = [ ui.font.family ];
+            names = [ui.font.family];
             size = builtins.toString ui.font.size;
           };
 
@@ -254,7 +256,7 @@ in
         }
 
         # Disable built-in swaybar when using an external bar.
-        (lib.mkIf desktop.bar.enable { bars = [ ]; })
+        (lib.mkIf desktop.bar.enable {bars = [];})
       ];
 
       extraConfig = disableFloating + barAutostart + wallpaperSetting;

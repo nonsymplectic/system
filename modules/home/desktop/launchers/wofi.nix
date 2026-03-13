@@ -1,9 +1,11 @@
-{ lib, pkgs, ui, desktop, ... }:
-
-let
-  enabled =
-    desktop.enable
-    && desktop.launcher.name == "wofi";
+{
+  lib,
+  pkgs,
+  ui,
+  desktop,
+  ...
+}: let
+  enabled = desktop.enable && desktop.launcher.name == "wofi";
 
   stripHash = s: lib.removePrefix "#" s;
 
@@ -12,15 +14,14 @@ let
   border = stripHash ui.colors.border;
   focus = stripHash ui.colors.focus;
   muted = stripHash (ui.colors.muted or ui.colors.foreground);
-in
-{
+in {
   /*
-    Wofi (Home Manager plugin)
+  Wofi (Home Manager plugin)
 
-    Responsibilities:
-      - Self-gate on normalized desktop payload (`desktop.*`).
-      - Enable + configure wofi via Home Manager (programs.wofi.*).
-      - Styling derives from immutable UI tokens (`ui.*`).
+  Responsibilities:
+    - Self-gate on normalized desktop payload (`desktop.*`).
+    - Enable + configure wofi via Home Manager (programs.wofi.*).
+    - Styling derives from immutable UI tokens (`ui.*`).
   */
 
   config = lib.mkIf enabled {

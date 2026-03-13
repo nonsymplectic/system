@@ -1,12 +1,10 @@
-{ config, ... }:
-let
+{config, ...}: let
   user = config.my.primaryUser;
   u = config.users.users.${user};
   home = u.home;
   group = u.group;
-in
-{
-  age.identityPaths = [ "/etc/agenix/host.agekey" ];
+in {
+  age.identityPaths = ["/etc/agenix/host.agekey"];
 
   systemd.tmpfiles.rules = [
     "d ${home}/.ssh 0700 ${user} ${group} -"
@@ -20,4 +18,3 @@ in
     path = "${home}/.ssh/id_ed25519_github";
   };
 }
-

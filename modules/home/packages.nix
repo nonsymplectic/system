@@ -1,6 +1,8 @@
-{ pkgs, pkgsUnstable, ... }:
-
 {
+  pkgs,
+  pkgsUnstable,
+  ...
+}: {
   # --- HOME MANAGER ---
   programs = {
     # --- WEB BROWSERS ---
@@ -24,7 +26,7 @@
     zed-editor = {
       enable = true;
       package = pkgsUnstable.zed-editor;
-      extensions = [ "nix" ];
+      extensions = ["nix"];
       extraPackages = [
         pkgs.nixd
         pkgs.nil
@@ -56,7 +58,7 @@
       swayimg # wayland image viewer
 
       # --- CODE FORMATTERS ---
-      nixpkgs-fmt # nix
+      alejandra # nix
       black # python
     ])
     ++ (with pkgsUnstable; [
