@@ -1,8 +1,9 @@
-{ lib
-, pkgs
-, ui
-, desktop
-, ...
+{
+  lib,
+  pkgs,
+  ui,
+  desktop,
+  ...
 }:
 
 let
@@ -16,8 +17,6 @@ let
   */
 
   enabled = desktop.enable && desktop.wm.name == "sway";
-
-  menuCmd = desktop.launcher.command;
 
   hex = c: lib.removePrefix "#" c;
   alpha = a: c: "${hex c}${a}";
@@ -124,7 +123,7 @@ let
   baseKeybindings = {
     # Launch / session
     "Mod4+Return" = "exec ${desktop.terminal.command}";
-    "Mod4+d" = "exec ${menuCmd}";
+    "Mod4+d" = "exec ${desktop.launcher.command}";
     "Mod4+Shift+f" = "exec ${desktop.defaultBrowser.command}";
     "Mod4+Shift+q" = "kill";
     "Mod4+Shift+r" = "reload";
@@ -242,7 +241,7 @@ in
 
           # terminal/menu are Sway-native strings.
           terminal = desktop.terminal.command;
-          menu = menuCmd;
+          menu = desktop.launcher.command;
 
           fonts = {
             names = [ ui.font.family ];

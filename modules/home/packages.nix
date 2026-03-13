@@ -13,11 +13,14 @@
     # --- FILE VIEWERS ---
     zathura.enable = true;
     mpv.enable = true;
+    imv.enable = true;
 
     # --- GUI ---
     anki.enable = true;
 
-    # --- IDES ---
+    # --- EDITORS ---
+    neovim.enable = true;
+
     zed-editor = {
       enable = true;
       package = pkgsUnstable.zed-editor;

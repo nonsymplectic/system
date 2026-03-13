@@ -103,7 +103,7 @@
         "chromium"
         "qutebrowser"
       ];
-      default = "qutebrowser";
+      default = "chromium";
       description = "Browser for shortcut.";
     };
 
