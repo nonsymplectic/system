@@ -4,22 +4,23 @@
   catppuccin,
   config,
   ...
-}: {
+}:
+{
   /*
-  ============================================================
-  Workstation profile (NixOS layer)
-  ------------------------------------------------------------
-  Role profile for a workstation-like machine.
-  - System-level imports (users, DM, secrets)
-  - Home Manager module wiring (user environment)
-  - Minimal system baseline (net + session packages)
-  ============================================================
+    ============================================================
+    Workstation profile (NixOS layer)
+    ------------------------------------------------------------
+    Role profile for a workstation-like machine.
+    - System-level imports (users, DM, secrets)
+    - Home Manager module wiring (user environment)
+    - Minimal system baseline (net + session packages)
+    ============================================================
   */
 
   /*
-  ============================================================
-  NixOS module imports
-  ============================================================
+    ============================================================
+    NixOS module imports
+    ============================================================
   */
 
   imports = [
@@ -40,7 +41,6 @@
 
     # Installs Display Manager
     ../modules/nixos/services/ly.nix
-    #../modules/nixos/services/lemurs.nix
 
     # WMs need hotfixes
     ../modules/nixos/ui/wm-setup.nix
@@ -50,11 +50,11 @@
   ];
 
   /*
-  ============================================================
-  Home Manager
-  ------------------------------------------------------------
-  user-level home-manager settings belong in hosts/<hostname>/users.nix
-  ============================================================
+    ============================================================
+    Home Manager
+    ------------------------------------------------------------
+    user-level home-manager settings belong in hosts/<hostname>/users.nix
+    ============================================================
   */
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
