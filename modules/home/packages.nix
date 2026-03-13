@@ -2,7 +2,8 @@
   pkgs,
   pkgsUnstable,
   ...
-}: {
+}:
+{
   # --- HOME MANAGER ---
   programs = {
     # --- WEB BROWSERS ---
@@ -26,7 +27,7 @@
     zed-editor = {
       enable = true;
       package = pkgsUnstable.zed-editor;
-      extensions = ["nix"];
+      extensions = [ "nix" ];
       extraPackages = [
         pkgs.nixd
         pkgs.nil
