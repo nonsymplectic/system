@@ -8,8 +8,7 @@
   # Terminal palette is the 16 ANSI colors in canonical order:
   # 0-7   = normal  (black, red, green, yellow, blue, magenta, cyan, white)
   # 8-15  = bright  (black, red, green, yellow, blue, magenta, cyan, white)
-  ansi16 =
-    types.addCheck (types.listOf types.str) (xs: builtins.length xs == 16);
+  ansi16 = types.addCheck (types.listOf types.str) (xs: builtins.length xs == 16);
 
   # Named view of ANSI 16-color palette
   ansi = rec {
@@ -108,13 +107,13 @@ in {
 
       size = mkOption {
         type = types.int;
-        default = 15;
+        default = 18;
         description = "Primary UI font size (pt).";
       };
 
       sizePx = mkOption {
         type = types.int;
-        default = 20;
+        default = 25;
         description = "UI font size in px (for CSS-based components).";
       };
     };
@@ -128,13 +127,13 @@ in {
 
       size = mkOption {
         type = types.int;
-        default = 15;
+        default = 18;
         description = "Monospace UI font size (pt).";
       };
 
       sizePx = mkOption {
         type = types.int;
-        default = 20;
+        default = 25;
         description = "UI font size in px (for CSS-based components).";
       };
     };

@@ -11,6 +11,7 @@
     || (config.services.displayManager.gdm.enable or false)
     || (config.services.displayManager.sddm.enable or false)
     || (config.services.displayManager.lightdm.enable or false)
+    || (config.services.displayManager.lemurs.enable or false)
     || (config.services.xserver.displayManager.startx.enable or false)
     || (config.services.greetd.enable or false);
 
@@ -26,8 +27,7 @@
 in {
   config = lib.mkMerge [
     (lib.mkIf (d.enable && anyDmEnabled && wmSessionPkg != null) {
-      services.displayManager.sessionPackages =
-        lib.mkAfter [wmSessionPkg];
+      services.displayManager.sessionPackages = lib.mkAfter [wmSessionPkg];
 
       # Optional: expose the WM binary system-wide as well.
       # environment.systemPackages = lib.mkAfter [ wmSessionPkg ];
