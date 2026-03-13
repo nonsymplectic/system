@@ -1,4 +1,4 @@
-{ catppuccin, ... }:
+{ ... }:
 {
   catppuccin = {
     enable = true;
