@@ -205,10 +205,10 @@ in
       enable = true;
 
       settings = {
-        backgroundColor = ui.colors.background;
-        textColor = ui.colors.foreground;
-        borderColor = ui.colors.muted;
-        progressColor = "over ${ui.colors.focus}";
+        background-color = ui.colors.background;
+        text-color = ui.colors.foreground;
+        border-color = ui.colors.muted;
+        progress-color = "over ${ui.colors.focus}";
       };
 
       extraConfig = ''
@@ -216,7 +216,7 @@ in
         border-color=${ui.colors.error}
 
         [urgency=normal]
-         border-color=${ui.colors.focus}
+        border-color=${ui.colors.focus}
       '';
     };
 

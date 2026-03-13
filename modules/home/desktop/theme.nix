@@ -11,6 +11,7 @@
     };
 
     sway.enable = false;
+    mako.enable = false;
     swaylock.enable = false;
     waybar.enable = false;
     # foot.enable = false;
