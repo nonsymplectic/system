@@ -1,4 +1,10 @@
-{ lib, pkgs, ui, desktop, ... }:
+{
+  lib,
+  pkgs,
+  ui,
+  desktop,
+  ...
+}:
 
 let
   /*
@@ -10,9 +16,7 @@ let
       - Interpret desktop selections (terminal/launcher/bar) into Sway config.
   */
 
-  enabled =
-    desktop.enable
-    && desktop.wm.name == "sway";
+  enabled = desktop.enable && desktop.wm.name == "sway";
 
   menuCmd = desktop.launcher.command;
 
@@ -58,17 +62,13 @@ let
 
   lockCmd = "${pkgs.swaylock-effects}/bin/swaylock";
 
-  barCmd =
-    if desktop.bar.enable then desktop.bar.backend.command else null;
+  barCmd = if desktop.bar.enable then desktop.bar.backend.command else null;
 
-  barBin =
-    if barCmd == null then null
-    else lib.head (lib.splitString " " barCmd);
+  barBin = if barCmd == null then null else lib.head (lib.splitString " " barCmd);
 
-  barAutostart =
-    lib.optionalString (barCmd != null) ''
-      exec sh -lc '${pkgs.procps}/bin/pgrep -x ${lib.escapeShellArg barBin} >/dev/null || exec ${barCmd}'
-    '';
+  barAutostart = lib.optionalString (barCmd != null) ''
+    exec sh -lc '${pkgs.procps}/bin/pgrep -x ${lib.escapeShellArg barBin} >/dev/null || exec ${barCmd}'
+  '';
 
   disableFloating = ''
     for_window [floating] floating disable
