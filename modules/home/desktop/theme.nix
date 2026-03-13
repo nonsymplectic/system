@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   catppuccin = {
     enable = true;
     flavor = "latte";
@@ -14,5 +15,14 @@
     swaylock.enable = false;
     waybar.enable = false;
     # foot.enable = false;
+  };
+
+  gtk = {
+    enable = true;
+  };
+
+  qt = {
+    enable = true;
+    style.name = "kvantum";
   };
 }
