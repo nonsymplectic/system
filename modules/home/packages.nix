@@ -40,6 +40,7 @@
     (with pkgs; [
       pulseaudioFull
       dconf # for GTK
+      wl-clipboard
 
       # --- WEB BROWSERS ---
       tor-browser
@@ -49,6 +50,7 @@
       keepassxc
       dino
       calibre
+      anydesk
 
       # --- CLI TOOLS ---
       ps_mem # RAM usage
