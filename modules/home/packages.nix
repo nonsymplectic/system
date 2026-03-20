@@ -57,6 +57,7 @@
       htop # task viewer
       neofetch # eyecandy welcome screen
       claude-code
+      wiremix # pipewire audio mixer
 
       # --- FILE VIEWERS ----
       swayimg # wayland image viewer
