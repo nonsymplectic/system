@@ -1,6 +1,10 @@
 # NixOS configurations using flake-parts
 # Defines nixosConfigurations for all hosts
-{inputs, self, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
   flake.nixosConfigurations = {
     home-pc = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
