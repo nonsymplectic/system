@@ -44,6 +44,9 @@
 
     # Secrets management (agenix)
     ../modules/nixos/core/agenix.nix
+
+    # Desktop features (dendritic)
+    ../features/desktop/foot.nix
   ];
 
   /*
@@ -81,4 +84,7 @@
     ../modules/home/packages.nix
     ../modules/home/services.nix
   ];
+
+  # Enable dendritic desktop features
+  features.foot.enable = true;
 }
