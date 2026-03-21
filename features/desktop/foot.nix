@@ -35,31 +35,31 @@ in {
                 blink = true;
               };
 
-              colors = {
-                alpha = 1.0;
-                background = lib.removePrefix "#" ui.terminal.background;
-                foreground = lib.removePrefix "#" ui.terminal.foreground;
+              # colors = {
+              #   alpha = 1.0;
+              #   background = lib.removePrefix "#" ui.terminal.background;
+              #   foreground = lib.removePrefix "#" ui.terminal.foreground;
 
-                # ANSI colors (0-7)
-                regular0 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 0);
-                regular1 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 1);
-                regular2 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 2);
-                regular3 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 3);
-                regular4 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 4);
-                regular5 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 5);
-                regular6 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 6);
-                regular7 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 7);
+              #   # ANSI colors (0-7)
+              #   regular0 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 0);
+              #   regular1 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 1);
+              #   regular2 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 2);
+              #   regular3 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 3);
+              #   regular4 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 4);
+              #   regular5 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 5);
+              #   regular6 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 6);
+              #   regular7 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 7);
 
-                # Bright ANSI colors (8-15)
-                bright0 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 8);
-                bright1 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 9);
-                bright2 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 10);
-                bright3 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 11);
-                bright4 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 12);
-                bright5 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 13);
-                bright6 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 14);
-                bright7 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 15);
-              };
+              #   # Bright ANSI colors (8-15)
+              #   bright0 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 8);
+              #   bright1 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 9);
+              #   bright2 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 10);
+              #   bright3 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 11);
+              #   bright4 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 12);
+              #   bright5 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 13);
+              #   bright6 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 14);
+              #   bright7 = lib.removePrefix "#" (builtins.elemAt ui.terminal.palette 15);
+              # };
             }
             // cfg.extraSettings;
         };

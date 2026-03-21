@@ -23,6 +23,12 @@ in {
       default = true;
       description = "Enable Proton Mail desktop client";
     };
+
+    zoom = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable Zoom desktop client";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -30,6 +36,7 @@ in {
       {
         home.packages =
           (lib.optionals cfg.dino [pkgs.dino])
+          ++ (lib.optionals cfg.zoom [pkgs.zoom-us])
           ++ (lib.optionals cfg.protonmail [pkgsUnstable.protonmail-desktop]);
       }
     ];
