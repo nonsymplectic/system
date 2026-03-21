@@ -12,7 +12,7 @@ in {
   age.identityPaths = ["/etc/agenix/host.agekey"];
 
   # Install agenix CLI for managing secrets
-  environment.systemPackages = [inputs.agenix.packages.${pkgs.system}.default];
+  environment.systemPackages = [inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default];
 
   systemd.tmpfiles.rules = [
     "d ${home}/.ssh 0700 ${user} ${group} -"
