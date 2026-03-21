@@ -67,7 +67,8 @@ in {
           local urgency="$1"
           local summary="$2"
           local body="$3"
-          ${pkgs.libnotify}/bin/notify-send -t 5000 -u "$urgency" -a "KeePassXC Sync" "$summary" "$body"
+          local timeout="''${4:-5000}"  # Default 5 seconds, can be overridden
+          ${pkgs.libnotify}/bin/notify-send -t "$timeout" -u "$urgency" -a "KeePassXC Sync" "$summary" "$body"
         }
 
         # Function to check if remote file exists and get its modtime
@@ -86,10 +87,11 @@ in {
 
         # Pre-sync: Download from remote before opening
         pre_sync() {
-          notify normal "KeePassXC Sync" "Syncing database from cloud..."
+          notify normal "KeePassXC Sync" "Syncing database from cloud..." 3000
 
-          # Check if remote exists
-          if ! ${pkgs.rclone}/bin/rclone lsl "$REMOTE_PATH" --config "$RCLONE_CONFIG" >/dev/null 2>&1; then
+          # Check if remote exists (check if output is non-empty, not just exit code)
+          REMOTE_CHECK=$(${pkgs.rclone}/bin/rclone lsl "$REMOTE_PATH" --config "$RCLONE_CONFIG" 2>/dev/null)
+          if [ -z "$REMOTE_CHECK" ]; then
             if [ -f "$DB_PATH" ]; then
               notify normal "KeePassXC Sync" "No remote database found. Will upload after closing."
             else
@@ -101,7 +103,10 @@ in {
 
           # If local doesn't exist, just download
           if [ ! -f "$DB_PATH" ]; then
-            ${pkgs.rclone}/bin/rclone copyto "$REMOTE_PATH" "$DB_PATH" --config "$RCLONE_CONFIG"
+            if ! ${pkgs.rclone}/bin/rclone copyto "$REMOTE_PATH" "$DB_PATH" --config "$RCLONE_CONFIG" 2>/dev/null; then
+              notify critical "KeePassXC Sync" "Failed to download database from remote. Check remote path: $REMOTE_PATH"
+              exit 1
+            fi
             notify normal "KeePassXC Sync" "Database downloaded from cloud."
             return
           fi
@@ -111,13 +116,14 @@ in {
 
           # Download to temp location for comparison
           TEMP_DB="$DB_DIR/.db.kdbx.tmp"
-          if ! ${pkgs.rclone}/bin/rclone copyto "$REMOTE_PATH" "$TEMP_DB" --config "$RCLONE_CONFIG" 2>&1; then
-            notify critical "KeePassXC Sync" "Failed to download remote database for comparison. Check rclone config."
+          if ! ${pkgs.rclone}/bin/rclone copyto "$REMOTE_PATH" "$TEMP_DB" --config "$RCLONE_CONFIG" 2>/dev/null; then
+            notify critical "KeePassXC Sync" "Failed to download remote database. Check remote path and rclone config."
             exit 1
           fi
 
+          # Verify the file was actually created
           if [ ! -f "$TEMP_DB" ]; then
-            notify critical "KeePassXC Sync" "Remote download succeeded but file not found. Check remote path."
+            notify critical "KeePassXC Sync" "Download completed but file not found. Check remote path: $REMOTE_PATH"
             exit 1
           fi
 
@@ -151,19 +157,19 @@ in {
             return
           fi
 
-          notify normal "KeePassXC Sync" "Uploading database to cloud..."
-
-          # Check if remote exists and is newer
-          if ${pkgs.rclone}/bin/rclone lsl "$REMOTE_PATH" --config "$RCLONE_CONFIG" >/dev/null 2>&1; then
+          # Check if remote exists and is newer (check if output is non-empty)
+          REMOTE_CHECK=$(${pkgs.rclone}/bin/rclone lsl "$REMOTE_PATH" --config "$RCLONE_CONFIG" 2>/dev/null)
+          if [ -n "$REMOTE_CHECK" ]; then
             # Download remote to temp for comparison
             TEMP_DB="$DB_DIR/.db.kdbx.tmp"
-            if ! ${pkgs.rclone}/bin/rclone copyto "$REMOTE_PATH" "$TEMP_DB" --config "$RCLONE_CONFIG" 2>&1; then
+            if ! ${pkgs.rclone}/bin/rclone copyto "$REMOTE_PATH" "$TEMP_DB" --config "$RCLONE_CONFIG" 2>/dev/null; then
               notify critical "KeePassXC Sync" "Failed to download remote for comparison during upload."
               return
             fi
 
+            # Verify the file was actually created
             if [ ! -f "$TEMP_DB" ]; then
-              notify critical "KeePassXC Sync" "Remote download succeeded but file not found during upload."
+              notify critical "KeePassXC Sync" "Download completed but file not found during upload check."
               return
             fi
 
@@ -189,8 +195,9 @@ in {
           fi
 
           # Upload local to remote
+          notify normal "KeePassXC Sync" "Uploading database to cloud..." 3000
           ${pkgs.rclone}/bin/rclone copyto "$DB_PATH" "$REMOTE_PATH" --config "$RCLONE_CONFIG"
-          notify normal "KeePassXC Sync" "Database uploaded to cloud successfully."
+          notify normal "KeePassXC Sync" "Database uploaded to cloud successfully." 5000
         }
 
         # Main execution
