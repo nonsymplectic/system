@@ -1,10 +1,18 @@
-{config, ...}: let
+{
+  config,
+  inputs,
+  pkgs,
+  ...
+}: let
   user = config.my.primaryUser;
   u = config.users.users.${user};
   home = u.home;
   group = u.group;
 in {
   age.identityPaths = ["/etc/agenix/host.agekey"];
+
+  # Install agenix CLI for managing secrets
+  environment.systemPackages = [inputs.agenix.packages.${pkgs.system}.default];
 
   systemd.tmpfiles.rules = [
     "d ${home}/.ssh 0700 ${user} ${group} -"

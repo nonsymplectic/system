@@ -17,4 +17,28 @@
   # Example overrides:
   # my.ui.font.size = 14;
   # features.waybar.position = "top";
+
+  # BorgBackup configuration (same settings as home-pc for shared repository)
+  features.borgbackup = {
+    enable = true;
+    jobName = "backup";
+
+    directories = [
+      "Documents"
+    ];
+
+    schedule = "daily";
+
+    b2 = {
+      bucket = "nixos-borgbackup";
+      syncSchedule = "*:0/30"; # Sync every 30 minutes
+    };
+
+    prune.keep = {
+      daily = 7;
+      weekly = 4;
+      monthly = 6;
+      yearly = 2;
+    };
+  };
 }

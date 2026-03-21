@@ -21,6 +21,7 @@
     ../features/system/fonts.nix
     ../features/system/ly-dm.nix
     ../features/system/agenix.nix
+    ../features/system/borgbackup.nix
 
     # Desktop features
     ../features/desktop/sway.nix
