@@ -24,14 +24,11 @@
   */
 
   imports = [
-    # inherits from minimal.nix
+    # inherits from minimal.nix (includes features/core with UI options)
     ../profiles/minimal.nix
 
     # Allow unfree
     ../modules/nixos/core/unfree-packages.nix
-
-    # default UI token surface (my.ui)
-    ../options/ui.nix
 
     # default desktop token surface (my.desktop)
     ../options/desktop.nix
