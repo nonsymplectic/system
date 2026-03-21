@@ -29,13 +29,19 @@ in {
 
       extensions = lib.mkOption {
         type = lib.types.listOf lib.types.str;
-        default = ["nix"];
+        default = [
+          "nix"
+          "git-firefly"
+        ];
         description = "Zed extensions to install";
       };
 
       extraPackages = lib.mkOption {
         type = lib.types.listOf lib.types.package;
-        default = with pkgs; [nixd nil];
+        default = with pkgs; [
+          nixd
+          nil
+        ];
         description = "Extra packages for Zed (LSP servers, etc.)";
       };
     };
