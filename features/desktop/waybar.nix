@@ -1,0 +1,172 @@
+# Waybar status bar feature
+# Home Manager only - no system-level configuration needed
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.features.waybar;
+  ui = config.my.ui;
+
+  stripHash = s: lib.removePrefix "#" s;
+  bg = stripHash ui.colors.background;
+  fg = stripHash ui.colors.foreground;
+  focus = stripHash ui.colors.focus;
+  urgent = stripHash ui.colors.error;
+
+  batScript = pkgs.writeShellScript "waybar-bat" ''
+    set -eu
+    bat="$(ls -d /sys/class/power_supply/BAT* 2>/dev/null | head -n1 || true)"
+    [ -n "$bat" ] || exit 0
+    cap="$(cat "$bat/capacity" 2>/dev/null || true)"
+    [ -n "$cap" ] || exit 0
+    printf 'BAT: %s%% |\n' "$cap"
+  '';
+in {
+  options.features.waybar = {
+    enable = lib.mkEnableOption "Waybar status bar";
+
+    position = lib.mkOption {
+      type = lib.types.enum ["top" "bottom"];
+      default = "bottom";
+      description = "Bar position on screen";
+    };
+
+    extraSettings = lib.mkOption {
+      type = lib.types.attrs;
+      default = {};
+      description = "Extra settings to pass to waybar configuration";
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    # Home Manager configuration
+    home-manager.sharedModules = [
+      {
+        programs.waybar = {
+          enable = true;
+
+          settings = {
+            mainBar =
+              {
+                layer = "top";
+                position = cfg.position;
+                spacing = 0;
+
+                modules-left = [
+                  "sway/workspaces"
+                  "sway/mode"
+                ];
+                modules-center = [];
+                modules-right = [
+                  "network"
+                  "custom/bat"
+                  "disk"
+                  "memory"
+                  "clock"
+                ];
+
+                network = {
+                  interval = 45;
+                  format-wifi = "NET: WIFI |";
+                  format-ethernet = "NET: ETH |";
+                  format-disconnected = "NET: -- |";
+                  tooltip-format-wifi = "{essid} ({signalStrength}%)\n{ipaddr}";
+                  tooltip-format-ethernet = "{ifname}\n{ipaddr}";
+                  tooltip-format-disconnected = "disconnected";
+                };
+
+                "custom/bat" = {
+                  exec = "${batScript}";
+                  interval = 45;
+                  return-type = "plain";
+                  hide-empty-text = true;
+                  tooltip = false;
+                };
+
+                disk = {
+                  interval = 90;
+                  path = "/";
+                  unit = "GiB";
+                  format = "/: {specific_used:0.2f}/{specific_total:0.2f}GiB |";
+                  tooltip = false;
+                };
+
+                memory = {
+                  interval = 45;
+                  format = "MEM: {used:0.2f}/{total:0.2f}GiB |";
+                  tooltip = false;
+                };
+
+                clock = {
+                  interval = 45;
+                  format = "{:%a %F %H:%M}";
+                  tooltip = false;
+                };
+              }
+              // cfg.extraSettings;
+          };
+
+          style = ''
+            * {
+              font-family: "${ui.monoFont.family}";
+              font-size: ${toString ui.monoFont.sizePx}px;
+              border: none;
+              border-radius: 0;
+              box-shadow: none;
+              min-height: 0;
+              padding: 0;
+              margin: 0;
+            }
+
+            @define-color bg    #${bg};
+            @define-color fg    #${fg};
+            @define-color focus #${focus};
+            @define-color urgent #${urgent};
+
+            window#waybar {
+              background: @bg;
+              color: @fg;
+              padding: 0;
+              margin: 0;
+            }
+
+            #workspaces {
+              background: transparent;
+              padding: 0;
+              margin: 0;
+            }
+
+            #workspaces button {
+              background: @bg;
+              color: @fg;
+              padding: 0;
+              margin: 0;
+              min-height: 0;
+            }
+
+            #workspaces button.focused,
+            #workspaces button:hover {
+              background: @focus;
+              color: @bg;
+            }
+
+            #workspaces button.urgent {
+              background: @urgent;
+              color: @bg;
+              padding: 0;
+              margin: 0;
+              min-height: 0;
+            }
+
+            #network, #custom-bat, #disk, #memory, #clock {
+              padding: 0;
+              margin: 0;
+            }
+          '';
+        };
+      }
+    ];
+  };
+}

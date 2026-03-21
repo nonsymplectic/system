@@ -46,7 +46,10 @@
     ../modules/nixos/core/agenix.nix
 
     # Desktop features (dendritic)
+    ../features/desktop/sway.nix
+    ../features/desktop/waybar.nix
     ../features/desktop/foot.nix
+    ../features/desktop/wofi.nix
   ];
 
   /*
@@ -72,7 +75,8 @@
     ../modules/home/core/git.nix # git config
 
     # --- DESKTOP ENVIRONMENT ---
-    ../modules/home/desktop/interface.nix
+    # TODO: Remove old desktop interface after migration complete
+    # ../modules/home/desktop/interface.nix
     ../modules/home/input-methods.nix
 
     catppuccin.homeModules.catppuccin
@@ -86,5 +90,8 @@
   ];
 
   # Enable dendritic desktop features
+  features.sway.enable = true;
+  features.waybar.enable = true;
   features.foot.enable = true;
+  features.wofi.enable = true;
 }
