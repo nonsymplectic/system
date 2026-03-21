@@ -46,6 +46,7 @@
     ../features/apps/cli-tools.nix
     ../features/apps/formatters.nix
     ../features/apps/utilities.nix
+    ../features/apps/keepassxc-sync.nix
   ];
 
   # Home Manager configuration
