@@ -24,28 +24,16 @@
   */
 
   imports = [
-    # inherits from minimal.nix (includes features/core with UI options)
+    # Inherits from minimal.nix (includes features/core with UI options)
     ../profiles/minimal.nix
 
-    # Allow unfree
-    ../modules/nixos/core/unfree-packages.nix
+    # System features
+    ../modules/nixos/core/unfree-packages.nix # Allow unfree packages
+    ../modules/nixos/ui/fonts.nix # Font resources
+    ../modules/nixos/services/ly.nix # Display manager
+    ../modules/nixos/core/agenix.nix # Secrets management
 
-    # default desktop token surface (my.desktop)
-    ../options/desktop.nix
-
-    # Font resources
-    ../modules/nixos/ui/fonts.nix
-
-    # Installs Display Manager
-    ../modules/nixos/services/ly.nix
-
-    # WMs need hotfixes
-    ../modules/nixos/ui/wm-setup.nix
-
-    # Secrets management (agenix)
-    ../modules/nixos/core/agenix.nix
-
-    # Desktop features (dendritic)
+    # Desktop features (dendritic pattern)
     ../features/desktop/sway.nix
     ../features/desktop/waybar.nix
     ../features/desktop/foot.nix
@@ -59,34 +47,33 @@
     user-level home-manager settings belong in hosts/<hostname>/users.nix
     ============================================================
   */
+  # Home Manager configuration
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
 
+  # Only pass pkgsUnstable - UI tokens accessible via config.my.ui
   home-manager.extraSpecialArgs = {
-    inherit pkgsUnstable catppuccin;
-    uiPolicy = config.my.ui;
-    desktopPolicy = config.my.desktop;
+    inherit pkgsUnstable;
   };
 
   home-manager.sharedModules = [
-    # --- CORE ---
-    ../modules/home/core/shell.nix # shell
-    ../modules/home/core/ssh.nix # ssh config
-    ../modules/home/core/git.nix # git config
-
-    # --- DESKTOP ENVIRONMENT ---
-    # TODO: Remove old desktop interface after migration complete
-    # ../modules/home/desktop/interface.nix
-    ../modules/home/input-methods.nix
-
+    # Catppuccin theme support
     catppuccin.homeModules.catppuccin
-    ../modules/home/desktop/theme.nix
 
-    # --- GENERIC USER LEVEL ---
-    ../modules/home/default-apps.nix
-    ../modules/home/desktop-entries.nix
-    ../modules/home/packages.nix
-    ../modules/home/services.nix
+    # Core user configuration
+    ../modules/home/core/shell.nix # Shell (bash/zsh)
+    ../modules/home/core/ssh.nix # SSH config
+    ../modules/home/core/git.nix # Git config
+
+    # Desktop theming and customization
+    ../modules/home/input-methods.nix # Input methods
+    ../modules/home/desktop/theme.nix # GTK/Qt theming
+
+    # User applications and services
+    ../modules/home/default-apps.nix # Default applications
+    ../modules/home/desktop-entries.nix # Desktop entries
+    ../modules/home/packages.nix # User packages
+    ../modules/home/services.nix # User services
   ];
 
   # Enable dendritic desktop features

@@ -62,15 +62,14 @@
 
   /*
   ============================================================
-  WM tokens
+  Feature configuration
   ------------------------------------------------------------
-  Host-level overrides for WM tokens.
+  Host-specific feature overrides.
   ============================================================
   */
 
   # Sway needs this flag because of nvidia drivers
-
-  my.desktop.extraFlags.sway = [
+  features.sway.extraFlags = [
     "--unsupported-gpu"
   ];
 }
