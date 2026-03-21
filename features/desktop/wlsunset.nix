@@ -19,7 +19,7 @@ in {
 
       night = lib.mkOption {
         type = lib.types.int;
-        default = 3000;
+        default = 2750;
         description = "Nighttime color temperature in Kelvin";
       };
     };
