@@ -4,10 +4,11 @@ This repository defines a **host-agnostic, reproducible system and user environm
 
 The design emphasizes:
 
-* strict separation of **policy vs implementation**
-* **host files as overrides only**
-* a **plugin-based desktop system**
-* a **single, synced home environment** across machines
+* **dendritic feature modules** – self-contained, composable features
+* **flake-parts** – automatic module composition without manual wiring
+* **host files as overrides only** – thin, declarative host configuration
+* **direct UI token access** – `config.my.ui` available everywhere
+* **single, synced home environment** across machines
 * secrets managed **exclusively via agenix**
 * minimal baselines composed into richer profiles
 
@@ -18,18 +19,116 @@ Code must be adapted to match it, not the other way around.
 
 ## High-level architecture
 
-The system is split into four conceptual layers:
+The system is built on three conceptual layers:
 
-1. **Hosts** – hardware + overrides only
-2. **Profiles** – role-based composition
-3. **Modules** – implementation (NixOS + Home Manager)
-4. **Options / tokens** – shared declarative interfaces
+1. **Hosts** – hardware + feature configuration + overrides
+2. **Profiles** – role-based feature composition
+3. **Features** – self-contained modules with explicit enable options
 
 Each layer has a clearly defined responsibility and must not leak concerns upward or downward.
 
 ---
 
-## Hosts: overrides only
+## Flake infrastructure
+
+The flake uses **flake-parts** for automatic module composition:
+
+```
+flake.nix                 # flake-parts entry point
+flake-modules/
+  ├── baseline.nix        # Flake-wide config (nix features, stateVersion)
+  └── nixos.nix           # Defines nixosConfigurations
+```
+
+Benefits:
+* No manual `specialArgs` wiring (except `pkgsUnstable`)
+* Automatic module composition
+* Clean, declarative structure
+
+---
+
+## Features: self-contained modules
+
+Features are **dendritic modules** that encapsulate both NixOS and Home Manager configuration in a single file.
+
+Directory structure:
+
+```
+features/
+  ├── core/              # Auto-imported baseline
+  │   ├── default.nix    # Auto-imports all core/*.nix
+  │   ├── ui-options.nix # UI tokens (my.ui.*)
+  │   ├── nix.nix        # Nix settings
+  │   ├── primary-user.nix
+  │   ├── network.nix
+  │   └── packages.nix
+  │
+  ├── desktop/           # Desktop environment
+  │   ├── sway.nix       # WM (NixOS + HM)
+  │   ├── waybar.nix     # Status bar (HM)
+  │   ├── foot.nix       # Terminal (HM)
+  │   └── wofi.nix       # Launcher (HM)
+  │
+  ├── system/            # System-level features
+  │   ├── fonts.nix
+  │   ├── unfree-packages.nix
+  │   ├── ly-dm.nix
+  │   └── agenix.nix
+  │
+  ├── home/              # Home Manager core
+  │   ├── shell.nix
+  │   ├── git.nix
+  │   ├── ssh.nix
+  │   └── theme.nix
+  │
+  ├── hardware/          # Hardware features
+  │   ├── nvidia.nix
+  │   └── bluetooth.nix
+  │
+  └── apps/              # Application bundles
+      └── browsers.nix
+```
+
+### Feature anatomy
+
+Each feature:
+
+1. **Declares options** under `features.<name>.*`
+2. **Self-gates** on `features.<name>.enable`
+3. **Accesses UI tokens** directly via `config.my.ui`
+4. **Contains both NixOS and HM config** when needed
+5. **Has no hidden dependencies** on other features
+
+Example feature structure:
+
+```nix
+# features/desktop/foot.nix
+{ config, lib, ... }:
+let
+  cfg = config.features.foot;
+  ui = config.my.ui;  # Direct access!
+in {
+  options.features.foot = {
+    enable = lib.mkEnableOption "Foot terminal";
+    extraSettings = lib.mkOption { /* ... */ };
+  };
+
+  config = lib.mkIf cfg.enable {
+    # Home Manager configuration
+    home-manager.sharedModules = [{
+      programs.foot = {
+        enable = true;
+        settings.main.font = "${ui.monoFont.family}:size=${toString ui.monoFont.size}";
+        # ... uses ui.terminal.palette, ui.colors, etc.
+      };
+    }];
+  };
+}
+```
+
+---
+
+## Hosts: thin overrides only
 
 `hosts/<name>/default.nix` files must be **thin**.
 
@@ -37,20 +136,45 @@ They are allowed to:
 
 * import hardware configuration
 * select profiles
-* override UI tokens
-* override desktop policy
-* toggle host-specific capability flags
+* override UI tokens (`my.ui.*`)
+* enable/configure features (`features.*`)
+* toggle host-specific feature options
 
 They must **not**:
 
 * define users
 * install packages directly
 * define services wholesale
-* contain Home Manager configuration
 * contain implementation details
 
 **Rule:**
 If two hosts should behave the same by default, the logic must not live in `hosts/`.
+
+Example host:
+
+```nix
+# hosts/home-pc/default.nix
+{...}: {
+  imports = [
+    ./hardware-configuration.nix
+    ./hardware.nix
+    ./users.nix
+    ../../profiles/workstation.nix
+  ];
+
+  networking.hostName = "home-pc";
+  time.timeZone = "Europe/Zurich";
+
+  # UI token overrides (optional)
+  # my.ui.font.size = 15;
+
+  # Feature configuration
+  features.nvidia.enable = true;
+  features.bluetooth.enable = true;
+  features.sway.extraFlags = ["--unsupported-gpu"];
+  features.waybar.position = "bottom";
+}
+```
 
 ---
 
@@ -64,6 +188,7 @@ The minimal baseline shared by all interactive systems.
 
 Characteristics:
 
+* imports `features/core` (auto-imported baseline)
 * ~10 core packages
 * SSH client enabled
 * basic shell/editor/tooling
@@ -73,8 +198,6 @@ Characteristics:
 
 This profile is intentionally boring and stable.
 
----
-
 ### `profiles/workstation.nix`
 
 Extends `minimal` and adds a desktop environment.
@@ -83,9 +206,45 @@ Characteristics:
 
 * imports `minimal`
 * enables Home Manager
-* enables the desktop plugin system
+* imports desktop features explicitly
 * enables a login manager
-* enables workstation-only services
+* imports system/hardware/app features
+
+Example:
+
+```nix
+# profiles/workstation.nix
+{...}: {
+  imports = [
+    ../profiles/minimal.nix
+
+    # System features
+    ../features/system/fonts.nix
+    ../features/system/ly-dm.nix
+    ../features/system/agenix.nix
+
+    # Desktop features
+    ../features/desktop/sway.nix
+    ../features/desktop/waybar.nix
+    ../features/desktop/foot.nix
+    ../features/desktop/wofi.nix
+
+    # Hardware features (enabled per-host)
+    ../features/hardware/nvidia.nix
+    ../features/hardware/bluetooth.nix
+
+    # App features
+    ../features/apps/browsers.nix
+  ];
+
+  # Enable features
+  features.sway.enable = true;
+  features.waybar.enable = true;
+  features.foot.enable = true;
+  features.wofi.enable = true;
+  features.browsers.enable = true;
+}
+```
 
 All graphical/UI behavior starts here or below — never in `minimal`.
 
@@ -93,9 +252,10 @@ All graphical/UI behavior starts here or below — never in `minimal`.
 
 ## Users: defined once
 
-The **primary user** is defined in a shared system module.
+The **primary user** is defined in a shared core feature.
 
-* User definitions live under `modules/nixos/core/users.nix`
+* User identity declared in `features/core/primary-user.nix`
+* User configuration in `hosts/<name>/users.nix`
 * Hosts must not redefine the primary user
 * Hosts may add extra users only when explicitly required
 
@@ -114,7 +274,7 @@ Rules:
 * services consume secrets via file paths only
 * encrypted material lives under `secrets/*.age`
 
-System modules declare:
+Features declare:
 
 ```nix
 age.secrets.<name>.path
@@ -124,28 +284,7 @@ Consumers reference the path. Nothing else is allowed.
 
 ---
 
-## Options and tokens
-
-### Shared option declarations
-
-Pure option declarations live at the **project root** under:
-
-```
-options/
-```
-
-They define **interfaces**, not behavior.
-
-Examples:
-
-* `options/ui.nix`
-* `options/desktop.nix`
-
-These files are imported into **both** the NixOS and Home Manager module graphs to ensure a single source of truth.
-
----
-
-### UI tokens (`my.ui.*`)
+## UI tokens (`my.ui.*`)
 
 UI tokens represent **host-specific display properties**, such as:
 
@@ -156,141 +295,72 @@ UI tokens represent **host-specific display properties**, such as:
 
 Properties:
 
-* set at the system level
-* forwarded into Home Manager as an **immutable policy**
-* consumed by user-level modules
-* never mutated or derived from within Home Manager modules
+* declared in `features/core/ui-options.nix`
+* set at the system level (optionally overridden in hosts)
+* accessible everywhere via `config.my.ui`
+* consumed by features directly
+* never mutated or derived from within modules
 
 UI tokens are **inputs**, not configuration.
 
----
+Example usage in features:
 
-## Desktop system (Home Manager)
-
-The desktop environment is implemented entirely at the **Home Manager layer** as a plugin system.
-
-The system is:
-
-* window-manager agnostic
-* bar agnostic
-* launcher agnostic
-* terminal agnostic
-
-It provides a stable policy interface while allowing new components to be added with minimal churn.
-
----
-
-### Desktop policy (`my.desktop.*`)
-
-Hosts select desktop behavior via declarative **policy options**:
-
-* `my.desktop.enable`
-* `my.desktop.wm`
-* `my.desktop.bar.enable`
-* `my.desktop.bar.backend`
-* `my.desktop.bar.position`
-* `my.desktop.launcher`
-* `my.desktop.terminal`
-* `my.desktop.extraFlags.<component> = [ ... ]`
-
-These options express **what** the desktop should be, never **how** it is implemented.
-
----
-
-### Policy forwarding and normalization
-
-The desktop system uses **single-pass normalization**:
-
-1. `my.desktop` is defined at the system level.
-2. It is forwarded into Home Manager as an **immutable argument** (`desktopPolicy`).
-3. The Home Manager desktop interface:
-
-   * derives a single **normalized wiring payload** (`desktop`)
-   * enforces invariants
-   * exposes the normalized payload to all desktop plugins
-
-The normalized payload contains:
-
-* resolved component identifiers
-* launch commands (e.g. bar / launcher / terminal)
-* component flags
-* minimal session wiring (environment variables)
-
-Normalization is **wiring-only**:
-
-* no UI styling
-* no backend configuration
-* no module-local interpretation
-
-There is exactly **one interpretation** of desktop policy.
-
----
-
-### Desktop interface module
-
-`modules/home/desktop/interface.nix` is the entry point.
-
-Responsibilities:
-
-* import all desktop plugins unconditionally
-* normalize `desktopPolicy → desktop`
-* forward immutable UI tokens (`uiPolicy`)
-* enforce invariants at evaluation time
-* expose `{ desktop, ui }` to all plugins
-
-The interface contains **no backend-specific configuration**.
-
----
-
-### Desktop plugin modules
-
-Plugins live under:
-
-```
-modules/home/desktop/
-  backends/
-  bars/
-  launchers/
-  terminals/
+```nix
+# Direct access - no specialArgs needed!
+let
+  ui = config.my.ui;
+in {
+  programs.waybar.style = ''
+    * {
+      font-family: "${ui.monoFont.family}";
+      font-size: ${toString ui.monoFont.sizePx}px;
+    }
+    window#waybar {
+      background: ${ui.colors.background};
+      color: ${ui.colors.foreground};
+    }
+  '';
+}
 ```
 
-Each plugin:
-
-* self-gates on the normalized `desktop` payload
-* installs its own packages
-* configures its own Home Manager programs
-* consumes only `{ desktop, ui }`
-
-Plugins must **not**:
-
-* read `config.my.desktop.*`
-* mutate policy
-* publish internal registry slots
-* depend on other plugins directly
-
-All cross-component coordination flows through the normalized payload.
-
 ---
 
-## Home Manager: directories
+## Desktop system
 
-### `modules/home/packages.nix`
+The desktop environment is implemented as **dendritic features**.
 
-Declares **generic user packages**.
+Each desktop component (WM, bar, launcher, terminal) is a self-contained feature that:
 
-* no configuration
-* no coupling to desktop or services
+* self-gates on `features.<name>.enable`
+* contains both NixOS and Home Manager config when needed
+* directly accesses UI tokens via `config.my.ui`
+* provides host-level override options
 
-### `modules/home/desktop/`
+### Desktop features
 
-Contains **all desktop behavior**.
+* **sway.nix** – Window manager + swaylock + mako + session setup
+  - Options: `enable`, `extraFlags`, `extraConfig`, `keybindings`
+  - Includes: PAM setup, XDG portal, session packages
 
-### `modules/home/core/`
+* **waybar.nix** – Status bar
+  - Options: `enable`, `position`, `extraSettings`
 
-Contains **core tool configuarion**
+* **foot.nix** – Terminal emulator
+  - Options: `enable`, `extraSettings`
 
-* shell
-* git, etc.
+* **wofi.nix** – Application launcher
+  - Options: `enable`, `extraSettings`
+
+### Adding a new desktop component
+
+1. Create `features/desktop/newcomponent.nix`
+2. Add `options.features.newcomponent.enable`
+3. Self-gate on that option
+4. Access UI tokens via `config.my.ui`
+5. Import in `profiles/workstation.nix`
+6. Enable in workstation profile
+
+No cross-feature dependencies. No normalization layer. No magic.
 
 ---
 
@@ -301,7 +371,7 @@ Contains **core tool configuarion**
 * hardware
 * login managers
 * session setup
-* services
+* system services
 * secrets
 
 **Home Manager modules** handle:
@@ -309,9 +379,9 @@ Contains **core tool configuarion**
 * user programs
 * desktop configuration
 * dotfiles
-* runtime behavior
+* user services
 
-No module may cross this boundary.
+Features may contain **both** when the component requires system-level setup (e.g., Sway needs PAM for swaylock, session packages for the display manager).
 
 ---
 
@@ -319,15 +389,32 @@ No module may cross this boundary.
 
 ```
 .
-├── hosts/            # overrides only
-├── profiles/         # role composition
-├── modules/
-│   ├── nixos/        # system implementation
+├── flake.nix                 # flake-parts entry point
+├── flake-modules/
+│   ├── baseline.nix          # Flake-wide baseline
+│   └── nixos.nix             # Host configurations
+│
+├── features/                 # Self-contained features
+│   ├── core/                 # Auto-imported baseline
+│   ├── desktop/              # Desktop environment
+│   ├── system/               # System-level features
+│   ├── home/                 # Home Manager core
+│   ├── hardware/             # Hardware features
+│   └── apps/                 # Application bundles
+│
+├── profiles/                 # Role composition
+│   ├── minimal.nix
+│   └── workstation.nix
+│
+├── hosts/                    # Host-specific overrides
+│   ├── home-pc/
+│   └── laptop/
+│
+├── modules/                  # Remaining non-feature modules
+│   ├── nixos/
 │   └── home/
-│       ├── packages.nix
-│       └── desktop/  # plugin system
-├── options/          # shared interfaces
-├── secrets/          # agenix-encrypted only
+│
+├── secrets/                  # agenix-encrypted only
 ├── lib/
 └── pkgs/
 ```
@@ -340,16 +427,94 @@ This structure is part of the spec.
 
 This system is designed so that:
 
+* features are self-contained and composable
 * hosts remain boring and declarative
+* profiles explicitly list features (no auto-discovery)
+* adding a new feature requires minimal changes
+* UI tokens flow naturally without specialArgs
+* no hidden dependencies or magic compilation
 * Home Manager config is identical across machines by default
-* desktop policy has a single interpretation
-* adding a new desktop component requires minimal changes
-* implementation complexity is hidden behind stable interfaces
 * secrets are never mishandled
 * the system is readable months later without archeology
 
 ---
 
-### Status
+## Feature patterns
+
+### Pattern 1: Home Manager only
+
+```nix
+{ config, lib, ... }:
+let
+  cfg = config.features.myfeature;
+  ui = config.my.ui;
+in {
+  options.features.myfeature.enable = lib.mkEnableOption "My feature";
+
+  config = lib.mkIf cfg.enable {
+    home-manager.sharedModules = [{
+      programs.myprogram = {
+        enable = true;
+        # Use ui.* directly
+      };
+    }];
+  };
+}
+```
+
+### Pattern 2: NixOS + Home Manager
+
+```nix
+{ config, lib, pkgs, ... }:
+let
+  cfg = config.features.myfeature;
+  ui = config.my.ui;
+in {
+  options.features.myfeature.enable = lib.mkEnableOption "My feature";
+
+  config = lib.mkIf cfg.enable {
+    # NixOS system-level config
+    services.mysystem.enable = true;
+    security.pam.services.myservice = {};
+
+    # Home Manager user-level config
+    home-manager.sharedModules = [{
+      programs.myprogram.enable = true;
+    }];
+  };
+}
+```
+
+### Pattern 3: Optional hardware
+
+```nix
+{ config, lib, ... }:
+let cfg = config.features.hardware-feature;
+in {
+  options.features.hardware-feature = {
+    enable = lib.mkEnableOption "Hardware feature";
+    optionA = lib.mkOption { /* ... */ };
+  };
+
+  config = lib.mkIf cfg.enable {
+    hardware.something.enable = true;
+    # ... hardware-specific config
+  };
+}
+```
+
+---
+
+## Status
 
 This document is **normative**.
+
+The implementation has been refactored to match this specification through 8 phases:
+1. ✅ Flake-parts infrastructure
+2. ✅ Core features structure
+3. ✅ First dendritic feature
+4. ✅ Desktop features conversion
+5. ✅ Workstation profile update
+6. ✅ Host configuration update
+7. ✅ Cleanup of old files
+8. ✅ Remaining features organization
