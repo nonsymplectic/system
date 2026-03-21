@@ -11,7 +11,7 @@
   ansi16 = types.addCheck (types.listOf types.str) (xs: builtins.length xs == 16);
 
   # Named view of ANSI 16-color palette
-  ansi = rec {
+  ansi = {
     black = "#eff1f5";
     red = "#d20f39";
     green = "#40a02b";

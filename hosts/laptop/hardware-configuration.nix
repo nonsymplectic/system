@@ -1,7 +1,6 @@
 # Placeholder hardware configuration for laptop
 # TODO: Generate proper config with: nixos-generate-config --show-hardware-config
 {
-  config,
   lib,
   modulesPath,
   ...
