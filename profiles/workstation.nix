@@ -28,16 +28,23 @@
     ../profiles/minimal.nix
 
     # System features
-    ../modules/nixos/core/unfree-packages.nix # Allow unfree packages
-    ../modules/nixos/ui/fonts.nix # Font resources
-    ../modules/nixos/services/ly.nix # Display manager
-    ../modules/nixos/core/agenix.nix # Secrets management
+    ../features/system/unfree-packages.nix
+    ../features/system/fonts.nix
+    ../features/system/ly-dm.nix
+    ../features/system/agenix.nix
 
     # Desktop features (dendritic pattern)
     ../features/desktop/sway.nix
     ../features/desktop/waybar.nix
     ../features/desktop/foot.nix
     ../features/desktop/wofi.nix
+
+    # Hardware features (optional, enabled per-host)
+    ../features/hardware/nvidia.nix
+    ../features/hardware/bluetooth.nix
+
+    # App features
+    ../features/apps/browsers.nix
   ];
 
   /*
@@ -61,24 +68,25 @@
     catppuccin.homeModules.catppuccin
 
     # Core user configuration
-    ../modules/home/core/shell.nix # Shell (bash/zsh)
-    ../modules/home/core/ssh.nix # SSH config
-    ../modules/home/core/git.nix # Git config
+    ../features/home/shell.nix
+    ../features/home/ssh.nix
+    ../features/home/git.nix
+    ../features/home/theme.nix
 
     # Desktop theming and customization
-    ../modules/home/input-methods.nix # Input methods
-    ../modules/home/desktop/theme.nix # GTK/Qt theming
+    ../modules/home/input-methods.nix
 
     # User applications and services
-    ../modules/home/default-apps.nix # Default applications
-    ../modules/home/desktop-entries.nix # Desktop entries
-    ../modules/home/packages.nix # User packages
-    ../modules/home/services.nix # User services
+    ../modules/home/default-apps.nix
+    ../modules/home/desktop-entries.nix
+    ../modules/home/packages.nix
+    ../modules/home/services.nix
   ];
 
-  # Enable dendritic desktop features
+  # Enable features
   features.sway.enable = true;
   features.waybar.enable = true;
   features.foot.enable = true;
   features.wofi.enable = true;
+  features.browsers.enable = true;
 }

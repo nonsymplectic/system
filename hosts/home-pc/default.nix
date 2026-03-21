@@ -68,6 +68,10 @@
   ============================================================
   */
 
+  # Enable hardware features
+  features.nvidia.enable = true;
+  features.bluetooth.enable = true;
+
   # Sway needs this flag because of nvidia drivers
   features.sway.extraFlags = [
     "--unsupported-gpu"
