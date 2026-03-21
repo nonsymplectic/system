@@ -13,35 +13,16 @@
 
     catppuccin.url = "github:catppuccin/nix/release-25.11";
     catppuccin.inputs.nixpkgs.follows = "nixpkgs";
+
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
   };
 
-  outputs = inputs @ {
-    self,
-    nixpkgs,
-    ...
-  }: let
-    mkHost = import ./lib/mkHost.nix {inherit inputs;};
-
-    # Flake-global baseline (nix tooling + stateVersion)
-    baselineModule = {...}: {
-      nix.settings.experimental-features = ["nix-command" "flakes"];
-      system.stateVersion = "25.11";
+  outputs = inputs @ {flake-parts, ...}:
+    flake-parts.lib.mkFlake {inherit inputs;} {
+      systems = ["x86_64-linux"];
+      imports = [
+        ./flake-modules/nixos.nix
+      ];
     };
-  in {
-    lib.mkHost = mkHost;
-
-    nixosConfigurations = {
-      home-pc = mkHost {
-        system = "x86_64-linux";
-        baselineModule = baselineModule;
-        modules = [./hosts/home-pc];
-      };
-
-      laptop = mkHost {
-        system = "x86_64-linux";
-        baselineModule = baselineModule;
-        modules = [./hosts/laptop];
-      };
-    };
-  };
 }
