@@ -215,6 +215,7 @@ in {
       enable = true;
       wlr.enable = true;
       extraPortals = [pkgs.xdg-desktop-portal-gtk];
+      config.common.default = "*"; # Use first portal in lexicographical order
     };
 
     # Home Manager user-level configuration
