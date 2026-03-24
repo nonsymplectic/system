@@ -63,6 +63,12 @@ in {
             }
             // cfg.extraSettings;
         };
+
+        # Set default terminal environment variables
+        home.sessionVariables = {
+          TERMINAL = "foot";
+          TERMCMD = "foot"; # For compatibility with older tools
+        };
       }
     ];
   };

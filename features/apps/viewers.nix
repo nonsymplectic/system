@@ -5,9 +5,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.features.viewers;
-in {
+in
+{
   options.features.viewers = {
     enable = lib.mkEnableOption "Media viewer applications";
 
