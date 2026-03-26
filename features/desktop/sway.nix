@@ -97,7 +97,7 @@
       indicator = ui.colors.error;
       childBorder = ui.colors.error;
       background = ui.colors.background;
-      text = ui.colors.foreground;
+      text = ui.colors.error;
     };
 
     placeholder = {
