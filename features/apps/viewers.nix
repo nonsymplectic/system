@@ -3,6 +3,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: let
   cfg = config.features.viewers;
@@ -34,6 +35,8 @@ in {
 
         # Video player
         programs.mpv.enable = true;
+
+        home.packages = [pkgs.vlc];
 
         # Image viewers
         programs.imv.enable = true;
