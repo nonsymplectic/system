@@ -4,7 +4,7 @@
     useTextGreeter = true;
     settings = {
       default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd sway --remember --greeting 'Michal ist King'";
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd sway --remember --greeting 'Michal ist King' --asterisks --asterisks-char '#'";
         user = "greeter";
       };
     };
