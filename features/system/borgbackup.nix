@@ -178,7 +178,7 @@ in {
           set -e
 
           REPO_PATH="/var/lib/borgbackup/${cfg.jobName}"
-          B2_PATH="${cfg.b2.remote}:${cfg.b2.bucket}"
+          B2_PATH="${cfg.b2.remote}:${cfg.b2.bucket}/borgbackup"
           LOG_FILE="/var/log/borgbackup-b2-sync.log"
 
           echo "[$(date)] Starting sync to B2..." | tee -a "$LOG_FILE"
