@@ -4,11 +4,9 @@
   config,
   lib,
   ...
-}:
-let
+}: let
   cfg = config.features.bluetooth;
-in
-{
+in {
   options.features.bluetooth = {
     enable = lib.mkEnableOption "Bluetooth support";
 

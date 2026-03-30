@@ -5,7 +5,7 @@
     accent = "pink";
 
     cursors = {
-      enable = true;
+      enable = false;
       accent = "pink";
     };
 
