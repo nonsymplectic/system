@@ -19,7 +19,7 @@
     # System features
     ../features/system/unfree-packages.nix
     ../features/system/fonts.nix
-    ../features/system/ly-dm.nix
+    ../features/system/tuigreet.nix
     ../features/system/agenix.nix
     ../features/system/borgbackup.nix
 
