@@ -4,9 +4,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.features.bluetooth;
-in {
+in
+{
   options.features.bluetooth = {
     enable = lib.mkEnableOption "Bluetooth support";
 
@@ -27,8 +29,7 @@ in {
           Experimental = true;
         };
         Policy = {
-          # Enable all controllers when found
-          AutoEnable = true;
+          AutoEnable = false;
         };
       };
     };
