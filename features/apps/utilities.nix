@@ -5,9 +5,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.features.utilities;
-in {
+in
+{
   options.features.utilities = {
     enable = lib.mkEnableOption "Utility applications";
 
@@ -23,10 +25,10 @@ in {
       description = "Enable AnyDesk remote desktop";
     };
 
-    udiskie = lib.mkOption {
+    udisks = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Enable udisk/udiskie disk tools";
+      description = "Enable udisks disk tools";
     };
   };
 
@@ -34,11 +36,9 @@ in {
     home-manager.sharedModules = [
       {
         home.packages =
-          (lib.optionals cfg.blueman [pkgs.blueman]) ++ (lib.optionals cfg.anydesk [pkgs.anydesk]);
-
-        services.udiskie.enable = cfg.udiskie;
+          (lib.optionals cfg.blueman [ pkgs.blueman ]) ++ (lib.optionals cfg.anydesk [ pkgs.anydesk ]);
       }
     ];
-    services.udisks2.enable = cfg.udiskie;
+    services.udisks2.enable = cfg.udisks;
   };
 }
