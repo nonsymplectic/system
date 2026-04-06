@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   imports = [
     ./hardware-configuration.nix
     ./hardware.nix
@@ -15,11 +16,14 @@
 
   # Console keymap
   console.keyMap = "de";
-  services.xserver.xkb = {
-      layout = "de";
-      options = "caps:swapescape";
-    };
 
+  # sway keymap
+  features.sway.extraConfig = ''
+    input type:keyboard {
+      xkb_layout de
+      xkb_options caps:swapescape
+    }
+  '';
 
   # Feature configuration
   # Laptops might want smaller fonts, different bar position, etc.
