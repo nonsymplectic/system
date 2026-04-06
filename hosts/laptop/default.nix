@@ -54,4 +54,12 @@
       yearly = 2;
     };
   };
+
+  # KeePassXC with automatic S3 sync
+  features.keepassxc-sync = {
+    enable = true;
+    databasePath = "/home/michal/KeepassXC/db.kdbx";
+    remotePath = "b2-backup:nixos-borgbackup/keepassxc/db.kdbx";
+    rcloneRemote = "b2-backup";
+  };
 }
