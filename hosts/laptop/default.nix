@@ -28,7 +28,11 @@
   # Feature configuration
   # Laptops might want smaller fonts, different bar position, etc.
   # Example overrides:
-  # my.ui.font.size = 14;
+  my.ui.font.size = 23;
+  my.ui.font.sizePx = 31;
+
+  my.ui.monoFont.size = 23;
+  my.ui.monoFont.sizePx = 31;
   # features.waybar.position = "top";
 
   # BorgBackup configuration (same settings as home-pc for shared repository)
