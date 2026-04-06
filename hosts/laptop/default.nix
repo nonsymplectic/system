@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   imports = [
     ./hardware-configuration.nix
     ./hardware.nix
@@ -23,9 +24,9 @@
     enable = true;
     jobName = "backup";
 
-    directories = [
-      "Documents"
-    ];
+    # directories = [
+    # "Documents"
+    # ];
 
     schedule = "daily";
 
