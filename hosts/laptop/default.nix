@@ -13,6 +13,14 @@
   networking.hostName = "laptop";
   time.timeZone = "Europe/Zurich";
 
+  # Console keymap
+  console.keyMap = "de";
+  services.xserver.xkb = {
+      layout = "de";
+      options = "caps:swapescape";
+    };
+
+
   # Feature configuration
   # Laptops might want smaller fonts, different bar position, etc.
   # Example overrides:
