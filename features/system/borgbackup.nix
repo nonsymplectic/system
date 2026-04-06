@@ -18,9 +18,24 @@ in {
 
     directories = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [];
+      default = [
+        "Documents"
+        "HowTo"
+        "Pictures"
+        "Spass"
+        "TODO"
+        "Videos"
+        "Job"
+        "MSc"
+        "Scripts"
+        "Uni"
+      ];
       description = "List of directories to backup (relative to user home)";
-      example = ["Documents" "Pictures" "scripts"];
+      example = [
+        "Documents"
+        "Pictures"
+        "scripts"
+      ];
     };
 
     schedule = lib.mkOption {
