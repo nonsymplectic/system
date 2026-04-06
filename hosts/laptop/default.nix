@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   imports = [
     ./hardware-configuration.nix
     ./hardware.nix
@@ -34,6 +33,7 @@
   # features.waybar.position = "top";
 
   features.bluetooth.enable = true;
+  features.minecraft.enable = true;
 
   # BorgBackup configuration (same settings as home-pc for shared repository)
   features.borgbackup = {

@@ -47,6 +47,7 @@
     ../features/apps/formatters.nix
     ../features/apps/utilities.nix
     ../features/apps/keepassxc-sync.nix
+    ../features/apps/minecraft.nix
   ];
 
   # Home Manager configuration

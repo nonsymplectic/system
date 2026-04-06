@@ -206,7 +206,6 @@ in {
 
           echo "[$(date)] Sync completed successfully" | tee -a "$LOG_FILE"
         '';
-
       };
 
       # Require network

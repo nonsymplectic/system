@@ -12,7 +12,7 @@ in {
 
     powerOnBoot = lib.mkOption {
       type = lib.types.bool;
-      default = false;
+      default = true;
       description = "Power on bluetooth adapter on boot";
     };
   };
