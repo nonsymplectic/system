@@ -3,6 +3,7 @@
     ./hardware-configuration.nix
     ./hardware.nix
     ./users.nix
+    ./swap.nix
 
     # Shared role profile
     ../../profiles/workstation.nix
