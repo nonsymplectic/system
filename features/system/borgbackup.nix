@@ -159,11 +159,6 @@ in {
       # Auto-initialize repository
       doInit = true;
 
-      # Environment for backup
-      environment = {
-        BORG_RSH = "ssh -i /root/.ssh/id_ed25519";
-      };
-
       # Post-backup hook to trigger B2 sync
       postHook = ''
         echo "Backup completed, triggering B2 sync..."
@@ -193,7 +188,7 @@ in {
           set -e
 
           REPO_PATH="/var/lib/borgbackup/${cfg.jobName}"
-          B2_PATH="${cfg.b2.remote}:${cfg.b2.bucket}/borgbackup"
+          B2_PATH="${cfg.b2.remote}:${cfg.b2.bucket}/borgbackup/${config.networking.hostName}"
           LOG_FILE="/var/log/borgbackup-b2-sync.log"
 
           echo "[$(date)] Starting sync to B2..." | tee -a "$LOG_FILE"
@@ -212,9 +207,6 @@ in {
           echo "[$(date)] Sync completed successfully" | tee -a "$LOG_FILE"
         '';
 
-        # Restart policy
-        Restart = "on-failure";
-        RestartSec = "5m";
       };
 
       # Require network
@@ -252,8 +244,12 @@ in {
         borgbackup
 
         # Helper script: List all archives
+        # Usage: borg-list [-r <hostname>]
         (pkgs.writeShellScriptBin "borg-list" ''
           REPO="/var/lib/borgbackup/${cfg.jobName}"
+          if [ "''${1:-}" = "-r" ]; then
+            REPO="/var/lib/borgbackup/remote/''${2:?hostname required}"
+          fi
           export BORG_PASSCOMMAND="sudo cat ${config.age.secrets.borgbackup_passphrase.path}"
 
           echo "Listing archives in repository: $REPO"
@@ -262,9 +258,16 @@ in {
         '')
 
         # Helper script: Mount an archive
+        # Usage: borg-mount [-r <hostname>] <archive-name> [mount-point]
         (pkgs.writeShellScriptBin "borg-mount" ''
+          REPO="/var/lib/borgbackup/${cfg.jobName}"
+          if [ "''${1:-}" = "-r" ]; then
+            REPO="/var/lib/borgbackup/remote/''${2:?hostname required}"
+            shift 2
+          fi
+
           if [ $# -lt 1 ]; then
-            echo "Usage: borg-mount <archive-name> [mount-point]"
+            echo "Usage: borg-mount [-r <hostname>] <archive-name> [mount-point]"
             echo ""
             echo "Available archives:"
             borg-list
@@ -273,7 +276,6 @@ in {
 
           ARCHIVE="$1"
           MOUNT_POINT="''${2:-/tmp/borg-mount}"
-          REPO="/var/lib/borgbackup/${cfg.jobName}"
           export BORG_PASSCOMMAND="sudo cat ${config.age.secrets.borgbackup_passphrase.path}"
 
           mkdir -p "$MOUNT_POINT"
@@ -287,9 +289,16 @@ in {
         '')
 
         # Helper script: Extract files from archive
+        # Usage: borg-extract [-r <hostname>] <archive-name> <path>
         (pkgs.writeShellScriptBin "borg-extract" ''
+          REPO="/var/lib/borgbackup/${cfg.jobName}"
+          if [ "''${1:-}" = "-r" ]; then
+            REPO="/var/lib/borgbackup/remote/''${2:?hostname required}"
+            shift 2
+          fi
+
           if [ $# -lt 2 ]; then
-            echo "Usage: borg-extract <archive-name> <path>"
+            echo "Usage: borg-extract [-r <hostname>] <archive-name> <path>"
             echo ""
             echo "Available archives:"
             borg-list
@@ -297,19 +306,22 @@ in {
           fi
 
           ARCHIVE="$1"
-          PATH_TO_EXTRACT="$2"
-          REPO="/var/lib/borgbackup/${cfg.jobName}"
+          EXTRACT_PATH="$2"
           export BORG_PASSCOMMAND="sudo cat ${config.age.secrets.borgbackup_passphrase.path}"
 
-          echo "Extracting '$PATH_TO_EXTRACT' from archive '$ARCHIVE'"
-          sudo ${pkgs.borgbackup}/bin/borg extract "$REPO::$ARCHIVE" "$PATH_TO_EXTRACT"
+          echo "Extracting '$EXTRACT_PATH' from archive '$ARCHIVE'"
+          sudo ${pkgs.borgbackup}/bin/borg extract "$REPO::$ARCHIVE" "$EXTRACT_PATH"
 
           echo "Extraction complete"
         '')
 
         # Helper script: Check repository integrity
+        # Usage: borg-check [-r <hostname>]
         (pkgs.writeShellScriptBin "borg-check" ''
           REPO="/var/lib/borgbackup/${cfg.jobName}"
+          if [ "''${1:-}" = "-r" ]; then
+            REPO="/var/lib/borgbackup/remote/''${2:?hostname required}"
+          fi
           export BORG_PASSCOMMAND="sudo cat ${config.age.secrets.borgbackup_passphrase.path}"
 
           echo "Checking repository integrity: $REPO"
@@ -321,8 +333,13 @@ in {
         '')
 
         # Helper script: Show repository info
+        # Usage: borg-info [-r <hostname>] [archive-name]
         (pkgs.writeShellScriptBin "borg-info" ''
           REPO="/var/lib/borgbackup/${cfg.jobName}"
+          if [ "''${1:-}" = "-r" ]; then
+            REPO="/var/lib/borgbackup/remote/''${2:?hostname required}"
+            shift 2
+          fi
           export BORG_PASSCOMMAND="sudo cat ${config.age.secrets.borgbackup_passphrase.path}"
 
           if [ $# -eq 0 ]; then
@@ -354,6 +371,34 @@ in {
           echo ""
           echo "Following sync logs (Ctrl+C to exit):"
           sudo journalctl -u borgbackup-b2-sync.service -f
+        '')
+
+        # Helper script: Pull another machine's repo from B2
+        # Usage: borg-pull <hostname>
+        (pkgs.writeShellScriptBin "borg-pull" ''
+          REMOTE_HOST="''${1:?Usage: borg-pull <hostname>}"
+          B2_PATH="${cfg.b2.remote}:${cfg.b2.bucket}/borgbackup/$REMOTE_HOST"
+          LOCAL_MIRROR="/var/lib/borgbackup/remote/$REMOTE_HOST"
+
+          echo "Pulling repo for '$REMOTE_HOST' from B2..."
+          echo "  Source : $B2_PATH"
+          echo "  Dest   : $LOCAL_MIRROR"
+          echo ""
+
+          sudo mkdir -p "$LOCAL_MIRROR"
+          sudo ${pkgs.rclone}/bin/rclone sync \
+            "$B2_PATH" \
+            "$LOCAL_MIRROR" \
+            --config /root/.config/rclone/rclone.conf \
+            --progress \
+            --transfers 4 \
+            --checkers 8
+
+          echo ""
+          echo "Pull complete. Browse with:"
+          echo "  borg-list -r $REMOTE_HOST"
+          echo "  borg-mount -r $REMOTE_HOST <archive> [mount-point]"
+          echo "  borg-extract -r $REMOTE_HOST <archive> <path>"
         '')
       ];
     };
