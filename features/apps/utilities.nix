@@ -5,11 +5,9 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.features.utilities;
-in
-{
+in {
   options.features.utilities = {
     enable = lib.mkEnableOption "Utility applications";
 
@@ -36,7 +34,7 @@ in
     home-manager.sharedModules = [
       {
         home.packages =
-          (lib.optionals cfg.blueman [ pkgs.blueman ]) ++ (lib.optionals cfg.anydesk [ pkgs.anydesk ]);
+          (lib.optionals cfg.blueman [pkgs.blueman]) ++ (lib.optionals cfg.anydesk [pkgs.anydesk]);
       }
     ];
     services.udisks2.enable = cfg.udisks;
