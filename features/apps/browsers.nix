@@ -12,8 +12,12 @@ in {
     enable = lib.mkEnableOption "Web browsers";
 
     defaultBrowser = lib.mkOption {
-      type = lib.types.enum ["chromium" "qutebrowser"];
-      default = "chromium";
+      type = lib.types.enum [
+        "chromium"
+        "qutebrowser"
+        "firefox"
+      ];
+      default = "firefox";
       description = "Default web browser";
     };
 
@@ -22,30 +26,41 @@ in {
       default = true;
       description = "Include Tor Browser";
     };
+
+    command = lib.mkOption {
+      type = lib.types.str;
+      readOnly = true;
+      description = "Command used to launch the configured default browser";
+    };
   };
 
   config = lib.mkIf cfg.enable {
+    features.browsers.command =
+      if cfg.defaultBrowser == "chromium"
+      then "${pkgs.chromium}/bin/chromium"
+      else if cfg.defaultBrowser == "qutebrowser"
+      then "${pkgs.qutebrowser}/bin/qutebrowser"
+      else "${pkgs.firefox}/bin/firefox";
+
     home-manager.sharedModules = [
       {
         programs.chromium.enable = true;
         programs.qutebrowser.enable = true;
+        programs.firefox.enable = true;
 
         home.packages = lib.optionals cfg.enableTor [pkgs.tor-browser];
 
-        # Set default browser
-        xdg.mimeApps.defaultApplications = {
-          "text/html" =
+        xdg.mimeApps.defaultApplications = let
+          browserDesktop =
             if cfg.defaultBrowser == "chromium"
             then "chromium-browser.desktop"
-            else "org.qutebrowser.qutebrowser.desktop";
-          "x-scheme-handler/http" =
-            if cfg.defaultBrowser == "chromium"
-            then "chromium-browser.desktop"
-            else "org.qutebrowser.qutebrowser.desktop";
-          "x-scheme-handler/https" =
-            if cfg.defaultBrowser == "chromium"
-            then "chromium-browser.desktop"
-            else "org.qutebrowser.qutebrowser.desktop";
+            else if cfg.defaultBrowser == "qutebrowser"
+            then "org.qutebrowser.qutebrowser.desktop"
+            else "firefox.desktop";
+        in {
+          "text/html" = browserDesktop;
+          "x-scheme-handler/http" = browserDesktop;
+          "x-scheme-handler/https" = browserDesktop;
         };
       }
     ];

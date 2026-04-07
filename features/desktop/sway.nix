@@ -113,7 +113,7 @@
     # Launch / session
     "Mod4+Return" = "exec foot";
     "Mod4+d" = "exec wofi --show drun";
-    "Mod4+Shift+f" = "exec chromium";
+    "Mod4+Shift+f" = "exec ${config.features.browsers.command}";
     "Mod4+Shift+q" = "kill";
     "Mod4+Shift+r" = "reload";
     "Mod4+Shift+e" = "exec swaymsg exit";
