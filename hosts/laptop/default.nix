@@ -1,7 +1,6 @@
 {...}: {
   imports = [
     ./hardware-configuration.nix
-    ./hardware.nix
     ./users.nix
     ./swap.nix
 
@@ -32,7 +31,9 @@
   my.ui.monoFont.sizePx = 31;
   # features.waybar.position = "top";
 
+  # Hardware features
   features.bluetooth.enable = true;
+  features.laptop-powersaving.enable = true;
   features.minecraft.enable = true;
 
   # BorgBackup configuration (same settings as home-pc for shared repository)

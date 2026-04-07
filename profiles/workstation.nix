@@ -35,6 +35,7 @@
     # Hardware features (enabled per-host)
     ../features/hardware/nvidia.nix
     ../features/hardware/bluetooth.nix
+    ../features/hardware/laptop-powersaving.nix
 
     # App features
     ../features/apps/browsers.nix
