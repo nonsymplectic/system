@@ -1,5 +1,3 @@
-# Browser applications feature
-# Home Manager only - installs and configures browsers
 {
   config,
   lib,
@@ -15,9 +13,9 @@ in {
       type = lib.types.enum [
         "chromium"
         "qutebrowser"
-        "firefox"
+        "librewolf"
       ];
-      default = "firefox";
+      default = "librewolf";
       description = "Default web browser";
     };
 
@@ -40,13 +38,13 @@ in {
       then "${pkgs.chromium}/bin/chromium"
       else if cfg.defaultBrowser == "qutebrowser"
       then "${pkgs.qutebrowser}/bin/qutebrowser"
-      else "${pkgs.firefox}/bin/firefox";
+      else "${pkgs.librewolf}/bin/librewolf";
 
     home-manager.sharedModules = [
       {
         programs.chromium.enable = true;
         programs.qutebrowser.enable = true;
-        programs.firefox.enable = true;
+        programs.librewolf.enable = true;
 
         home.packages = lib.optionals cfg.enableTor [pkgs.tor-browser];
 
@@ -56,7 +54,7 @@ in {
             then "chromium-browser.desktop"
             else if cfg.defaultBrowser == "qutebrowser"
             then "org.qutebrowser.qutebrowser.desktop"
-            else "firefox.desktop";
+            else "librewolf.desktop";
         in {
           "text/html" = browserDesktop;
           "x-scheme-handler/http" = browserDesktop;
