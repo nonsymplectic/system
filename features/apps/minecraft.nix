@@ -5,9 +5,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.features.minecraft;
-in {
+in
+{
   options.features.minecraft = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -19,7 +21,10 @@ in {
   config = lib.mkIf cfg.enable {
     home-manager.sharedModules = [
       {
-        home.packages = [pkgs.prismlauncher];
+        home.packages = [
+          pkgs.prismlauncher
+          pkgs.jdk25_headless # needed for minecraft 26.1
+        ];
       }
     ];
   };
