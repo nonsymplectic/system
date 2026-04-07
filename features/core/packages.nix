@@ -8,6 +8,8 @@
     git
     tree
     openssh
+    unzip
+    zip
 
     # Shorthand for rebuilding system config
     (writeShellScriptBin "system-rebuild" ''

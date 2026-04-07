@@ -5,11 +5,9 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.features.minecraft;
-in
-{
+in {
   options.features.minecraft = {
     enable = lib.mkOption {
       type = lib.types.bool;
