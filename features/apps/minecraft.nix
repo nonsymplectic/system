@@ -4,6 +4,7 @@
   config,
   lib,
   pkgs,
+  pkgsUnstable,
   ...
 }: let
   cfg = config.features.minecraft;
@@ -20,8 +21,7 @@ in {
     home-manager.sharedModules = [
       {
         home.packages = [
-          pkgs.prismlauncher
-          pkgs.jdk25_headless # needed for minecraft 26.1
+          pkgsUnstable.prismlauncher
         ];
       }
     ];

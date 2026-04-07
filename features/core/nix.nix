@@ -1,6 +1,6 @@
 {
   nix = {
-    settings.download-buffer-size = 32 * 1048577; # 32MiB
+    settings.download-buffer-size = 128 * 1048577; # 128 MiB
     settings.auto-optimise-store = true;
 
     gc = {
