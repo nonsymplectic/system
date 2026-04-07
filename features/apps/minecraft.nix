@@ -10,11 +10,7 @@
   cfg = config.features.minecraft;
 in {
   options.features.minecraft = {
-    enable = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = "Enable Minecraft";
-    };
+    enable = lib.mkEnableOption "Enable Minecraft";
   };
 
   config = lib.mkIf cfg.enable {
