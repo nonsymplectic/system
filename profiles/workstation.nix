@@ -22,6 +22,7 @@
     ../features/system/tuigreet.nix
     ../features/system/agenix.nix
     ../features/system/borgbackup.nix
+    ../features/system/theme.nix
 
     # Desktop features
     ../features/desktop/sway.nix
