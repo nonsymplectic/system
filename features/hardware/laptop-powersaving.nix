@@ -16,11 +16,11 @@ in {
       settings = {
         battery = {
           governor = "powersave";
-          turbo = "never";
+          turbo = "auto";
         };
         charger = {
           governor = "performance";
-          turbo = "auto";
+          turbo = "always";
         };
       };
     };
