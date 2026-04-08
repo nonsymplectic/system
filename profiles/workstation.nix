@@ -46,6 +46,7 @@
     ../features/apps/communication.nix
     ../features/apps/security.nix
     ../features/apps/cli-tools.nix
+    ../features/apps/dev-tools.nix
     ../features/apps/formatters.nix
     ../features/apps/utilities.nix
     ../features/apps/keepassxc-sync.nix
@@ -88,6 +89,7 @@
   features.productivity.enable = true;
   features.communication.enable = true;
   features.security.enable = true;
+  features.dev-tools.enable = true;
   features.cli-tools.enable = true;
   features.formatters.enable = true;
   features.utilities.enable = true;

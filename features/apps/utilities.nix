@@ -1,5 +1,5 @@
 # Utility applications feature
-# Home Manager only - miscellaneous GUI utilities
+# Home Manager only - miscellaneous utilities
 {
   config,
   lib,
