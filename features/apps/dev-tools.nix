@@ -6,6 +6,33 @@
   ...
 }: let
   cfg = config.features.dev-tools;
+
+  devenvCmd = pkgs.writeShellScriptBin "dev-env" ''
+    set -euo pipefail
+
+    dir="$PWD"
+    pids=()
+
+    cleanup() {
+      local pid
+      for pid in "''${pids[@]}"; do
+        kill "$pid" 2>/dev/null || true
+      done
+    }
+
+    trap cleanup HUP INT TERM EXIT
+
+    foot --title="nvim"    --working-directory="$dir" nvim . 2>/dev/null &
+    pids+=("$!")
+
+    foot --title="shell"   --working-directory="$dir" 2>/dev/null &
+    pids+=("$!")
+
+    foot --title="lazygit" --working-directory="$dir" lazygit 2>/dev/null &
+    pids+=("$!")
+
+    wait
+  '';
 in {
   options.features.dev-tools = {
     enable = lib.mkEnableOption "developer tools";
@@ -27,6 +54,12 @@ in {
       default = true;
       description = "Enable lazygit";
     };
+
+    dev-env = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable devenv command";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -36,7 +69,8 @@ in {
       {
         home.packages =
           (lib.optionals cfg.uv [pkgs.uv])
-          ++ (lib.optionals cfg.lazygit [pkgs.lazygit]);
+          ++ (lib.optionals cfg.lazygit [pkgs.lazygit])
+          ++ (lib.optionals cfg.dev-env [devenvCmd]);
       }
     ];
   };
