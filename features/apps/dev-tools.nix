@@ -21,6 +21,12 @@ in {
       default = true;
       description = "Enable nix-ld for running non-Nix dynamic binaries";
     };
+
+    lazygit = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable lazygit";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -28,9 +34,9 @@ in {
 
     home-manager.sharedModules = [
       {
-        home.packages = lib.optionals cfg.uv [
-          pkgs.uv
-        ];
+        home.packages =
+          (lib.optionals cfg.uv [pkgs.uv])
+          ++ (lib.optionals cfg.lazygit [pkgs.lazygit]);
       }
     ];
   };
