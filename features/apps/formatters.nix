@@ -14,13 +14,19 @@ in {
     nix = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Enable Alejandra Nix formatter";
+      description = "Enable Nix formatter";
     };
 
     python = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Enable Black Python formatter";
+      description = "Enable Python formatter";
+    };
+
+    lua = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable Lua formatter";
     };
   };
 
@@ -29,7 +35,8 @@ in {
       {
         home.packages =
           (lib.optionals cfg.nix [pkgs.alejandra])
-          ++ (lib.optionals cfg.python [pkgs.black]);
+          ++ (lib.optionals cfg.python [pkgs.black])
+          ++ (lib.optionals cfg.lua [pkgs.stylua]);
       }
     ];
   };

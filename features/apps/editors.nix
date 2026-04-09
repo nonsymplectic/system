@@ -38,10 +38,6 @@ in {
           nixd
           lua-language-server
           pyright
-
-          alejandra
-          stylua
-          black
         ];
         description = "Extra packages for Neovim (LSP servers, formatters, CLI tools).";
       };
