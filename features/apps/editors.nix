@@ -153,9 +153,9 @@ in {
             require("mini.files").setup({
               windows = {
                 preview = true,
-                width_focus = 35,
+                width_focus = 20,
                 width_nofocus = 20,
-                width_preview = 45,
+                width_preview = 90,
               },
             })
 
