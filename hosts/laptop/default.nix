@@ -31,6 +31,12 @@
   my.ui.monoFont.sizePx = 31;
   # features.waybar.position = "top";
 
+  # Sway additional keybinds
+  features.sway.keybindings = {
+    # Turn off Laptop Screen
+    "Mod4+Shift+m" = "output eDP-1 toggle";
+  };
+
   # Hardware features
   features.bluetooth.enable = true;
   features.laptop-powersaving.enable = true;

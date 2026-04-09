@@ -182,9 +182,6 @@
     # Resize mode
     "Mod4+r" = "mode resize";
 
-    # Turn off Laptop Screen
-    "Mod4+Shift+m" = "output eDP-1 toggle";
-
     # Laptop Volume controls
     "XF86AudioRaiseVolume" = "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ && notify-send -t 2000 -h string:x-canonical-private-synchronous:sys-notify -h int:value:$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2*100)}') 'Volume' \"$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{if ($3 == \"[MUTED]\") print \"muted\"; else print int($2*100) \"%\"}')\"";
     "XF86AudioLowerVolume" = "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- && notify-send -t 2000 -h string:x-canonical-private-synchronous:sys-notify -h int:value:$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2*100)}') 'Volume' \"$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{if ($3 == \"[MUTED]\") print \"muted\"; else print int($2*100) \"%\"}')\"";
