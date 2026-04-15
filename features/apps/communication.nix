@@ -18,6 +18,12 @@ in {
       description = "Enable Dino XMPP client";
     };
 
+    mumble = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable mumble client";
+    };
+
     protonmail = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -37,6 +43,7 @@ in {
         home.packages =
           (lib.optionals cfg.dino [pkgs.dino])
           ++ (lib.optionals cfg.zoom [pkgs.zoom-us])
+          ++ (lib.optionals cfg.mumble [pkgs.mumble])
           ++ (lib.optionals cfg.protonmail [pkgsUnstable.protonmail-desktop]);
       }
     ];
