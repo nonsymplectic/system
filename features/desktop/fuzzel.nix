@@ -41,6 +41,7 @@ in {
                 font = "${ui.monoFont.family}:size=${toString ui.monoFont.size}";
                 icons-enabled = false;
                 show-actions = false;
+                auto-select = true;
 
                 lines = 10;
                 width = 40;
