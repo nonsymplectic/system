@@ -30,6 +30,7 @@
     ../features/desktop/foot.nix
     ../features/desktop/wofi.nix
     ../features/desktop/tofi.nix
+    ../features/desktop/fuzzel.nix
     ../features/desktop/wlsunset.nix
     ../features/desktop/input-methods.nix
     ../features/desktop/desktop-support.nix
@@ -78,8 +79,12 @@
   features.sway.enable = true;
   features.waybar.enable = true;
   features.foot.enable = true;
+
+  # Launchers
   features.wofi.enable = false;
-  features.tofi.enable = true;
+  features.tofi.enable = false;
+  features.fuzzel.enable = true;
+
   features.wlsunset.enable = true;
   # features.input-methods.enable = false; # Disabled by default
   features.desktop-support.enable = true;

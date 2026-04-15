@@ -112,7 +112,7 @@
   baseKeybindings = {
     # Launch / session
     "Mod4+Return" = "exec foot";
-    "Mod4+d" = "exec tofi-drun | xargs swaymsg exec --";
+    "Mod4+d" = "exec fuzzel";
     "Mod4+Shift+f" = "exec ${config.features.browsers.command}";
     "Mod4+Shift+q" = "kill";
     "Mod4+Shift+r" = "reload";
@@ -268,7 +268,7 @@ in {
               workspaceLayout = "tabbed";
 
               terminal = "foot";
-              menu = "exec tofi-drun | xargs swaymsg exec --";
+              menu = "exec fuzzel";
 
               fonts = {
                 names = [ui.font.family];
