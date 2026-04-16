@@ -25,7 +25,7 @@
     ../features/system/theme.nix
 
     # Desktop features
-    ../features/desktop/sway.nix
+    ../features/desktop/sway
     ../features/desktop/waybar.nix
     ../features/desktop/foot.nix
     ../features/desktop/wofi.nix
