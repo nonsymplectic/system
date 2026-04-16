@@ -91,6 +91,9 @@ in {
           '';
         };
 
+        # Brightnessctl for Screen brightness
+        home.packages = [pkgs.brightnessctl];
+
         # Swaylock for lockscreen
         programs.swaylock = {
           enable = true;

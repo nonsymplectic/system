@@ -79,4 +79,8 @@
   "XF86AudioLowerVolume" = "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- && notify-send -t 2000 -h string:x-canonical-private-synchronous:sys-notify -h int:value:$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2*100)}') 'Volume' \"$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{if ($3 == \"[MUTED]\") print \"muted\"; else print int($2*100) \"%\"}')\"";
   "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle && notify-send -t 2000 -h string:x-canonical-private-synchronous:sys-notify -h int:value:$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2*100)}') 'Volume' \"$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{if ($3 == \"[MUTED]\") print \"muted\"; else print int($2*100) \"%\"}')\"";
   "XF86AudioMicMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle && notify-send -t 2000 -h string:x-canonical-private-synchronous:mic-notify -h int:value:$(wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | awk '{print int($2*100)}') 'Microphone' \"$(wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | awk '{if ($3 == \"[MUTED]\") print \"muted\"; else print int($2*100) \"%\"}')\"";
+
+  # Laptop Monitor controls
+  "XF86MonBrightnessUp" = "exec brightnessctl -c backlight set 5%+ && notify-send -t 2000 -h string:x-canonical-private-synchronous:brightness-notify -h int:value:$(brightnessctl -m | awk -k '{print int($4)}') 'Brightness' $(brightnessctl -m | awk -k '{print $4}')";
+  "XF86MonBrightnessDown" = "exec brightnessctl -c backlight set 5%- && notify-send -t 2000 -h string:x-canonical-private-synchronous:brightness-notify -h int:value:$(brightnessctl -m | awk -k '{print int($4)}') 'Brightness' $(brightnessctl -m | awk -k '{print $4}')";
 }
