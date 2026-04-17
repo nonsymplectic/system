@@ -14,7 +14,7 @@ in {
     bluetooth-ui = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Enable Blueman Bluetooth manager + bluetui";
+      description = "Enable bluetui";
     };
 
     anydesk = lib.mkOption {
@@ -34,7 +34,7 @@ in {
     home-manager.sharedModules = [
       {
         home.packages =
-          (lib.optionals cfg.bluetooth-ui [pkgs.blueman pkgs.bluetui]) ++ (lib.optionals cfg.anydesk [pkgs.anydesk]);
+          (lib.optionals cfg.bluetooth-ui [pkgs.bluetui]) ++ (lib.optionals cfg.anydesk [pkgs.anydesk]);
       }
     ];
     services.udisks2.enable = cfg.udisks;
