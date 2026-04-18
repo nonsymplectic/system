@@ -3,28 +3,33 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: let
   cfg = config.features.input-methods;
+  fcitx5Home = "${config.xdg.configHome}/fcitx5";
 in {
   options.features.input-methods = {
     enable = lib.mkEnableOption "Input method framework";
-
-    type = lib.mkOption {
-      type = lib.types.enum ["fcitx5" "ibus"];
-      default = "fcitx5";
-      description = "Input method framework to use";
-    };
   };
 
   config = lib.mkIf cfg.enable {
     home-manager.sharedModules = [
-      {
+      ({
+        pkgs,
+        lib,
+        ...
+      }: {
         i18n.inputMethod = {
-          enabled = cfg.type;
-          # Add framework-specific configuration here if needed
+          enable = true;
+          type = "fcitx5";
+          fcitx5.addons = [
+            pkgs.fcitx5
+            pkgs.fcitx5-gtk
+            pkgs.qt6Packages.fcitx5-chinese-addons
+          ];
         };
-      }
+      })
     ];
   };
 }
