@@ -29,6 +29,11 @@ in {
       default = true;
       description = "Enable Zotero reference manager";
     };
+    hugo = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable hugo static site generator";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -38,7 +43,8 @@ in {
 
         home.packages =
           (lib.optionals cfg.calibre [pkgs.calibre])
-          ++ (lib.optionals cfg.zotero [pkgsUnstable.zotero]);
+          ++ (lib.optionals cfg.zotero [pkgsUnstable.zotero])
+          ++ (lib.optionals cfg.hugo [pkgs.hugo]);
       }
     ];
   };
