@@ -14,6 +14,7 @@
     home.stateVersion = "25.11";
 
     xdg.enable = true;
+    xdg.mimeApps.enable = true;
     programs.home-manager.enable = true;
   };
 
