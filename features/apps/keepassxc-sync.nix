@@ -143,7 +143,7 @@ in {
             notify normal "KeePassXC Sync" "Database updated from cloud."
           else
             # Local is newer or both changed - CONFLICT
-            CONFLICT_FILE="$DB_DIR/db.kdbx.conflict.$TIMESTAMP"
+            CONFLICT_FILE="$DB_DIR/db-conflict-$TIMESTAMP.kdbx"
             cp "$DB_PATH" "$CONFLICT_FILE"
             mv "$TEMP_DB" "$DB_PATH"
             notify critical "KeePassXC Sync - CONFLICT" "Local changes backed up to:\n$CONFLICT_FILE\n\nUsing remote version."
