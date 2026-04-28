@@ -179,7 +179,7 @@ in {
               margin: 0;
             }
 
-            #network, #custom-bat, #disk, #memory, #clock {
+            #network, #custom-bat, #disk, #memory, #clock, #battery {
               padding: 0;
               margin: 0;
             }
