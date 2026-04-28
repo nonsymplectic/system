@@ -61,7 +61,8 @@ in {
                 modules-center = [];
                 modules-right = [
                   "network"
-                  "custom/bat"
+                  "battery"
+                  #"custom/bat"
                   "disk"
                   "memory"
                   "clock"
@@ -77,13 +78,24 @@ in {
                   tooltip-format-disconnected = "disconnected";
                 };
 
-                "custom/bat" = {
-                  exec = "${batScript}";
+                battery = {
                   interval = 45;
-                  return-type = "plain";
+                  states = {
+                    "warning" = 15;
+                  };
+                  format-plugged = "BAT: PLUG |";
+                  format-charging = "CHR: {capacity}% |";
+                  format-discharging = "BAT: {capacity}% |";
                   hide-empty-text = true;
-                  tooltip = false;
                 };
+
+                #"custom/bat" = {
+                #exec = "${batScript}";
+                #interval = 45;
+                #return-type = "plain";
+                #hide-empty-text = true;
+                #tooltip = false;
+                #};
 
                 disk = {
                   interval = 90;
@@ -158,6 +170,13 @@ in {
               padding: 0;
               margin: 0;
               min-height: 0;
+            }
+
+            #battery.warning {
+              background: @urgent;
+              color: @bg;
+              padding: 0;
+              margin: 0;
             }
 
             #network, #custom-bat, #disk, #memory, #clock {
