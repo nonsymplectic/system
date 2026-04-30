@@ -17,7 +17,7 @@ in {
     home-manager.sharedModules = [
       {
         home.packages = [
-          pkgsUnstable.prismlauncher
+          pkgs.prismlauncher
         ];
       }
     ];
