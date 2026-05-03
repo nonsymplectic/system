@@ -4,11 +4,12 @@
   config,
   lib,
   pkgs,
-  pkgsUnstable,
   ...
-}: let
+}:
+let
   cfg = config.features.minecraft;
-in {
+in
+{
   options.features.minecraft = {
     enable = lib.mkEnableOption "Enable Minecraft";
   };
