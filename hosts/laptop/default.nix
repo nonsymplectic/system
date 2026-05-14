@@ -40,7 +40,10 @@
   # Hardware features
   features.bluetooth.enable = true;
   features.laptop-powersaving.enable = true;
+
+  # Gaming
   features.minecraft.enable = true;
+  features.steam.enable = true;
 
   # BorgBackup configuration (same settings as home-pc for shared repository)
   features.borgbackup = {

@@ -53,6 +53,7 @@
     ../features/apps/utilities.nix
     ../features/apps/keepassxc-sync.nix
     ../features/apps/minecraft.nix
+    ../features/apps/steam.nix
   ];
 
   # Home Manager configuration
