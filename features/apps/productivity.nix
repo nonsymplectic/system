@@ -29,6 +29,7 @@ in {
       default = true;
       description = "Enable Zotero reference manager";
     };
+
     hugo = lib.mkOption {
       type = lib.types.bool;
       default = true;
