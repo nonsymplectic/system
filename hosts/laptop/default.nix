@@ -43,7 +43,6 @@
 
   # Gaming
   features.minecraft.enable = true;
-  features.steam.enable = true;
 
   # BorgBackup configuration (same settings as home-pc for shared repository)
   features.borgbackup = {

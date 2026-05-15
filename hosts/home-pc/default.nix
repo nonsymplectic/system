@@ -67,6 +67,9 @@
   ============================================================
   */
 
+  # Gaming
+  features.steam.enable = true;
+
   # Enable hardware features
   features.nvidia.enable = true;
   features.bluetooth.enable = true;
