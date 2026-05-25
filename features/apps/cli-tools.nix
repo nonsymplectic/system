@@ -37,7 +37,8 @@ in {
 
         home.packages =
           (lib.optionals cfg.monitoring [
-            pkgs.htop
+            # htop patched with vim keybinds
+            pkgs.htop-vim
             pkgs.ps_mem
           ])
           ++ (lib.optionals cfg.utilities [
