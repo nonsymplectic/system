@@ -44,7 +44,15 @@ in {
         # Spotify
         programs.spotify-player = {
           enable = cfg.enableSpotify;
-          settings.notify_timeout_in_secs = 5;
+          settings = {
+            notify_timeout_in_secs = 5;
+            enable_audio_visualization = true;
+            device = {
+              name = config.networking.hostName;
+              type = "computer";
+              volume = 100;
+            };
+          };
         };
 
         # home.packages = with pkgs; [
