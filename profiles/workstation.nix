@@ -39,6 +39,7 @@
     ../features/hardware/nvidia.nix
     ../features/hardware/bluetooth.nix
     ../features/hardware/laptop-powersaving.nix
+    ../features/hardware/virtualization.nix
 
     # App features
     ../features/apps/browsers.nix

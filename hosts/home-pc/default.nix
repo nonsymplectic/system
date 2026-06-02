@@ -73,6 +73,7 @@
   # Enable hardware features
   features.nvidia.enable = true;
   features.bluetooth.enable = true;
+  features.virtualization.enable = true;
 
   # Sway needs this flag because of nvidia drivers
   features.sway.extraFlags = [
