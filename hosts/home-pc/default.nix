@@ -80,6 +80,13 @@
     "--unsupported-gpu"
   ];
 
+  # rearrange monitors
+  features.sway.extraConfig = ''
+    workspace 1 output HDMI-A-1
+    output HDMI-A-1 mode 1920x1080@60Hz pos 0 0
+    output DP-1 mode 1920x1080@60Hz pos 1920 0
+  '';
+
   # BorgBackup configuration
   features.borgbackup = {
     enable = true;
