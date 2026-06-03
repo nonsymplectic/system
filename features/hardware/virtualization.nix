@@ -10,7 +10,14 @@ in {
     lib.mkEnableOption "Virtualization support";
 
   config = lib.mkIf cfg.enable {
-    virtualisation.libvirtd.enable = true;
+    virtualisation.libvirtd = {
+      enable = true;
+
+      # Enable TPM emulation
+      qemu = {
+        swtpm.enable = true;
+      };
+    };
 
     programs.virt-manager.enable = true;
 
