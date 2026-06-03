@@ -88,7 +88,7 @@
   features.fuzzel.enable = true;
 
   features.wlsunset.enable = true;
-  features.input-methods.enable = true;
+  #features.input-methods.enable = true;
   features.desktop-support.enable = true;
 
   # Enable application features
