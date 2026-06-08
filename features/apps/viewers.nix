@@ -34,6 +34,15 @@ in {
       default = "epr";
       description = "Default Epub viewer for XDG MIME associations";
     };
+
+    defaultImageViewer = lib.mkOption {
+      type = lib.types.enum [
+        "imv"
+        "none"
+      ];
+      default = "imv";
+      description = "Default Image viewer for XDG MIME associations";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -96,6 +105,16 @@ in {
 
           (lib.mkIf (cfg.defaultEpubViewer == "epr") {
             "application/epub+zip" = "epr.desktop";
+          })
+
+          (lib.mkIf (cfg.defaultImageViewer == "imv") {
+            "image/png" = "imv.desktop";
+            "image/jpeg" = "imv.desktop";
+            "image/pjpeg" = "imv.desktop";
+            "image/webp" = "imv.desktop";
+            "image/gif" = "imv.desktop";
+            "image/svg+xml" = "imv.desktop";
+            "image/tiff" = "imv.desktop";
           })
         ];
       }
