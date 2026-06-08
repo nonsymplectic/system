@@ -47,7 +47,7 @@ in {
 
         # epr epub reader needs its own .desktop entry
         xdg.desktopEntries.epr = {
-          name = "EPR";
+          name = "epr";
           genericName = "EPUB Reader";
           comment = "Read EPUB books in the terminal with EPR";
           exec = "${pkgs.foot}/bin/foot -T epr ${pkgs.epr}/bin/epr %f";
@@ -68,12 +68,24 @@ in {
           settings = {
             notify_timeout_in_secs = 5;
             enable_audio_visualization = true;
+            play_icon = "[PLAY]";
+            pause_icon = "[PAUSE]";
+            liked_icon = "LIKED";
             device = {
               name = config.networking.hostName;
               type = "computer";
               volume = 100;
             };
           };
+        };
+
+        xdg.desktopEntries.spotify = {
+          name = "spotify";
+          genericName = "Music Player";
+          comment = "Spotify TUI";
+          exec = "${pkgs.foot}/bin/foot -T spotify spotify_player";
+          terminal = false; # Foot will handle the terminal
+          categories = ["Music" "Viewer"];
         };
 
         # Set MIME association
