@@ -20,7 +20,7 @@ in {
     utilities = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Enable general utilities (neofetch, claude-code)";
+      description = "Enable general utilities (fastfetch, claude-code)";
     };
 
     audio = lib.mkOption {
@@ -42,7 +42,7 @@ in {
             pkgs.ps_mem
           ])
           ++ (lib.optionals cfg.utilities [
-            pkgs.neofetch
+            pkgs.fastfetch
             pkgs.claude-code
           ])
           ++ (lib.optionals cfg.audio [
