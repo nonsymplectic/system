@@ -29,6 +29,11 @@
     output * bg ${wallpaperPath} fill
   '';
 
+  hideCursor = ''
+    seat * hide_cursor 5000
+    seat * hide_cursor when-typing enable
+  '';
+
   # Sway window colors derived from UI tokens
   clientColors = import ./clientColors.nix {inherit ui;};
   baseKeybindings = import ./baseKeybindings.nix {inherit config pkgs;};
@@ -131,7 +136,7 @@ in {
             (lib.mkIf config.features.waybar.enable {bars = [];})
           ];
 
-          extraConfig = disableFloating + barAutostart + wallpaperSetting + cfg.extraConfig;
+          extraConfig = disableFloating + barAutostart + wallpaperSetting + hideCursor + cfg.extraConfig;
         };
       }
     ];
