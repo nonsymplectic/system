@@ -5,6 +5,7 @@
   ...
 }: let
   cfg = config.features.browsers;
+  ui = config.my.ui;
 in {
   options.features.browsers = {
     enable = lib.mkEnableOption "Web browsers";
@@ -43,7 +44,10 @@ in {
     home-manager.sharedModules = [
       {
         programs.chromium.enable = true;
-        programs.qutebrowser.enable = true;
+        programs.qutebrowser = {
+          enable = true;
+          settings.fonts.default_size = "${toString ui.font.size}pt";
+        };
         programs.librewolf.enable = true;
 
         home.packages = lib.optionals cfg.enableTor [pkgs.tor-browser];
