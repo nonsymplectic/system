@@ -25,4 +25,11 @@ in {
     mode = "0600";
     path = "${home}/.ssh/id_ed25519_github";
   };
+
+  age.secrets.gpg_private_key = {
+    file = ../../secrets/gpg_private_key.age;
+    owner = user;
+    inherit group;
+    mode = "0600";
+  };
 }

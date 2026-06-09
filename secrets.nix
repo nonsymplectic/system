@@ -2,10 +2,14 @@ let
   home-pc = "age1ut4vhgwvnkng46zx0et7a7ptcfaxpsgjj94mrqmkzl7z706dafrqzklrxx"; # home-pc public key
   laptop = "age1y4esvm73q2lgvf29dkzvs8plkj0dm0pxw605k4k9u6zu89ps6ags0qq929"; # laptop public key
 in {
+  "secrets/gpg_private_key.age".publicKeys = [
+    home-pc
+    laptop
+  ]; # gpg key
   "secrets/github_id_ed25519_github.age".publicKeys = [
     home-pc
     laptop
-  ]; # don't forget to add laptop later
+  ]; # github
   "secrets/borgbackup_passphrase.age".publicKeys = [
     home-pc
     laptop

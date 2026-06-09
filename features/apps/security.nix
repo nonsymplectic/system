@@ -25,11 +25,28 @@ in {
 
   config = lib.mkIf cfg.enable {
     home-manager.sharedModules = [
-      {
+      ({
+        lib,
+        pkgs,
+        ...
+      }: {
         home.packages =
           (lib.optionals cfg.keepassxc [pkgs.keepassxc])
           ++ (lib.optionals cfg.gnupg [pkgs.gnupg]);
-      }
+
+        services.gpg-agent = lib.mkIf cfg.gnupg {
+          enable = true;
+          pinentry.package = pkgs.pinentry-curses;
+        };
+
+        home.activation.importGpgKey = lib.mkIf cfg.gnupg (
+          lib.hm.dag.entryAfter ["writeBoundary"] ''
+            if [ -r /run/agenix/gpg_private_key ]; then
+              $DRY_RUN_CMD ${pkgs.gnupg}/bin/gpg --batch --import /run/agenix/gpg_private_key || true
+            fi
+          ''
+        );
+      })
     ];
   };
 }
