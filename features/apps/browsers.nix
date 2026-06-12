@@ -50,7 +50,7 @@ in {
         };
         programs.librewolf.enable = true;
 
-        home.packages = lib.optionals cfg.enableTor [pkgs.tor-browser];
+        home.packages = (lib.optionals cfg.enableTor [pkgs.tor-browser]) ++ [pkgs.w3m];
 
         xdg.mimeApps.defaultApplications = let
           browserDesktop =
