@@ -19,8 +19,8 @@
       merge.conflictStyle = "zdiff3";
 
       user.signingkey = "A95E6DE301FBDF0FEAE8B9422AED34C030B29CC2";
-      commit.gpgsign = true;
-      tag.gpgsign = true;
+      commit.gpgsign = false;
+      tag.gpgsign = false;
       gpg.format = "openpgp";
     };
   };
