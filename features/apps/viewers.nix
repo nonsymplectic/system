@@ -79,12 +79,13 @@ in {
             enable_audio_visualization = true;
             play_icon = "[PLAY]";
             pause_icon = "[PAUSE]";
-            liked_icon = "LIKED";
+            liked_icon = "[LIKED]";
             device = {
               name = config.networking.hostName;
               type = "computer";
               volume = 100;
             };
+            cover_img_length = 0;
           };
         };
 
