@@ -46,7 +46,10 @@ in {
         programs.chromium.enable = true;
         programs.qutebrowser = {
           enable = true;
-          settings.fonts.default_size = "${toString ui.font.size}pt";
+          settings = {
+            fonts.default_size = "${toString ui.font.size}pt";
+            zoom.default = "175%";
+          };
         };
         programs.librewolf.enable = true;
 
