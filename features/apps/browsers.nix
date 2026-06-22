@@ -14,9 +14,9 @@ in {
       type = lib.types.enum [
         "chromium"
         "qutebrowser"
-        "librewolf"
+        "firefox"
       ];
-      default = "librewolf";
+      default = "chromium";
       description = "Default web browser";
     };
 
@@ -39,7 +39,7 @@ in {
       then "${pkgs.chromium}/bin/chromium"
       else if cfg.defaultBrowser == "qutebrowser"
       then "${pkgs.qutebrowser}/bin/qutebrowser"
-      else "${pkgs.librewolf}/bin/librewolf";
+      else "${pkgs.firefox}/bin/firefox";
 
     home-manager.sharedModules = [
       {
@@ -51,7 +51,7 @@ in {
             zoom.default = "175%";
           };
         };
-        programs.librewolf.enable = true;
+        programs.firefox.enable = true;
 
         home.packages = (lib.optionals cfg.enableTor [pkgs.tor-browser]) ++ [pkgs.w3m];
 
@@ -61,7 +61,7 @@ in {
             then "chromium-browser.desktop"
             else if cfg.defaultBrowser == "qutebrowser"
             then "org.qutebrowser.qutebrowser.desktop"
-            else "librewolf.desktop";
+            else "firefox.desktop";
         in {
           "text/html" = browserDesktop;
           "x-scheme-handler/http" = browserDesktop;
