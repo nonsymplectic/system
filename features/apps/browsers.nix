@@ -43,14 +43,28 @@ in {
 
     home-manager.sharedModules = [
       {
+        # ---------- chromium ----------
         programs.chromium.enable = true;
+
+        # ---------- qutebrowser ----------
         programs.qutebrowser = {
           enable = true;
           settings = {
             fonts.default_size = "${toString ui.font.size}pt";
             zoom.default = "175%";
+            quickmarks = {
+              "blog" = "https://mikuta.online/";
+              "ft" = "https://www.ft.com/";
+              "yt" = "https://invidious.nerdvpn.de/";
+              "nixpkgs" = "https://search.nixos.org/packages";
+              "help" = "https://raw.githubusercontent.com/qutebrowser/qutebrowser/main/doc/img/cheatsheet-big.png";
+              "chat" = "https://chatgpt.com/";
+              "meteo" = "https://www.meteoschweiz.admin.ch/lokalprognose/zuerich/8044.html#forecast-tab=detail-view";
+            };
           };
         };
+
+        # ---------- firefox ----------
         programs.firefox.enable = true;
 
         home.packages = (lib.optionals cfg.enableTor [pkgs.tor-browser]) ++ [pkgs.w3m];
