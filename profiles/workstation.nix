@@ -52,6 +52,7 @@
     ../features/apps/dev-tools.nix
     ../features/apps/formatters.nix
     ../features/apps/utilities.nix
+    ../features/apps/latex.nix
     ../features/apps/keepassxc-sync.nix
     ../features/apps/minecraft.nix
     ../features/apps/steam.nix
@@ -102,4 +103,5 @@
   features.cli-tools.enable = true;
   features.formatters.enable = true;
   features.utilities.enable = true;
+  features.latex.enable = true;
 }
