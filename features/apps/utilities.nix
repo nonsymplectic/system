@@ -19,7 +19,7 @@ in {
 
     anydesk = lib.mkOption {
       type = lib.types.bool;
-      default = true;
+      default = false;
       description = "Enable AnyDesk remote desktop";
     };
 
