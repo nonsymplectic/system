@@ -2,11 +2,16 @@
   programs.bash = {
     enable = true;
 
+    shellAliases = {
+      ls = "ls --color=auto";
+    };
     # ~/.bashrc content; guard so it only affects interactive shells.
     bashrcExtra = ''
       case $- in
         *i*)
           PS1="\[\033[1;34m\][\[\e]0;\u@\h: \w\a\]\u@\h:\w]\$\[\033[0m\] "
+          export LS_COLORS="$LS_COLORS:di=1;35"
+
           ;;
       esac
     '';
