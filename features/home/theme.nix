@@ -2,11 +2,11 @@
   catppuccin = {
     enable = true;
     flavor = "latte";
-    accent = "pink";
+    accent = "blue";
 
     cursors = {
       enable = false;
-      accent = "pink";
+      accent = "blue";
     };
 
     sway.enable = false;
