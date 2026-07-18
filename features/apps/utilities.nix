@@ -34,7 +34,7 @@ in {
     home-manager.sharedModules = [
       {
         home.packages =
-          (lib.optionals cfg.bluetooth-ui [pkgs.bluetui]) ++ (lib.optionals cfg.anydesk [pkgs.anydesk]);
+          lib.optionals cfg.anydesk [pkgs.anydesk];
       }
     ];
     services.udisks2.enable = cfg.udisks;

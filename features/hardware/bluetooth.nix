@@ -1,8 +1,9 @@
 # Bluetooth feature
-# System-level only - enables bluetooth hardware
+# enables bluetooth hardware, relevant tui
 {
   config,
   lib,
+  pkgs,
   ...
 }: let
   cfg = config.features.bluetooth;
@@ -31,5 +32,20 @@ in {
         };
       };
     };
+    home-manager.sharedModules = [
+      {
+        home.packages = [pkgs.bluetui];
+        # bluetui needs its own .desktop entry
+        xdg.desktopEntries.bluetui = {
+          name = "bluetui";
+          genericName = "Bluetooth Settings";
+          comment = "Set Bluetooth settings with bluetui TUI.";
+          exec = "${pkgs.foot}/bin/foot -T bluetui ${pkgs.bluetui}/bin/bluetui";
+          terminal = false; # Foot will handle the terminal
+          mimeType = [];
+          categories = ["System"];
+        };
+      }
+    ];
   };
 }
