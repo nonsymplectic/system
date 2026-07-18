@@ -76,7 +76,7 @@ in {
           enable = cfg.spotify;
           settings = {
             notify_timeout_in_secs = 5;
-            enable_audio_visualization = true;
+            enable_audio_visualization = false;
             play_icon = "[PLAY]";
             pause_icon = "[PAUSE]";
             liked_icon = "[LIKED]";
