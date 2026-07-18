@@ -4,7 +4,7 @@
     enable = true;
     enableDefaultConfig = false;
 
-    matchBlocks."*" = {
+    settings."*" = {
       forwardAgent = false;
       addKeysToAgent = "no";
       compression = false;
@@ -17,7 +17,7 @@
       controlPersist = "5m";
     };
 
-    matchBlocks."github.com" = {
+    settings."github.com" = {
       user = "git";
       identityFile = "${config.home.homeDirectory}/.ssh/id_ed25519_github";
       identitiesOnly = true;

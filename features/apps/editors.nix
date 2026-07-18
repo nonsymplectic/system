@@ -85,10 +85,14 @@ in {
           viAlias = true;
           vimAlias = true;
 
+          # eval warnings
+          withRuby = false;
+          withPython3 = true;
+
           extraPackages = cfg.neovim.extraPackages;
           plugins = cfg.neovim.plugins;
 
-          extraLuaConfig = ''
+          initLua = ''
             vim.g.mapleader = " "
 
             vim.opt.number = true

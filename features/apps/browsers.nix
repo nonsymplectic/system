@@ -65,7 +65,12 @@ in {
         };
 
         # ---------- firefox ----------
-        programs.firefox.enable = true;
+        programs.firefox = {
+          enable = true;
+
+          # evaluation warning
+          configPath = ".mozilla/firefox";
+        };
 
         home.packages = (lib.optionals cfg.enableTor [pkgs.tor-browser]) ++ [pkgs.w3m];
 
