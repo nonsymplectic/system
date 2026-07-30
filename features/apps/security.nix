@@ -16,10 +16,17 @@ in {
       default = true;
       description = "Enable KeePassXC password manager";
     };
+
     gnupg = lib.mkOption {
       type = lib.types.bool;
       default = true;
       description = "Enable GnuPG OpenPGP";
+    };
+
+    openvpn = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable OpenVPN";
     };
   };
 
@@ -32,7 +39,8 @@ in {
       }: {
         home.packages =
           (lib.optionals cfg.keepassxc [pkgs.keepassxc])
-          ++ (lib.optionals cfg.gnupg [pkgs.gnupg]);
+          ++ (lib.optionals cfg.gnupg [pkgs.gnupg])
+          ++ (lib.optionals cfg.openvpn [pkgs.openvpn]);
 
         services.gpg-agent = lib.mkIf cfg.gnupg {
           enable = true;
