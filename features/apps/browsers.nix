@@ -72,7 +72,7 @@ in {
           configPath = ".mozilla/firefox";
         };
 
-        home.packages = (lib.optionals cfg.enableTor [pkgs.tor-browser]) ++ [pkgs.w3m];
+        home.packages = (lib.optionals cfg.enableTor [pkgs.tor-browser]) ++ [pkgs.w3m pkgs.elinks];
 
         xdg.mimeApps.defaultApplications = let
           browserDesktop =
