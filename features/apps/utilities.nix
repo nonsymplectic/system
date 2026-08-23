@@ -4,6 +4,7 @@
   config,
   lib,
   pkgs,
+  pkgsUnstable,
   ...
 }: let
   cfg = config.features.utilities;
@@ -28,13 +29,19 @@ in {
       default = true;
       description = "Enable udisks disk tools";
     };
+
+    tribler = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Enable tribler p2p";
+    };
   };
 
   config = lib.mkIf cfg.enable {
     home-manager.sharedModules = [
       {
         home.packages =
-          lib.optionals cfg.anydesk [pkgs.anydesk];
+          lib.optionals cfg.anydesk [pkgs.anydesk] ++ lib.optionals cfg.tribler [pkgsUnstable.tribler];
       }
     ];
     services.udisks2.enable = cfg.udisks;
