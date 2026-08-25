@@ -30,10 +30,10 @@ in {
       description = "Enable udisks disk tools";
     };
 
-    tribler = lib.mkOption {
+    rtorrent = lib.mkOption {
       type = lib.types.bool;
-      default = false;
-      description = "Enable tribler p2p";
+      default = true;
+      description = "Enable rtorrent p2p";
     };
   };
 
@@ -41,7 +41,7 @@ in {
     home-manager.sharedModules = [
       {
         home.packages =
-          lib.optionals cfg.anydesk [pkgs.anydesk] ++ lib.optionals cfg.tribler [pkgsUnstable.tribler];
+          lib.optionals cfg.anydesk [pkgs.anydesk] ++ lib.optionals cfg.rtorrent [pkgsUnstable.rtorrent];
       }
     ];
     services.udisks2.enable = cfg.udisks;
