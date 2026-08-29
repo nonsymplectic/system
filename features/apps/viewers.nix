@@ -4,12 +4,18 @@
   config,
   lib,
   pkgs,
+  pkgsUnstable,
   ...
 }: let
   cfg = config.features.viewers;
 in {
   options.features.viewers = {
     enable = lib.mkEnableOption "Media viewer applications";
+    freetube = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Include freetube";
+    };
 
     spotify = lib.mkOption {
       type = lib.types.bool;
@@ -67,6 +73,10 @@ in {
 
         # Video player
         programs.mpv.enable = true;
+        programs.freetube = {
+          enable = cfg.freetube;
+          package = pkgsUnstable.freetube;
+        };
 
         # Image viewers
         programs.imv.enable = true;
