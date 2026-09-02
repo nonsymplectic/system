@@ -3,11 +3,11 @@
     enable = true;
     autoEnable = true;
     flavor = "latte";
-    accent = "blue";
+    accent = "pink";
 
     cursors = {
       enable = false;
-      accent = "blue";
+      accent = "pink";
     };
 
     sway.enable = false;

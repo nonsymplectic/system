@@ -183,7 +183,7 @@ in {
       };
       focus = mkOption {
         type = types.str;
-        default = ansi.blue;
+        default = ansi.magenta;
         description = "Focus/active indicator color (hex).";
       };
       error = mkOption {

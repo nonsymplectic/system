@@ -3,6 +3,6 @@
     enable = true;
     autoEnable = true;
     flavor = "latte";
-    accent = "blue";
+    accent = "pink";
   };
 }
