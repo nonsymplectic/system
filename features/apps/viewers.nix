@@ -76,6 +76,28 @@ in {
         programs.freetube = {
           enable = cfg.freetube;
           package = pkgsUnstable.freetube;
+          settings = {
+            checkForUpdates = false;
+
+            useSponsorBlock = true;
+            sponsorBlockShowSkippedToast = true;
+            showDistractionFreeTitles = true;
+            useDeArrowTitles = true;
+            useDeArowThumbnails = true;
+
+            landingPage = "history";
+            hideTrendingVideos = true;
+            hideSubscriptionsShorts = true;
+            hideSubscriptionsCommunity = true;
+            hideActiveSubscriptions = true;
+
+            hideCommentLikes = true;
+            hideCommentPhotos = true;
+
+            hideLiveChat = true;
+            hideHeaderLogo = true;
+            uiScale = 175;
+          };
         };
 
         # Image viewers
