@@ -76,28 +76,35 @@ in {
         programs.freetube = {
           enable = cfg.freetube;
           package = pkgsUnstable.freetube;
-          settings = {
-            checkForUpdates = false;
+          settings =
+            {
+              checkForUpdates = false;
 
-            useSponsorBlock = true;
-            sponsorBlockShowSkippedToast = true;
-            showDistractionFreeTitles = true;
-            useDeArrowTitles = true;
-            useDeArowThumbnails = true;
+              useSponsorBlock = true;
+              sponsorBlockShowSkippedToast = true;
 
-            landingPage = "history";
-            hideTrendingVideos = true;
-            hideSubscriptionsShorts = true;
-            hideSubscriptionsCommunity = true;
-            hideActiveSubscriptions = true;
+              showDistractionFreeTitles = true;
+              useDeArrowTitles = true;
+              useDeArrowThumbnails = true;
 
-            hideCommentLikes = true;
-            hideCommentPhotos = true;
+              landingPage = "history";
+              hideTrendingVideos = true;
+              hideSubscriptionsShorts = true;
+              hideSubscriptionsCommunity = true;
+              hideActiveSubscriptions = true;
 
-            hideLiveChat = true;
-            hideHeaderLogo = true;
-            uiScale = 175;
-          };
+              hideCommentLikes = true;
+              hideCommentPhotos = true;
+
+              hideLiveChat = true;
+              hideHeaderLogo = true;
+              uiScale = 175;
+            }
+            // lib.genAttrs ["sponsorBlockSponsor" "sponsorBlockSelfPromo" "sponsorBlockInteraction" "sponsorBlockMusicOffTopic" "sponsorBlockIntro" "sponsorBlockOutro"]
+            (_: {
+              color = "Red";
+              skip = "autoSkip";
+            });
         };
 
         # Image viewers
