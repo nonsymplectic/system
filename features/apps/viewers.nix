@@ -23,6 +23,12 @@ in {
       description = "Include Spotify-Player";
     };
 
+    yazi = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Include yazi file viewer";
+    };
+
     defaultPdfViewer = lib.mkOption {
       type = lib.types.enum [
         "zathura"
@@ -106,6 +112,9 @@ in {
               skip = "autoSkip";
             });
         };
+
+        # File viewers
+        programs.yazi.enable = cfg.yazi;
 
         # Image viewers
         programs.imv.enable = true;
