@@ -15,6 +15,7 @@
     mako.enable = false;
     swaylock.enable = false;
     waybar.enable = false;
+    mpv.enable = false;
   };
 
   gtk = {
