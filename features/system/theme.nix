@@ -3,6 +3,6 @@
     enable = true;
     autoEnable = true;
     flavor = "mocha";
-    accent = "pink";
+    accent = "green";
   };
 }

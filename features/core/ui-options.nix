@@ -12,23 +12,44 @@
 
   # Named view of ANSI 16-color palette
   ansi = {
-    black = "#eff1f5";
-    red = "#d20f39";
-    green = "#40a02b";
-    yellow = "#df8e1d";
-    blue = "#1e66f5";
-    magenta = "#ea76cb";
-    cyan = "#179299";
-    white = "#4c4f69";
+    # Mocha
+    black = "#1e1e2e";
+    red = "#f38ba8";
+    green = "#a6e3a1";
+    yellow = "#f9e2af";
+    blue = "#89b4fa";
+    magenta = "#f5c2e7";
+    cyan = "#94e2d5";
+    white = "#bac2de";
 
-    brightBlack = "#eff1f5";
-    brightRed = "#d20f39";
-    brightGreen = "#40a02b";
-    brightYellow = "#df8e1d";
-    brightBlue = "#1e66f5";
-    brightMagenta = "#ea76cb";
-    brightCyan = "#179299";
-    brightWhite = "#4c4f69";
+    brightBlack = "#585b70";
+    brightRed = "#f38ba8";
+    brightGreen = "#a6e3a1";
+    brightYellow = "#f9e2af";
+    brightBlue = "#89b4fa";
+    brightMagenta = "#f5c2e7";
+    brightCyan = "#94e2d5";
+    brightWhite = "#a6adc8";
+
+    # Latte
+
+    # black = "#eff1f5";
+    # red = "#d20f39";
+    # green = "#40a02b";
+    # yellow = "#df8e1d";
+    # blue = "#1e66f5";
+    # magenta = "#ea76cb";
+    # cyan = "#179299";
+    # white = "#4c4f69";
+
+    # brightBlack = "#eff1f5";
+    # brightRed = "#d20f39";
+    # brightGreen = "#40a02b";
+    # brightYellow = "#df8e1d";
+    # brightBlue = "#1e66f5";
+    # brightMagenta = "#ea76cb";
+    # brightCyan = "#179299";
+    # brightWhite = "#4c4f69";
   };
 
   ansiPalette = [
@@ -59,9 +80,8 @@ in {
   - Scale factor
   - Typography (UI + monospace roles)
   - Semantic colors
-  - Terminal palette (ANSI 16)
 
-  Defaults derived from Catpuccin Latte.
+  Defaults derived from Catpuccin
   Hosts may override any token per-host.
   ============================================================
   */
@@ -183,7 +203,7 @@ in {
       };
       focus = mkOption {
         type = types.str;
-        default = ansi.magenta;
+        default = ansi.green;
         description = "Focus/active indicator color (hex).";
       };
       error = mkOption {
@@ -200,44 +220,6 @@ in {
         type = types.str;
         default = ansi.green;
         description = "Success color (hex).";
-      };
-    };
-
-    /*
-    ============================================================
-    Terminal colors
-    ------------------------------------------------------------
-    Terminal colors are expressed as hex strings.
-    palette is the ANSI 16-color table in canonical order:
-    - indices 0..7   normal  black..white
-    - indices 8..15  bright  black..white
-    ============================================================
-    */
-
-    terminal = {
-      # Reference ANSI slots (by name) for terminal background/foreground/cursor.
-      background = mkOption {
-        type = types.str;
-        default = ansi.black;
-        description = "Terminal background (hex).";
-      };
-      foreground = mkOption {
-        type = types.str;
-        default = ansi.white;
-        description = "Terminal foreground (hex).";
-      };
-      cursor = mkOption {
-        type = types.str;
-        default = ansi.white;
-        description = "Terminal cursor color (hex).";
-      };
-
-      palette = mkOption {
-        type = ansi16;
-        default = ansiPalette;
-        description = ''
-          Terminal ANSI palette (16 colors), in canonical order.
-        '';
       };
     };
   };

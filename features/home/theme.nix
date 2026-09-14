@@ -3,11 +3,11 @@
     enable = true;
     autoEnable = true;
     flavor = "mocha";
-    accent = "pink";
+    accent = "green";
 
     cursors = {
       enable = false;
-      accent = "pink";
+      accent = "green";
     };
 
     sway.enable = false;
@@ -16,6 +16,8 @@
     swaylock.enable = false;
     waybar.enable = false;
     mpv.enable = false;
+
+    librewolf.force = true;
   };
 
   gtk = {
