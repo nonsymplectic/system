@@ -78,7 +78,13 @@ in {
         };
 
         # Video player
-        programs.mpv.enable = true;
+        programs.mpv = {
+          enable = true;
+          config = {
+            sub-scale = 1.5;
+            sub-pos = 0;
+          };
+        };
         programs.freetube = {
           enable = cfg.freetube;
           package = pkgsUnstable.freetube;
