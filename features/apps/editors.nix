@@ -20,7 +20,27 @@ in {
       plugins = lib.mkOption {
         type = lib.types.listOf lib.types.package;
         default = with pkgs.vimPlugins; [
-          nvim-treesitter.withAllGrammars
+          (nvim-treesitter.withPlugins
+            (p: [
+              p.bash
+              p.c
+              p.desktop
+              p.dockerfile
+              p.go
+              p.html
+              p.json
+              p.json5
+              p.latex
+              p.markdown
+              p.nix
+              p.python
+              p.rust
+              p.sql
+              p.toml
+              p.typescript
+              p.xml
+              p.yaml
+            ]))
           nvim-lspconfig
           conform-nvim
           gitsigns-nvim
