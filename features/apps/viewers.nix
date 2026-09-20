@@ -110,6 +110,8 @@ in {
 
               hideLiveChat = true;
               hideHeaderLogo = true;
+
+              enableSubtitlesByDefault = true;
               uiScale = 175;
             }
             // lib.genAttrs ["sponsorBlockSponsor" "sponsorBlockSelfPromo" "sponsorBlockInteraction" "sponsorBlockMusicOffTopic" "sponsorBlockIntro" "sponsorBlockOutro"]
