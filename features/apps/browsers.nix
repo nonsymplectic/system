@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  pkgsUnstable,
   ...
 }: let
   cfg = config.features.browsers;
@@ -49,6 +50,7 @@ in {
         # ---------- qutebrowser ----------
         programs.qutebrowser = {
           enable = true;
+          package = pkgsUnstable.qutebrowser;
           settings = {
             fonts.default_size = "${toString ui.font.size}pt";
             zoom.default = "175%";
