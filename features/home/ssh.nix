@@ -22,5 +22,10 @@
       identityFile = "${config.home.homeDirectory}/.ssh/id_ed25519_github";
       identitiesOnly = true;
     };
+
+    settings."late.sh" = {
+      identityFile = "${config.home.homeDirectory}/.ssh/id_ed25519_late";
+      identitiesOnly = true;
+    };
   };
 }

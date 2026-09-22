@@ -6,7 +6,7 @@ in {
     home-pc
     laptop
   ]; # gpg key
-  "secrets/github_id_ed25519_github.age".publicKeys = [
+  "secrets/id_ed25519_github.age".publicKeys = [
     home-pc
     laptop
   ]; # github
@@ -22,4 +22,8 @@ in {
     home-pc
     laptop
   ]; # Rclone configuration for B2
+  "secrets/id_ed25519_late.age".publicKeys = [
+    home-pc
+    laptop
+  ]; # ssh key for late.sh
 }

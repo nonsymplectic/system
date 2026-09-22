@@ -19,11 +19,18 @@ in {
   ];
 
   age.secrets.github_ssh_key = {
-    file = ../../secrets/github_id_ed25519_github.age;
+    file = ../../secrets/id_ed25519_github.age;
     owner = user;
     inherit group;
     mode = "0600";
     path = "${home}/.ssh/id_ed25519_github";
+  };
+  age.secrets.late_ssh_key = {
+    file = ../../secrets/id_ed25519_late.age;
+    owner = user;
+    inherit group;
+    mode = "0600";
+    path = "${home}/.ssh/id_ed25519_late";
   };
 
   age.secrets.gpg_private_key = {
