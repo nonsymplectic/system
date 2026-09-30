@@ -122,7 +122,10 @@ in {
         };
 
         # File viewers
-        programs.yazi.enable = cfg.yazi;
+        programs.yazi = {
+          enable = cfg.yazi;
+          shellWrapperName = "y";
+        };
 
         # Image viewers
         programs.imv.enable = true;
