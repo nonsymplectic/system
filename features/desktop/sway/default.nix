@@ -85,6 +85,7 @@ in {
             text-color = ui.colors.foreground;
             border-color = ui.colors.muted;
             progress-color = "over ${ui.colors.focus}";
+            default-timeout = 5000;
           };
 
           extraConfig = ''
