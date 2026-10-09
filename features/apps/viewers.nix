@@ -23,10 +23,10 @@ in {
       description = "Include Spotify-Player";
     };
 
-    yazi = lib.mkOption {
+    ranger = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Include yazi file viewer";
+      description = "Include ranger file viewer";
     };
 
     defaultPdfViewer = lib.mkOption {
@@ -122,11 +122,8 @@ in {
         };
 
         # File viewers
-        programs.yazi = {
-          enable = cfg.yazi;
-          shellWrapperName = "y";
-        };
-
+        programs.ranger.enable = cfg.ranger;
+        programs.bash.shellAliases = lib.mkIf (cfg.ranger) {ra = "ranger";};
         # Image viewers
         programs.imv.enable = true;
 
