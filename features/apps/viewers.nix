@@ -8,6 +8,11 @@
   ...
 }: let
   cfg = config.features.viewers;
+  epr-launcher = pkgs.writeShellScript "epr-launcher" ''
+    file="$1"
+    printf '\033]0;epr - %s\007' "$(basename "$file")"
+    exec ${pkgs.epr}/bin/epr "$file"
+  '';
 in {
   options.features.viewers = {
     enable = lib.mkEnableOption "Media viewer applications";
@@ -71,7 +76,7 @@ in {
           name = "epr";
           genericName = "EPUB Reader";
           comment = "Read EPUB books in the terminal with EPR";
-          exec = "${pkgs.foot}/bin/foot -T epr ${pkgs.epr}/bin/epr %f";
+          exec = "${pkgs.foot}/bin/foot ${epr-launcher} %f";
           terminal = false; # Foot will handle the terminal
           mimeType = ["application/epub+zip"];
           categories = ["Office" "Viewer"];
@@ -167,7 +172,6 @@ in {
           (lib.mkIf (cfg.defaultImageViewer == "imv") {
             "image/png" = "imv.desktop";
             "image/jpeg" = "imv.desktop";
-            "image/pjpeg" = "imv.desktop";
             "image/webp" = "imv.desktop";
             "image/gif" = "imv.desktop";
             "image/svg+xml" = "imv.desktop";
