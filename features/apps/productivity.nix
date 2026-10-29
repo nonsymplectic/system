@@ -40,7 +40,10 @@ in {
   config = lib.mkIf cfg.enable {
     home-manager.sharedModules = [
       {
-        programs.anki.enable = lib.mkIf cfg.anki true;
+        programs.anki = {
+          enable = lib.mkIf cfg.anki true;
+          package = pkgsUnstable.anki;
+        };
 
         home.packages =
           (lib.optionals cfg.calibre [pkgs.calibre])
