@@ -18,6 +18,12 @@ in {
       description = "Enable Dino XMPP client";
     };
 
+    catgirl = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable catgirl IRC client";
+    };
+
     mumble = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -42,6 +48,7 @@ in {
       {
         home.packages =
           (lib.optionals cfg.dino [pkgs.dino])
+          ++ (lib.optionals cfg.catgirl [pkgs.catgirl])
           ++ (lib.optionals cfg.zoom [pkgs.zoom-us])
           ++ (lib.optionals cfg.mumble [pkgs.mumble])
           ++ (lib.optionals cfg.protonmail [pkgsUnstable.protonmail-desktop]);
