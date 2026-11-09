@@ -193,7 +193,7 @@ in {
 
         programs.zed-editor = lib.mkIf cfg.zed.enable {
           enable = true;
-          package = pkgsUnstable.zed-editor;
+          package = pkgs.zed-editor;
           extensions = cfg.zed.extensions;
           extraPackages = cfg.zed.extraPackages;
         };
