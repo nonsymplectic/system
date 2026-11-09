@@ -283,7 +283,13 @@
         exit 1
       fi
 
-      exec ${lib.escapeShellArgs cfg.terminalCommand} sudo ${vpn-up}/bin/vpn-up "$cc"
+      # Terminal command is a template: @cc@ / @CC@ become the country code.
+      upper="$(printf '%s' "$cc" | tr '[:lower:]' '[:upper:]')"
+      term=(${lib.escapeShellArgs cfg.terminalCommand})
+      term=("''${term[@]//@cc@/$cc}")
+      term=("''${term[@]//@CC@/$upper}")
+
+      exec "''${term[@]}" sudo ${vpn-up}/bin/vpn-up "$cc"
     '';
   };
 in {
@@ -320,8 +326,12 @@ in {
 
     terminalCommand = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = ["foot" "--title" "openvpn" "--"];
-      description = "Terminal command; the openvpn invocation is appended as trailing arguments.";
+      default = ["foot" "--title" "openvpn - @CC@" "--"];
+      description = ''
+        Terminal command; the openvpn invocation is appended as trailing
+        arguments. `@cc@` and `@CC@` are replaced by the selected country code
+        (lower- and upper-case respectively) in every argument.
+      '';
     };
 
     flagPrefix = lib.mkOption {
