@@ -10,4 +10,7 @@ in {
   "secrets/borgbackup_b2_env.age".publicKeys = all-machines; # Backblaze B2 credentials
   "secrets/rclone_conf.age".publicKeys = all-machines; # Rclone configuration for B2
   "secrets/id_ed25519_late.age".publicKeys = all-machines; # ssh key for late.sh
+  "secrets/protonvpn_creds.age".publicKeys = all-machines; # ProtonVPN OpenVPN username/password (two lines)
+  "secrets/protonvpn_ca.age".publicKeys = all-machines; # ProtonVPN OpenVPN CA certificate
+  "secrets/protonvpn_tls_crypt.age".publicKeys = all-machines; # ProtonVPN OpenVPN tls-crypt static key
 }

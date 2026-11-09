@@ -54,6 +54,7 @@
     ../features/apps/utilities.nix
     ../features/apps/latex.nix
     ../features/apps/keepassxc-sync.nix
+    ../features/apps/vpn.nix
     ../features/apps/minecraft.nix
     ../features/apps/steam.nix
   ];
@@ -104,4 +105,7 @@
   features.formatters.enable = true;
   features.utilities.enable = true;
   features.latex.enable = true;
+
+  # ProtonVPN picker (desktop entry -> fuzzel -> openvpn in a foot window)
+  features.vpn.enable = true;
 }
