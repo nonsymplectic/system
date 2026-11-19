@@ -11,7 +11,7 @@ in {
 
     scheme = lib.mkOption {
       type = lib.types.enum ["basic" "small" "medium" "full"];
-      default = "medium";
+      default = "full";
       description = "TeX Live scheme to install.";
     };
 
